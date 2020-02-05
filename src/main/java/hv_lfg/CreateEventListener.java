@@ -37,7 +37,7 @@ public class CreateEventListener extends ListenerAdapter {
                     System.out.println("Connecte a " + guild.getName());
                     clear(guild.getTextChannelById("550694482132074506"));
                     //lecture des raids
-                    InitialiseEvent(guild);
+                    InitialiseEvent(event,guild);
                 }
             }
         }
@@ -52,9 +52,9 @@ public class CreateEventListener extends ListenerAdapter {
         }
     }
 
-    private static void InitialiseEvent(Guild guild){
+    private static void InitialiseEvent(ReadyEvent event,Guild guild){
         Connection conn = bdd.getConn();
-        ResultSet rs = bdd.getTable(conn,"SELECT idMessageDiscord,admin,instance,difficulty,date,descritption FROM OrganizedDate;");
+        ResultSet rs = bdd.getTable(conn,"SELECT idMessageDiscord,admin,instance,difficulty,date,description FROM OrganizedDate;");
         try{
             while (rs.next()){
                 OrganizedDate od = new OrganizedDate();
@@ -63,8 +63,17 @@ public class CreateEventListener extends ListenerAdapter {
                 od.setInstance(rs.getInt("instance"));
                 od.setDifficulty(rs.getInt("difficulty"));
                 od.setDate(new SimpleDateFormat("dd/MM/yyyy hh:mm aa").parse(rs.getString("date")));
+                od.setDescription(rs.getString("description"));
 
                 System.out.println(od.toString());
+
+                Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById("241110646677176320")).getTextChannelById("550694482132074506")).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
+                {
+                    message.addReaction("\uD83D\uDEE1").queue();
+                    message.addReaction("\uD83D\uDC89").queue();
+                    message.addReaction("\u2694").queue();
+                    message.addReaction("\u274C").queue();
+                });
             }
             rs.close();
             conn.close();

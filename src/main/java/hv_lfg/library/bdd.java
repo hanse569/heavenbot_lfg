@@ -36,7 +36,7 @@ public class bdd {
             try {
                 Connection conn = bdd.getConn();
 
-                String myStatement = "INSERT INTO OrganizedDate ('idMessageDiscord','admin','instance','difficulty','date','descritption') VALUES (?,?,?,?,?,?);";
+                String myStatement = "INSERT INTO OrganizedDate ('idMessageDiscord','admin','instance','difficulty','date','description') VALUES (?,?,?,?,?,?);";
                 PreparedStatement statement = conn.prepareStatement(myStatement);
                 statement.setString(1,od.getIdMessageDiscord());
                 statement.setString(2,od.getAdmin().getIdDiscord());
