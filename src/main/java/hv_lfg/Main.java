@@ -11,18 +11,20 @@ import java.util.ArrayList;
 public class Main {
 
     private static ArrayList<OrganizedDate> listDate = new ArrayList<>();
-    public static ArrayList<OrganizedDate> waitListDate = new ArrayList<>();
+    static ArrayList<OrganizedDate> waitListDate = new ArrayList<>();
 
     public static ArrayList<Instance> Raid = new ArrayList<>();
     private static ArrayList<Instance> Donjon = new ArrayList<>();
     private static ArrayList<Instance> BattleGround = new ArrayList<>();
     private static ArrayList<Instance> Arene = new ArrayList<>();
+    public static ArrayList<Difficulty> diff = new ArrayList<>();
 
     public static void main(String[] args) throws LoginException {
         InitialiseRaid();
         InitialiseDonjon();
         InitialiseBattleground();
         InitialiseArene();
+        InitialiseDifficulty();
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         builder.setToken("NTUwNjkyOTI0NzE1OTU4Mjgz.XVMwhw.W62qdD2FPvgB7rewV5AmpwfknsY");
@@ -97,6 +99,23 @@ public class Main {
                 instance.setName(rs.getString("name"));
                 instance.setThumbmail(rs.getString("thumbmail"));
                 Arene.add(instance);
+            }
+            rs.close();
+            conn.close();
+        }
+        catch (SQLException ex) { ex.printStackTrace(); }
+    }
+
+    private static void InitialiseDifficulty(){
+        Connection conn = bdd.getConn();
+        ResultSet rs = bdd.getTable(conn,"SELECT * FROM Difficulty");
+        try{
+            while (rs.next()){
+                Difficulty difficulty = new Difficulty();
+                difficulty.setId(rs.getInt("id"));
+                difficulty.setName(rs.getString("name"));
+
+                diff.add(difficulty);
             }
             rs.close();
             conn.close();
