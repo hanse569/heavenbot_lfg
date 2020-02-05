@@ -21,7 +21,7 @@ public class OrganizedDate {
     public int etape = 0;
     public int type = -1;
 
-    public OrganizedDate() {  }
+    public OrganizedDate() { }
     public OrganizedDate(RegisteredMember admin) { this.admin = admin; }
     public void setAdmin(RegisteredMember admin) { this.admin = admin; }
     public void setIdMessageDiscord(String id) { this.idMessageDiscord = id; }

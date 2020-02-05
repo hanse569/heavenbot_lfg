@@ -15,17 +15,13 @@ public class RegistrationListener extends ListenerAdapter {
             Message message = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
             MessageEmbed me = message.getEmbeds().get(0);
 
-            if(event.getUser().isBot()){
+            if(event.getUser().isBot()){ //Permet de relié le message à l'event
                 String realAuthor = me.getFooter().getText();
                 realAuthor = realAuthor.substring("Cree par ".length(),realAuthor.length()-  " - Powered by HeavenBot".length());
 
                 OrganizedDate od = null;
-                for (OrganizedDate tmp: Main.waitListDate) {
-                    if(tmp.getAdmin().getName().equals(realAuthor)){
-                        od = tmp;
-                    }
-                }
-                if(od != null)Main.confirmEvent(od,event.getMessageId());
+                for (OrganizedDate tmp: Main.waitListDate) if(tmp.getAdmin().getName().equals(realAuthor)) od = tmp;
+                if(od != null) Main.confirmEvent(od,event.getMessageId());
             }
             else {
                 System.out.println(event.getUser().getName() + " a reagi avec " + event.getReactionEmote() + " sur le message " + event.getMessageId());
