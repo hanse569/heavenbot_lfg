@@ -65,7 +65,7 @@ public class CreateEventListener extends ListenerAdapter {
                 od.setDate(new SimpleDateFormat("dd/MM/yyyy hh:mm aa").parse(rs.getString("date")));
                 od.setDescription(rs.getString("description"));
 
-                System.out.println(od.toString());
+                System.out.println("Event trouve: " + od.toString());
 
                 Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById("241110646677176320")).getTextChannelById("550694482132074506")).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
                 {

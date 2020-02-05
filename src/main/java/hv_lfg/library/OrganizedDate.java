@@ -75,4 +75,9 @@ public class OrganizedDate {
     public void removeMember(RegisteredMember member){
         memberlist.remove(member);
     }
+
+    @Override
+    public String toString() {
+        return Main.Raid.get(this.getInstance()).getName() + " de " + this.getAdmin().getName() + " le " + this.getDateToString();
+    }
 }
