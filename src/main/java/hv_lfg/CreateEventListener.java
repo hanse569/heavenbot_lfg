@@ -4,7 +4,6 @@ import hv_lfg.library.OrganizedDate;
 import hv_lfg.library.RegisteredMember;
 import hv_lfg.library.bdd;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
