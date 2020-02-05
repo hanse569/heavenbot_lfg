@@ -47,7 +47,7 @@ public class OrganizedDate {
     public Date getDateToDate() { return date; }
     public String getDateToString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Kiev"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
         return dateFormat.format(this.getDateToDate());
     }
     public String getDescription() { return description; }

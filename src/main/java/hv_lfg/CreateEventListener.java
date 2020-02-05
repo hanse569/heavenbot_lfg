@@ -58,7 +58,7 @@ public class CreateEventListener extends ListenerAdapter {
         try{
             while (rs.next()){
                 OrganizedDate od = new OrganizedDate();
-                od.setAdmin(new RegisteredMember(rs.getString("admin"),guild.getMemberById(rs.getString("admin")).getNickname()));
+                od.setAdmin(new RegisteredMember(rs.getString("admin"),guild.getMemberById(rs.getString("admin")).getEffectiveName()));
                 od.setIdMessageDiscord(rs.getString("idMessageDiscord"));
                 od.setInstance(rs.getInt("instance"));
                 od.setDifficulty(rs.getInt("difficulty"));
@@ -68,12 +68,12 @@ public class CreateEventListener extends ListenerAdapter {
                 System.out.println("Event trouve: " + od.toString());
 
                 SendPublicRichEmbed(event.getJDA(),od);
+                SendPublicMessage(event.getJDA(),".");
             }
             rs.close();
             conn.close();
         }
-        catch (SQLException ex) { ex.printStackTrace(); }
-        catch (ParseException e) { e.printStackTrace(); }
+        catch (SQLException | ParseException ex) { ex.printStackTrace(); }
     }
 
     @Override
@@ -89,15 +89,6 @@ public class CreateEventListener extends ListenerAdapter {
 
         if(event.getAuthor().isBot()) {
             System.out.println("Message du bot");
-            /*if(etape == 6 && type == 1){
-                event.getJDA().getGuildById("241110646677176320").getTextChannelById("550694482132074506").sendMessage(event.getMessage()).queue( (message) ->
-                {
-                    message.addReaction("\uD83D\uDEE1").queue();
-                    message.addReaction("\uD83D\uDC89").queue();
-                    message.addReaction("\u2694").queue();
-                    message.addReaction("\u274C").queue();
-                });
-            }*/
         }
         else {
             System.out.println("Message recu de " +
@@ -259,6 +250,10 @@ public class CreateEventListener extends ListenerAdapter {
 
     private void SendPrivateRichEmbed(User user, EmbedBuilder embedBuilder){
         user.openPrivateChannel().queue( (channel) -> channel.sendMessage(embedBuilder.build()).queue());
+    }
+
+    private void SendPublicMessage(JDA jda,String message){
+        Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getTextChannelById("550694482132074506")).sendMessage(message).queue();
     }
 
     private void SendPublicRichEmbed(JDA jda,OrganizedDate od){
