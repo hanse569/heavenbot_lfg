@@ -47,7 +47,7 @@ public class CreateEventListener extends ListenerAdapter {
         List<Message> messages = channel.getHistory().retrievePast(50).complete();
         if(messages.isEmpty() || messages.size() < 2) return;
         else{
-            System.out.println("Suppresion des messages dans le channel tada: " + channel);
+            System.out.println("Suppresion des messages dans le channel: " + channel);
             channel.deleteMessages(messages).complete();
         }
     }
