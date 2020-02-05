@@ -4,6 +4,7 @@ import hv_lfg.library.OrganizedDate;
 import hv_lfg.library.RegisteredMember;
 import hv_lfg.library.bdd;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -51,7 +52,7 @@ public class CreateEventListener extends ListenerAdapter {
         }
     }
 
-    private static void InitialiseEvent(ReadyEvent event,Guild guild){
+    private void InitialiseEvent(ReadyEvent event,Guild guild){
         Connection conn = bdd.getConn();
         ResultSet rs = bdd.getTable(conn,"SELECT idMessageDiscord,admin,instance,difficulty,date,description FROM OrganizedDate;");
         try{
@@ -66,13 +67,7 @@ public class CreateEventListener extends ListenerAdapter {
 
                 System.out.println("Event trouve: " + od.toString());
 
-                Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById("241110646677176320")).getTextChannelById("550694482132074506")).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
-                {
-                    message.addReaction("\uD83D\uDEE1").queue();
-                    message.addReaction("\uD83D\uDC89").queue();
-                    message.addReaction("\u2694").queue();
-                    message.addReaction("\u274C").queue();
-                });
+                SendPublicRichEmbed(event.getJDA(),od);
             }
             rs.close();
             conn.close();
@@ -253,13 +248,7 @@ public class CreateEventListener extends ListenerAdapter {
             tmpListDate.remove(newRaid);
             Main.addListeEvent(newRaid);
 
-            Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById("241110646677176320")).getTextChannelById("550694482132074506")).sendMessage(newRaid.getEmbedBuilder().build()).queue( (message) ->
-            {
-                message.addReaction("\uD83D\uDEE1").queue();
-                message.addReaction("\uD83D\uDC89").queue();
-                message.addReaction("\u2694").queue();
-                message.addReaction("\u274C").queue();
-            });
+            SendPublicRichEmbed(event.getJDA(),newRaid);
 
         } //Enregistrement description
     }
@@ -270,6 +259,16 @@ public class CreateEventListener extends ListenerAdapter {
 
     private void SendPrivateRichEmbed(User user, EmbedBuilder embedBuilder){
         user.openPrivateChannel().queue( (channel) -> channel.sendMessage(embedBuilder.build()).queue());
+    }
+
+    private void SendPublicRichEmbed(JDA jda,OrganizedDate od){
+        Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getTextChannelById("550694482132074506")).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
+        {
+            message.addReaction("\uD83D\uDEE1").queue();
+            message.addReaction("\uD83D\uDC89").queue();
+            message.addReaction("\u2694").queue();
+            message.addReaction("\u274C").queue();
+        });
     }
 
     private void AfficheListRaid(User user){
