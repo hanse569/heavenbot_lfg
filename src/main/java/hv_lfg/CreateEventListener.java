@@ -156,7 +156,6 @@ public class CreateEventListener extends ListenerAdapter {
                 for(int i = 0;i < Main.diff.size();i++){
                     description = description.concat(i + " " + Main.diff.get(i).getName() + "\n");
                 }
-                //eb.setDescription("1 Normal\n2 Heroique\n3 Mythique\n4 Marcheur du temps");
                 eb.setDescription(description);
 
                 this.SendPrivateRichEmbed(user,eb);
