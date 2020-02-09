@@ -24,7 +24,6 @@ public class CreateEventListener extends ListenerAdapter {
 
     private ArrayList<OrganizedDate> tmpListDate = new ArrayList<>();
     private int nr = 0;
-    private boolean isModificable = true;
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
@@ -55,8 +54,9 @@ public class CreateEventListener extends ListenerAdapter {
 
     private void InitialiseEvent(ReadyEvent event,Guild guild){
         Connection conn = bdd.getConn();
-        ResultSet rs = bdd.getTable(conn,"SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM OrganizedDate;");
+
         try{
+            ResultSet rs = bdd.getTable(conn,"SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM OrganizedDate;");
             while (rs.next()){
                 OrganizedDate od = new OrganizedDate();
                 od.setId(rs.getInt("id"));
@@ -70,11 +70,48 @@ public class CreateEventListener extends ListenerAdapter {
                 System.out.println("Event trouve: " + od.toString());
 
                 Main.listDate.add(od);
+                nr++;
+            }
+            rs.close();
 
+            /*ResultSet rsTank = bdd.getTable(conn, "SELECT * FROM ParticiperTANK;");
+            while (rsTank.next()){
+                int idEvent = rsTank.getInt("idEvent");
+                String idMember = rsTank.getString("idMember");
+
+                for (OrganizedDate od : Main.listDate){
+                    if(od.getId() == idEvent) od.addTank(conn,idMember);
+                }
+            }
+            rsTank.close();
+
+            ResultSet rsHeal = bdd.getTable(conn, "SELECT * FROM ParticiperHEAL;");
+            while (rsHeal.next()){
+                int idEvent = rsHeal.getInt("idEvent");
+                String idMember = rsHeal.getString("idMember");
+
+                for (OrganizedDate od : Main.listDate){
+                    if(od.getId() == idEvent) od.addHeal(conn,idMember);
+                }
+            }
+            rsHeal.close();
+
+            ResultSet rsDps = bdd.getTable(conn, "SELECT * FROM ParticiperDPS;");
+            while (rsDps.next()){
+                int idEvent = rsDps.getInt("idEvent");
+                String idMember = rsDps.getString("idMember");
+
+                for (OrganizedDate od : Main.listDate){
+                    if(od.getId() == idEvent) od.addDps(conn,idMember);
+                }
+            }
+            rsDps.close();*/
+
+            for (OrganizedDate od : Main.listDate){
                 SendPublicRichEmbed(event.getJDA(),od);
                 SendPublicMessage(event.getJDA(),".");
             }
-            rs.close();
+
             conn.close();
         }
         catch (SQLException | ParseException ex) { ex.printStackTrace(); }
@@ -82,12 +119,11 @@ public class CreateEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if(isModificable && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals("550694482132074506") && event.getAuthor().isBot()){
-            OrganizedDate od = Main.listDate.get(nr);
+        if(nr > 0 && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals("550694482132074506") && event.getAuthor().isBot()){
+            OrganizedDate od = Main.listDate.get(nr%(Main.listDate.size()));
             od.setIdMessageDiscord(event.getMessageId());
             bdd.updateIdMessageEvent(od.getId(),event.getMessageId());
-            nr++;
-            if(nr == 3) isModificable = false;
+            nr--;
         }
     }
 

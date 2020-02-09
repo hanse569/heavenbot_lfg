@@ -61,18 +61,19 @@ public class bdd {
             statement.setInt(2,id);
             statement.executeUpdate();
 
+            conn.close();
+
         } catch (SQLException ex) { ex.printStackTrace(); }
     }
 
-    public static void insertOrRemoveRole(String request,int idEvent,String idMember){
+    public static void insertOrRemoveRole(Connection conn,String request,int idEvent,String idMember){
         try{
-            Connection conn = bdd.getConn();
-
             PreparedStatement statement = conn.prepareStatement(request);
             statement.setInt(1,idEvent);
             statement.setString(2,idMember);
             statement.executeUpdate();
 
+            conn.close();
         } catch (SQLException ex) { ex.printStackTrace(); }
     }
 }

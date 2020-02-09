@@ -5,8 +5,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,28 +78,28 @@ public class OrganizedDate {
         return eb;
     }
 
-    public void addTank(String id) {
-        removeRoleList(id);
+    public void addTank(Connection conn, String id) {
+        removeRoleList(conn,id);
 
         TankList.add(id);
-        bdd.insertOrRemoveRole("INSERT INTO ParticiperTANK VALUES(?,?);",this.getId(),id);
+        bdd.insertOrRemoveRole(conn,"INSERT INTO ParticiperTANK VALUES(?,?);",this.getId(),id);
     }
-    public void addHeal(String id) {
-        removeRoleList(id);
+    public void addHeal(Connection conn, String id) {
+        removeRoleList(conn,id);
 
         HealList.add(id);
-        bdd.insertOrRemoveRole("INSERT INTO ParticiperHEAL VALUES(?,?);",this.getId(),id);
+        bdd.insertOrRemoveRole(conn,"INSERT INTO ParticiperHEAL VALUES(?,?);",this.getId(),id);
     }
-    public void addDps(String id) {
-        removeRoleList(id);
+    public void addDps(Connection conn, String id) {
+        removeRoleList(conn,id);
 
         DpsList.add(id);
-        bdd.insertOrRemoveRole("INSERT INTO ParticiperDPS VALUES(?,?);",this.getId(),id);
+        bdd.insertOrRemoveRole(conn,"INSERT INTO ParticiperDPS VALUES(?,?);",this.getId(),id);
     }
-    public void removeRoleList(String id){
-        if(TankList.remove(id)) bdd.insertOrRemoveRole("DELETE FROM ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
-        if(HealList.remove(id)) bdd.insertOrRemoveRole("DELETE FROM ParticiperHEAL WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
-        if(DpsList.remove(id))  bdd.insertOrRemoveRole("DELETE FROM ParticiperDPS WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
+    public void removeRoleList(Connection conn, String id){
+        if(TankList.remove(id)) bdd.insertOrRemoveRole(conn,"DELETE FROM ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
+        if(HealList.remove(id)) bdd.insertOrRemoveRole(conn,"DELETE FROM ParticiperHEAL WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
+        if(DpsList.remove(id))  bdd.insertOrRemoveRole(conn,"DELETE FROM ParticiperDPS WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
     }
 
     private String getStringOfTankList(){
