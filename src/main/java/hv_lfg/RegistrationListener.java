@@ -3,12 +3,10 @@ package hv_lfg;
 import hv_lfg.library.OrganizedDate;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public class RegistrationListener extends ListenerAdapter {
     @Override
@@ -32,26 +30,31 @@ public class RegistrationListener extends ListenerAdapter {
 
                 for (OrganizedDate tmp : Main.listDate){
                     if(tmp.getIdMessageDiscord().equals(messageId)){
+                        System.out.println("raid trouve");
                         switch (event.getReactionEmote().toString()){
                             case "RE:U+1f6e1":
+                                System.out.println("Ajout d un tank dans " + tmp.getIdMessageDiscord());
                                 tmp.addTank(realAuthor);
                                 break;
 
                             case "RE:U+1f489":
+                                System.out.println("Ajout d un heal dans " + tmp.getIdMessageDiscord());
                                 tmp.addHeal(realAuthor);
                                 break;
 
                             case "RE:U+2694":
+                                System.out.println("Ajout d un dps dans " + tmp.getIdMessageDiscord());
                                 tmp.addDps(realAuthor);
                                 break;
 
                             case "RE:U+274c":
+                                System.out.println("Suppresion dans " + tmp.getIdMessageDiscord());
                                 tmp.removeRoleList(realAuthor);
                                 break;
                         }
 
                         //ajouter l'actualisation du message
-                        event.getChannel().editMessageById(event.getMessageId(),tmp.getEmbedBuilder().build()).queue();
+                        event.getChannel().editMessageById(event.getMessageId(),tmp.getEmbedBuilder().build()).complete();
                         break;
                     }
                 }

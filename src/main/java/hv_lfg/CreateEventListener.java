@@ -5,11 +5,9 @@ import hv_lfg.library.RegisteredMember;
 import hv_lfg.library.bdd;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -66,6 +64,8 @@ public class CreateEventListener extends ListenerAdapter {
 
                 System.out.println("Event trouve: " + od.toString());
 
+                Main.listDate.add(od);
+
                 SendPublicRichEmbed(event.getJDA(),od);
                 SendPublicMessage(event.getJDA(),".");
             }
@@ -73,6 +73,15 @@ public class CreateEventListener extends ListenerAdapter {
             conn.close();
         }
         catch (SQLException | ParseException ex) { ex.printStackTrace(); }
+    }
+
+    @Override
+    public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
+        if(event.getChannel().getId().equals("550694482132074506")){
+            if(event.getAuthor().isBot()){ //Permet de relié le message à l'event
+
+            }
+        }
     }
 
     @Override
