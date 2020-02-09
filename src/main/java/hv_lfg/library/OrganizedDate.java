@@ -16,9 +16,9 @@ public class OrganizedDate {
     private int keyNumber = 0;
     private Date date;
     private String description;
-    private ArrayList<String> TankList;
-    private ArrayList<String> HealList;
-    private ArrayList<String> DpsList;
+    private ArrayList<String> TankList = new ArrayList<>();
+    private ArrayList<String> HealList = new ArrayList<>();
+    private ArrayList<String> DpsList = new ArrayList<>();
 
     public int etape = 0;
     public int type = -1;
@@ -70,37 +70,44 @@ public class OrganizedDate {
         return eb;
     }
 
-    public void AddTank(String id) { TankList.add(id);}
-    public void AddHeal(String id) { HealList.add(id);}
-    public void AddDps(String id) { DpsList.add(id);}
-    public void RemoveRoleList(String id){
+    public void addTank(String id) { TankList.add(id);}
+    public void addHeal(String id) { HealList.add(id);}
+    public void addDps(String id) { DpsList.add(id);}
+    public void removeRoleList(String id){
         TankList.remove(id);
         HealList.remove(id);
         DpsList.remove(id);
     }
 
     private String getStringOfTankList(){
-        String buffer = "";
-        for (String tmp : TankList){
-            buffer = buffer.concat(" - " + tmp);
+        if(TankList.size() > 0){
+            String buffer = "";
+            for (String tmp : TankList){
+                buffer = buffer.concat(" - " + tmp);
+            }
+            return buffer;
         }
-        return buffer;
+        return " / ";
     }
-
     private String getStringOfHealList(){
-        String buffer = "";
-        for (String tmp : HealList){
-            buffer = buffer.concat(" - " + tmp);
+        if(HealList.size() > 0){
+            String buffer = "";
+            for (String tmp : HealList){
+                buffer = buffer.concat(" - " + tmp);
+            }
+            return buffer;
         }
-        return buffer;
+        return " / ";
     }
-
     private String getStringOfDpsList(){
-        String buffer = "";
-        for (String tmp : DpsList){
-            buffer = buffer.concat(" - " + tmp);
+        if(DpsList.size() > 0){
+            String buffer = "";
+            for (String tmp : DpsList){
+                buffer = buffer.concat(" - " + tmp);
+            }
+            return buffer;
         }
-        return buffer;
+        return " / ";
     }
 
     @Override

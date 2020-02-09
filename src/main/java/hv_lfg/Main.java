@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-    private static ArrayList<OrganizedDate> listDate = new ArrayList<>();
+    static ArrayList<OrganizedDate> listDate = new ArrayList<>();
     static ArrayList<OrganizedDate> waitListDate = new ArrayList<>();
 
     public static ArrayList<Instance> Raid = new ArrayList<>();
