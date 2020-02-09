@@ -16,7 +16,9 @@ public class OrganizedDate {
     private int keyNumber = 0;
     private Date date;
     private String description;
-    private ArrayList<RegisteredMember> memberlist;
+    private ArrayList<String> TankList;
+    private ArrayList<String> HealList;
+    private ArrayList<String> DpsList;
 
     public int etape = 0;
     public int type = -1;
@@ -51,7 +53,6 @@ public class OrganizedDate {
         return dateFormat.format(this.getDateToDate());
     }
     public String getDescription() { return description; }
-    public ArrayList<RegisteredMember> getMemberlist() { return memberlist; }
 
     public EmbedBuilder getEmbedBuilder(){
         EmbedBuilder eb = new EmbedBuilder();
@@ -62,18 +63,44 @@ public class OrganizedDate {
         eb.setFooter("Cree par " + this.getAdmin().getName() + " - Powered by HeavenBot");
 
         eb.addField("Date: ","  " + this.getDateToString(),false);
-        eb.addField("TANK","  /",true);
-        eb.addField("HEAL","  /",true);
-        eb.addField("DPS","  /",false);
+        eb.addField("TANK",getStringOfTankList(),true);
+        eb.addField("HEAL",getStringOfHealList(),true);
+        eb.addField("DPS",getStringOfDpsList(),false);
 
         return eb;
     }
 
-    public void addMember(RegisteredMember member){
-        memberlist.add(member);
+    public void AddTank(String id) { TankList.add(id);}
+    public void AddHeal(String id) { HealList.add(id);}
+    public void AddDps(String id) { DpsList.add(id);}
+    public void RemoveRoleList(String id){
+        TankList.remove(id);
+        HealList.remove(id);
+        DpsList.remove(id);
     }
-    public void removeMember(RegisteredMember member){
-        memberlist.remove(member);
+
+    private String getStringOfTankList(){
+        String buffer = "";
+        for (String tmp : TankList){
+            buffer = buffer.concat(" - " + tmp);
+        }
+        return buffer;
+    }
+
+    private String getStringOfHealList(){
+        String buffer = "";
+        for (String tmp : HealList){
+            buffer = buffer.concat(" - " + tmp);
+        }
+        return buffer;
+    }
+
+    private String getStringOfDpsList(){
+        String buffer = "";
+        for (String tmp : DpsList){
+            buffer = buffer.concat(" - " + tmp);
+        }
+        return buffer;
     }
 
     @Override
