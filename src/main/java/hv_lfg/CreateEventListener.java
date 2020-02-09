@@ -36,7 +36,6 @@ public class CreateEventListener extends ListenerAdapter {
                 if(guild.getId().equals("241110646677176320")){
                     System.out.println("Connecte a " + guild.getName());
                     clear(guild.getTextChannelById("550694482132074506"));
-                    //lecture des raids
                     InitialiseEvent(event,guild);
                 }
             }
