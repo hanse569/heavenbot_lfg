@@ -30,7 +30,6 @@ public class RegistrationListener extends ListenerAdapter {
 
                 for (OrganizedDate tmp : Main.listDate){
                     if(tmp.getIdMessageDiscord().equals(messageId)){
-                        System.out.println("raid trouve");
                         switch (event.getReactionEmote().toString()){
                             case "RE:U+1f6e1":
                                 System.out.println("Ajout d un tank dans " + tmp.getIdMessageDiscord());
