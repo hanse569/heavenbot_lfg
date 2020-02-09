@@ -23,6 +23,8 @@ import java.util.*;
 public class CreateEventListener extends ListenerAdapter {
 
     private ArrayList<OrganizedDate> tmpListDate = new ArrayList<>();
+    private int nr = 0;
+    private boolean isModificable = true;
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
@@ -30,6 +32,8 @@ public class CreateEventListener extends ListenerAdapter {
             System.out.println("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
         }
         else{
+            OrganizedDate.jda = event.getJDA();
+
             for (Guild guild : event.getJDA().getGuilds()){
                 if(guild.getId().equals("241110646677176320")){
                     System.out.println("Connecte a " + guild.getName());
@@ -51,10 +55,11 @@ public class CreateEventListener extends ListenerAdapter {
 
     private void InitialiseEvent(ReadyEvent event,Guild guild){
         Connection conn = bdd.getConn();
-        ResultSet rs = bdd.getTable(conn,"SELECT idMessageDiscord,admin,instance,difficulty,date,description FROM OrganizedDate;");
+        ResultSet rs = bdd.getTable(conn,"SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM OrganizedDate;");
         try{
             while (rs.next()){
                 OrganizedDate od = new OrganizedDate();
+                od.setId(rs.getInt("id"));
                 od.setAdmin(new RegisteredMember(rs.getString("admin"),guild.getMemberById(rs.getString("admin")).getEffectiveName()));
                 od.setIdMessageDiscord(rs.getString("idMessageDiscord"));
                 od.setInstance(rs.getInt("instance"));
@@ -77,10 +82,12 @@ public class CreateEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if(event.getChannel().getId().equals("550694482132074506")){
-            if(event.getAuthor().isBot()){ //Permet de relié le message à l'event
-
-            }
+        if(isModificable && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals("550694482132074506") && event.getAuthor().isBot()){
+            OrganizedDate od = Main.listDate.get(nr);
+            od.setIdMessageDiscord(event.getMessageId());
+            bdd.updateIdMessageEvent(od.getId(),event.getMessageId());
+            nr++;
+            if(nr == 3) isModificable = false;
         }
     }
 

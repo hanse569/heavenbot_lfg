@@ -2,13 +2,18 @@ package hv_lfg.library;
 
 import hv_lfg.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class OrganizedDate {
+    public static JDA jda;
+
+    private int id;
     private String idMessageDiscord;
     private RegisteredMember admin;
     private int instance;
@@ -25,6 +30,7 @@ public class OrganizedDate {
 
     public OrganizedDate() { }
     public OrganizedDate(RegisteredMember admin) { this.admin = admin; }
+    public void setId(int id) { this.id = id; }
     public void setAdmin(RegisteredMember admin) { this.admin = admin; }
     public void setIdMessageDiscord(String id) { this.idMessageDiscord = id; }
     public void setInstance(int instance) {
@@ -41,6 +47,7 @@ public class OrganizedDate {
         this.keyNumber = keyNumber;
     }
 
+    public int getId() { return id; }
     public RegisteredMember getAdmin() { return admin; }
     public String getIdMessageDiscord() { return idMessageDiscord; }
     public int getInstance() { return instance; }
@@ -70,9 +77,9 @@ public class OrganizedDate {
         return eb;
     }
 
-    public void addTank(String id) { TankList.add(id);}
-    public void addHeal(String id) { HealList.add(id);}
-    public void addDps(String id) { DpsList.add(id);}
+    public void addTank(String id) { removeRoleList(id); TankList.add(id);}
+    public void addHeal(String id) { removeRoleList(id); HealList.add(id);}
+    public void addDps(String id) { removeRoleList(id); DpsList.add(id);}
     public void removeRoleList(String id){
         TankList.remove(id);
         HealList.remove(id);
@@ -83,7 +90,7 @@ public class OrganizedDate {
         if(TankList.size() > 0){
             String buffer = "";
             for (String tmp : TankList){
-                buffer = buffer.concat(" - " + tmp);
+                buffer = buffer.concat(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getMemberById(tmp).getEffectiveName() + "  ");
             }
             return buffer;
         }
@@ -93,7 +100,7 @@ public class OrganizedDate {
         if(HealList.size() > 0){
             String buffer = "";
             for (String tmp : HealList){
-                buffer = buffer.concat(" - " + tmp);
+                buffer = buffer.concat(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getMemberById(tmp).getEffectiveName() + "  ");
             }
             return buffer;
         }
@@ -103,7 +110,7 @@ public class OrganizedDate {
         if(DpsList.size() > 0){
             String buffer = "";
             for (String tmp : DpsList){
-                buffer = buffer.concat(" - " + tmp);
+                buffer = buffer.concat(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getMemberById(tmp).getEffectiveName() + "  ");
             }
             return buffer;
         }

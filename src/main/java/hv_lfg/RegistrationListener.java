@@ -16,11 +16,10 @@ public class RegistrationListener extends ListenerAdapter {
             MessageEmbed me = message.getEmbeds().get(0);
             String messageId = event.getMessageId();
 
-            String realAuthor = me.getFooter().getText();
-            realAuthor = realAuthor.substring("Cree par ".length(),realAuthor.length()-  " - Powered by HeavenBot".length());
-
-
             if(event.getUser().isBot()){ //Permet de relié le message à l'event
+                String realAuthor = me.getFooter().getText();
+                realAuthor = realAuthor.substring("Cree par ".length(),realAuthor.length()-  " - Powered by HeavenBot".length());
+
                 OrganizedDate od = null;
                 for (OrganizedDate tmp: Main.waitListDate) if(tmp.getAdmin().getName().equals(realAuthor)) od = tmp;
                 if(od != null) Main.confirmEvent(od,messageId);
@@ -33,22 +32,22 @@ public class RegistrationListener extends ListenerAdapter {
                         switch (event.getReactionEmote().toString()){
                             case "RE:U+1f6e1":
                                 System.out.println("Ajout d un tank dans " + tmp.getIdMessageDiscord());
-                                tmp.addTank(realAuthor);
+                                tmp.addTank(event.getUser().getId());
                                 break;
 
                             case "RE:U+1f489":
                                 System.out.println("Ajout d un heal dans " + tmp.getIdMessageDiscord());
-                                tmp.addHeal(realAuthor);
+                                tmp.addHeal(event.getUser().getId());
                                 break;
 
                             case "RE:U+2694":
                                 System.out.println("Ajout d un dps dans " + tmp.getIdMessageDiscord());
-                                tmp.addDps(realAuthor);
+                                tmp.addDps(event.getUser().getId());
                                 break;
 
                             case "RE:U+274c":
                                 System.out.println("Suppresion dans " + tmp.getIdMessageDiscord());
-                                tmp.removeRoleList(realAuthor);
+                                tmp.removeRoleList(event.getUser().getId());
                                 break;
                         }
 

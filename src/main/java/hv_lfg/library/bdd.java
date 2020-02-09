@@ -50,4 +50,17 @@ public class bdd {
             } catch (SQLException ex) { ex.printStackTrace(); }
         }
     }
+
+    public static void updateIdMessageEvent(int id,String newIdMessageDiscord){
+        try{
+            Connection conn = bdd.getConn();
+
+            String myStatement = "UPDATE OrganizedDate set idMessageDiscord = ? WHERE id = ?;";
+            PreparedStatement statement = conn.prepareStatement(myStatement);
+            statement.setString(1,newIdMessageDiscord);
+            statement.setInt(2,id);
+            statement.executeUpdate();
+
+        } catch (SQLException ex) { ex.printStackTrace(); }
+    }
 }
