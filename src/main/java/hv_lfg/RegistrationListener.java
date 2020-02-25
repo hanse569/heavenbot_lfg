@@ -1,7 +1,6 @@
 package hv_lfg;
 
 import hv_lfg.library.OrganizedDate;
-import hv_lfg.library.bdd;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -33,22 +32,22 @@ public class RegistrationListener extends ListenerAdapter {
                         switch (event.getReactionEmote().toString()){
                             case "RE:U+1f6e1":
                                 System.out.println("Ajout d un tank dans " + tmp.getIdMessageDiscord());
-                                tmp.addTank(bdd.getConn(), event.getUser().getId());
+                                tmp.addTank(event.getUser().getId());
                                 break;
 
                             case "RE:U+1f489":
                                 System.out.println("Ajout d un heal dans " + tmp.getIdMessageDiscord());
-                                tmp.addHeal(bdd.getConn(),event.getUser().getId());
+                                tmp.addHeal(event.getUser().getId());
                                 break;
 
                             case "RE:U+2694":
                                 System.out.println("Ajout d un dps dans " + tmp.getIdMessageDiscord());
-                                tmp.addDps(bdd.getConn(),event.getUser().getId());
+                                tmp.addDps(event.getUser().getId());
                                 break;
 
                             case "RE:U+274c":
                                 System.out.println("Suppresion dans " + tmp.getIdMessageDiscord());
-                                tmp.removeRoleList(bdd.getConn(),event.getUser().getId());
+                                tmp.removeRoleList(event.getUser().getId());
                                 break;
                         }
 

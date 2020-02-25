@@ -37,8 +37,7 @@ public class Main {
     }
 
     private static void InitialiseRaid(){
-        Connection conn = bdd.getConn();
-        ResultSet rs = bdd.getTable(conn,"SELECT * FROM ViewRaid");
+        ResultSet rs = bdd.getTable("SELECT * FROM ViewRaid");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
@@ -49,14 +48,12 @@ public class Main {
                 Raid.add(instance);
             }
             rs.close();
-            conn.close();
         }
         catch (SQLException ex) { ex.printStackTrace(); }
     }
 
     private static void InitialiseDonjon(){
-        Connection conn = bdd.getConn();
-        ResultSet rs = bdd.getTable(conn,"SELECT * FROM ViewDonjon");
+        ResultSet rs = bdd.getTable("SELECT * FROM ViewDonjon");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
@@ -67,14 +64,12 @@ public class Main {
                 Donjon.add(instance);
             }
             rs.close();
-            conn.close();
         }
         catch (SQLException ex) { ex.printStackTrace(); }
     }
 
     private static void InitialiseBattleground(){
-        Connection conn = bdd.getConn();
-        ResultSet rs = bdd.getTable(conn,"SELECT * FROM ViewBattleground");
+        ResultSet rs = bdd.getTable("SELECT * FROM ViewBattleground");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
@@ -84,14 +79,12 @@ public class Main {
                 BattleGround.add(instance);
             }
             rs.close();
-            conn.close();
         }
         catch (SQLException ex) { ex.printStackTrace(); }
     }
 
     private static void InitialiseArene(){
-        Connection conn = bdd.getConn();
-        ResultSet rs = bdd.getTable(conn,"SELECT * FROM ViewArene");
+        ResultSet rs = bdd.getTable("SELECT * FROM ViewArene");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
@@ -101,14 +94,12 @@ public class Main {
                 Arene.add(instance);
             }
             rs.close();
-            conn.close();
         }
         catch (SQLException ex) { ex.printStackTrace(); }
     }
 
     private static void InitialiseDifficulty(){
-        Connection conn = bdd.getConn();
-        ResultSet rs = bdd.getTable(conn,"SELECT * FROM Difficulty");
+        ResultSet rs = bdd.getTable("SELECT * FROM Difficulty");
         try{
             while (rs.next()){
                 Difficulty difficulty = new Difficulty();
@@ -118,7 +109,6 @@ public class Main {
                 diff.add(difficulty);
             }
             rs.close();
-            conn.close();
         }
         catch (SQLException ex) { ex.printStackTrace(); }
     }
