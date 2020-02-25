@@ -41,7 +41,7 @@ public class bdd {
                 statement.setString(2,od.getAdmin().getIdDiscord());
                 statement.setInt(3,od.getInstance());
                 statement.setInt(4,od.getDifficulty());
-                statement.setString(5,od.getDateToString());
+                statement.setString(5,od.getDateToRequest());
                 statement.setString(6,od.getDescription().replace("'","''"));
 
                 statement.executeUpdate();

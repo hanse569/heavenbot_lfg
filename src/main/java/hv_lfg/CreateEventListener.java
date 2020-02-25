@@ -235,11 +235,9 @@ public class CreateEventListener extends ListenerAdapter {
             }
         } //Enregistrement difficulté et Demande date
         else if(newRaid.etape == 3){
-            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-            df.setTimeZone(TimeZone.getTimeZone("Europe/Brussels"));
-            Date date;
             try{
-                date = df.parse(msg.getContentDisplay());
+                DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = df.parse(msg.getContentDisplay());
                 newRaid.setDate(date);
 
                 EmbedBuilder eb = new EmbedBuilder();
@@ -259,12 +257,15 @@ public class CreateEventListener extends ListenerAdapter {
             }
         } //Enregristement date et demande heure
         else if(newRaid.etape == 4){
-            DateFormat df = new SimpleDateFormat("HH:mm", Locale.FRANCE);
-            //df.setTimeZone(TimeZone.getTimeZone("Europe/Brussels"));
-            Date date;
             try{
-                date = df.parse(msg.getContentDisplay());
-                newRaid.setDate(new Date(newRaid.getDateToDate().getTime() + date.getTime()));
+                DateFormat df = new SimpleDateFormat("HH:mm");
+                Date date = df.parse(msg.getContentDisplay());
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(newRaid.getDateToDate());
+                calendar.add(Calendar.HOUR,date.getHours());
+                calendar.add(Calendar.MINUTE,date.getMinutes());
+                newRaid.setDate(calendar.getTime());
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");

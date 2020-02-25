@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class OrganizedDate {
@@ -52,11 +53,12 @@ public class OrganizedDate {
     public int getKeyNumber() { return keyNumber; }
     public Date getDateToDate() { return date; }
     public String getDateToString() {
-        /*SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
-        return dateFormat.format(this.getDateToDate());*/
-
         return DateFormat.getDateTimeInstance(DateFormat.FULL,DateFormat.SHORT,Locale.FRANCE).format(this.getDateToDate());//Depuis Dossier LCR
+    }
+    public String getDateToRequest(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
+        return dateFormat.format(this.getDateToDate());
     }
     public String getDescription() { return description; }
 
