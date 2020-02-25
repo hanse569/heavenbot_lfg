@@ -4,11 +4,8 @@ import hv_lfg.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.text.DateFormat;
+import java.util.*;
 
 public class OrganizedDate {
     public static JDA jda;
@@ -55,9 +52,11 @@ public class OrganizedDate {
     public int getKeyNumber() { return keyNumber; }
     public Date getDateToDate() { return date; }
     public String getDateToString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
+        /*SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
-        return dateFormat.format(this.getDateToDate());
+        return dateFormat.format(this.getDateToDate());*/
+
+        return DateFormat.getDateTimeInstance(DateFormat.FULL,DateFormat.SHORT,Locale.FRANCE).format(this.getDateToDate());//Depuis Dossier LCR
     }
     public String getDescription() { return description; }
 
