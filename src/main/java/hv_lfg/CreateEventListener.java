@@ -105,10 +105,13 @@ public class CreateEventListener extends ListenerAdapter {
             }
             rsDps.close();
 
+            Main.TriListInstance();
+
             for (OrganizedDate od : Main.listDate){
                 SendPublicRichEmbed(event.getJDA(),od);
                 SendPublicMessage(event.getJDA(),".");
             }
+
         }
         catch (SQLException | ParseException ex) { ex.printStackTrace(); }
     }

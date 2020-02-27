@@ -2,12 +2,13 @@ package hv_lfg.library;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class OrganizedDate {
+public class OrganizedDate implements Comparable<OrganizedDate>{
     public static JDA jda;
 
     private int id;
@@ -135,5 +136,10 @@ public class OrganizedDate {
     @Override
     public String toString() {
         return this.getInstance().getName() + " de " + this.getAdmin().getName() + " le " + this.getDateToString();
+    }
+
+    @Override
+    public int compareTo(@NotNull OrganizedDate o) {
+        return this.date.compareTo(o.date);
     }
 }

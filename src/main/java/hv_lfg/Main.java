@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.JDABuilder;
 import javax.security.auth.login.LoginException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Main {
 
@@ -123,5 +125,9 @@ public class Main {
         listDate.add(od);
 
         bdd.addEvent(od);
+    }
+
+    static void TriListInstance(){
+        Collections.sort(listDate);
     }
 }
