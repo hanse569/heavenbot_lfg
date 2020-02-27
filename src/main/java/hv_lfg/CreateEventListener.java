@@ -1,8 +1,6 @@
 package hv_lfg;
 
-import hv_lfg.library.OrganizedDate;
-import hv_lfg.library.RegisteredMember;
-import hv_lfg.library.bdd;
+import hv_lfg.library.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -55,19 +53,22 @@ public class CreateEventListener extends ListenerAdapter {
         try{
             ResultSet rs = bdd.getTable("SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM OrganizedDate;");
             while (rs.next()){
-                OrganizedDate od = new OrganizedDate();
-                od.setId(rs.getInt("id"));
-                od.setAdmin(new RegisteredMember(rs.getString("admin"),guild.getMemberById(rs.getString("admin")).getEffectiveName()));
-                od.setIdMessageDiscord(rs.getString("idMessageDiscord"));
-                od.setInstance(rs.getInt("instance"));
-                od.setDifficulty(rs.getInt("difficulty"));
-                od.setDate(new SimpleDateFormat("dd/MM/yyyy hh:mm aa").parse(rs.getString("date")));
-                od.setDescription(rs.getString("description"));
+                try{
+                    OrganizedDate od = new OrganizedDate();
+                    od.setId(rs.getInt("id"));
+                    od.setAdmin(new RegisteredMember(rs.getString("admin"),guild.getMemberById(rs.getString("admin")).getEffectiveName()));
+                    od.setInstance(this.getInstanceObjectWithId(rs.getInt("instance")));
+                    od.setDifficulty(rs.getInt("difficulty"));
+                    od.setDate(new SimpleDateFormat("dd/MM/yyyy hh:mm aa").parse(rs.getString("date")));
+                    od.setDescription(rs.getString("description"));
 
-                System.out.println("Event trouve: " + od.toString());
+                    System.out.println("Event trouve: " + od.toString());
 
-                Main.listDate.add(od);
-                nr++;
+                    Main.listDate.add(od);
+                    nr++;
+                }
+                catch (NotFoundException ex) { ex.toString(); }
+
             }
             rs.close();
 
@@ -112,6 +113,37 @@ public class CreateEventListener extends ListenerAdapter {
         catch (SQLException | ParseException ex) { ex.printStackTrace(); }
     }
 
+    private Instance getInstanceObjectWithId(int val) throws NotFoundException{
+        for (Instance obj : Main.Raid){
+            if(obj.getIdInstance() == val){
+                return obj;
+            }
+        }
+
+        for (Instance obj : Main.Donjon){
+            if(obj.getIdInstance() == val){
+                return obj;
+            }
+        }
+
+        throw new NotFoundException();
+    }
+
+    private Instance getInstanceObjectWithOrder(int type,int val) throws NotFoundException{
+        Instance instance = null;
+
+        if(type == 1){
+            instance = Main.Raid.get(val);
+            if(instance != null) return instance;
+        }
+        else if(type == 2){
+            instance = Main.Donjon.get(val);
+            if(instance != null) return instance;
+        }
+
+        throw new NotFoundException();
+    }
+
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
         if(nr > 0 && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals("550694482132074506") && event.getAuthor().isBot()){
@@ -126,10 +158,10 @@ public class CreateEventListener extends ListenerAdapter {
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
-        OrganizedDate newRaid = null;
+        OrganizedDate newOD = null;
         for (OrganizedDate obj: tmpListDate) {
             if(obj.getAdmin().getIdDiscord().equals(user.getId()))
-                newRaid = obj;
+                newOD = obj;
         }
 
         if(event.getAuthor().isBot()) {
@@ -141,24 +173,24 @@ public class CreateEventListener extends ListenerAdapter {
                     event.getMessage().getContentDisplay()
             );
 
-            if(newRaid==null) {
-                newRaid = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
-                tmpListDate.add(newRaid);
+            if(newOD==null) {
+                newOD = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
+                tmpListDate.add(newOD);
             }
 
-            if(newRaid.etape == 0){
+            if(newOD.etape == 0){
                 if(msg.getContentDisplay().startsWith("!lfg raid")){
                     AfficheListRaid(user);
 
-                    newRaid.type = 1;
-                    newRaid.etape++;
+                    newOD.type = 1;
+                    newOD.etape++;
                 }
-                /*else if(msg.getContentDisplay().startsWith("!lfg donjon")){
-                    tmpDate = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
-                    this.SendPrivateMessage(user,"**Creation d'un donjon**");
-                    this.etape = 2;
-                    etape++;
-                }
+                else if(msg.getContentDisplay().startsWith("!lfg donjon")){
+                    AfficheListDonjon(user);
+
+                    newOD.type = 2;
+                    newOD.etape++;
+                }/*
                 else if(msg.getContentDisplay().startsWith("!lfg bg")){
                     tmpDate = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
                     this.SendPrivateMessage(user,"**Creation d'un bg**");
@@ -175,23 +207,23 @@ public class CreateEventListener extends ListenerAdapter {
                     this.SendPrivateMessage(user);
                 }
             }
-            else if(newRaid.etape > 0){
-                if(newRaid.type == 1){//type = raid
-                    ProgrammationRaid(event,newRaid);
+            else if(newOD.type > 0){
+                if(newOD.type == 1 || newOD.type == 2){
+                    ProgrammationInstance(event,newOD);
                 }
             }
 
         }
     }
 
-    private void ProgrammationRaid(PrivateMessageReceivedEvent event, OrganizedDate newRaid){
+    private void ProgrammationInstance(PrivateMessageReceivedEvent event, OrganizedDate newRaid){
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
         if(newRaid.etape == 1){ //Enregistrement raid et Demande difficulté
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
-                newRaid.setInstance(val-1);
+                newRaid.setInstance(this.getInstanceObjectWithOrder(newRaid.type,val-1));
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
@@ -207,7 +239,7 @@ public class CreateEventListener extends ListenerAdapter {
 
                 newRaid.etape++;
             }
-            catch(NumberFormatException ex){
+            catch(NumberFormatException | NotFoundException ex){
                 AfficheListRaid(user);
             }
 
@@ -324,6 +356,18 @@ public class CreateEventListener extends ListenerAdapter {
         String temp = "";
         for (int i = 0;i < Main.Raid.size();i++){
             temp = temp.concat((i+1) + " " + Main.Raid.get(i) + "\n");
+        }
+        eb.setDescription(temp);
+        this.SendPrivateRichEmbed(user,eb);
+    }
+
+    private void AfficheListDonjon(User user){
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor("Creation d'un donjon");
+        eb.setTitle("Choisissez l'instance a l'aide du numero: ");
+        String temp = "";
+        for (int i = 0;i < Main.Donjon.size();i++){
+            temp = temp.concat((i+1) + " " + Main.Donjon.get(i) + "\n");
         }
         eb.setDescription(temp);
         this.SendPrivateRichEmbed(user,eb);

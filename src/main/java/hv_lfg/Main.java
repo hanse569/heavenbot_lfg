@@ -13,11 +13,11 @@ public class Main {
     static ArrayList<OrganizedDate> listDate = new ArrayList<>();
     static ArrayList<OrganizedDate> waitListDate = new ArrayList<>();
 
-    public static ArrayList<Instance> Raid = new ArrayList<>();
-    private static ArrayList<Instance> Donjon = new ArrayList<>();
-    private static ArrayList<Instance> BattleGround = new ArrayList<>();
-    private static ArrayList<Instance> Arene = new ArrayList<>();
-    public static ArrayList<Difficulty> diff = new ArrayList<>();
+    public final static ArrayList<Instance> Raid = new ArrayList<>();
+    public final static ArrayList<Instance> Donjon = new ArrayList<>();
+    public final static ArrayList<Instance> BattleGround = new ArrayList<>();
+    public final static ArrayList<Instance> Arene = new ArrayList<>();
+    public final static ArrayList<Difficulty> diff = new ArrayList<>();
 
     public static void main(String[] args) throws LoginException {
         InitialiseRaid();
@@ -28,7 +28,6 @@ public class Main {
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         builder.setToken("NTUwNjkyOTI0NzE1OTU4Mjgz.XVMwhw.W62qdD2FPvgB7rewV5AmpwfknsY");
-
 
         builder.addEventListeners(new CreateEventListener());
         builder.addEventListeners(new RegistrationListener());

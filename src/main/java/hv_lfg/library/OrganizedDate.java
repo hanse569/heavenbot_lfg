@@ -1,6 +1,5 @@
 package hv_lfg.library;
 
-import hv_lfg.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 
@@ -14,7 +13,7 @@ public class OrganizedDate {
     private int id;
     private String idMessageDiscord;
     private RegisteredMember admin;
-    private int instance;
+    private Instance instance;
     private int difficulty;
     private int keyNumber = 0;
     private Date date;
@@ -31,7 +30,7 @@ public class OrganizedDate {
     public void setId(int id) { this.id = id; }
     public void setAdmin(RegisteredMember admin) { this.admin = admin; }
     public void setIdMessageDiscord(String id) { this.idMessageDiscord = id; }
-    public void setInstance(int instance) {
+    public void setInstance(Instance instance) {
         this.instance = instance;
     }
     public void setDate(Date date) {
@@ -48,7 +47,7 @@ public class OrganizedDate {
     public int getId() { return id; }
     public RegisteredMember getAdmin() { return admin; }
     public String getIdMessageDiscord() { return idMessageDiscord; }
-    public int getInstance() { return instance; }
+    public Instance getInstance() { return instance; }
     public int getDifficulty() { return difficulty; }
     public int getKeyNumber() { return keyNumber; }
     public Date getDateToDate() { return date; }
@@ -65,9 +64,9 @@ public class OrganizedDate {
     public EmbedBuilder getEmbedBuilder(){
         EmbedBuilder eb = new EmbedBuilder();
 
-        eb.setTitle(Main.Raid.get(this.getInstance()).getName());
+        eb.setTitle(this.getInstance().getName());
         eb.setDescription(this.getDescription());
-        eb.setThumbnail(Main.Raid.get(this.getInstance()).getThumbmail());
+        eb.setThumbnail(this.getInstance().getThumbmail());
         eb.setFooter("Cree par " + this.getAdmin().getName() + " - Powered by HeavenBot");
 
         eb.addField("Date: ","  " + this.getDateToString(),false);
@@ -135,6 +134,6 @@ public class OrganizedDate {
 
     @Override
     public String toString() {
-        return Main.Raid.get(this.getInstance()).getName() + " de " + this.getAdmin().getName() + " le " + this.getDateToString();
+        return this.getInstance().getName() + " de " + this.getAdmin().getName() + " le " + this.getDateToString();
     }
 }

@@ -39,7 +39,7 @@ public class bdd {
                 PreparedStatement statement = conn.prepareStatement(myStatement);
                 statement.setString(1,od.getIdMessageDiscord());
                 statement.setString(2,od.getAdmin().getIdDiscord());
-                statement.setInt(3,od.getInstance());
+                statement.setInt(3,od.getInstance().getIdInstance());
                 statement.setInt(4,od.getDifficulty());
                 statement.setString(5,od.getDateToRequest());
                 statement.setString(6,od.getDescription().replace("'","''"));

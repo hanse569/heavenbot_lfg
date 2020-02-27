@@ -17,7 +17,7 @@ public class Instance {
 
     public int getIdInstance() { return idInstance; }
     public String getName() { return name; }
-    public int getId() { return type; }
+    public int getType() { return type; }
     public String getThumbmail() { return thumbnail; }
 
     public void setIdInstance(int idInstance) { this.idInstance = idInstance; }
