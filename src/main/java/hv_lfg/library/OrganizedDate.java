@@ -135,7 +135,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
 
     @Override
     public String toString() {
-        return this.getInstance().getName() + " de " + this.getAdmin().getName() + " le " + this.getDateToString();
+        return this.getInstance().getName() + " de " + this.getAdmin().getName() + " le " + this.getDateToRequest();
     }
 
     @Override
