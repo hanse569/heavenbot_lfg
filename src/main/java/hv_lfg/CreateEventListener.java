@@ -230,12 +230,7 @@ public class CreateEventListener extends ListenerAdapter {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
-
-                String description = "";
-                for(int i = 0;i < Main.diff.size();i++){
-                    description = description.concat(i + " " + Main.diff.get(i).getName() + "\n");
-                }
-                eb.setDescription(description);
+                eb.setDescription("1 Normal\n2 Heroique\n3 Mythique");
 
                 this.SendPrivateRichEmbed(user,eb);
 
