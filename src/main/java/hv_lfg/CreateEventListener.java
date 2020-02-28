@@ -33,8 +33,8 @@ public class CreateEventListener extends ListenerAdapter {
             for (Guild guild : event.getJDA().getGuilds()){
                 if(guild.getId().equals("241110646677176320")){
                     System.out.println("Connecte a " + guild.getName());
-                    clear(guild.getTextChannelById("550694482132074506"));
-                    InitialiseEvent(event,guild);
+                    clear(Objects.requireNonNull(guild.getTextChannelById("550694482132074506")));
+                    InitialiseEvent(event);
                 }
             }
         }
@@ -42,14 +42,13 @@ public class CreateEventListener extends ListenerAdapter {
 
     private void clear(TextChannel channel){
         List<Message> messages = channel.getHistory().retrievePast(50).complete();
-        if(messages.isEmpty() || messages.size() < 2) return;
-        else{
+        if(!(messages.isEmpty() || messages.size() < 2)) {
             System.out.println("Suppresion des messages dans le channel: " + channel);
             channel.deleteMessages(messages).complete();
         }
     }
 
-    private void InitialiseEvent(ReadyEvent event,Guild guild){
+    private void InitialiseEvent(ReadyEvent event){
         try{
             ResultSet rs = bdd.getTable("SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM OrganizedDate;");
             while (rs.next()){
@@ -67,7 +66,7 @@ public class CreateEventListener extends ListenerAdapter {
                     Main.listDate.add(od);
                     nr++;
                 }
-                catch (NotFoundException ex) { ex.toString(); }
+                catch (NotFoundException ex) { ex.printStackTrace();}
 
             }
             rs.close();
@@ -133,7 +132,7 @@ public class CreateEventListener extends ListenerAdapter {
     }
 
     private Instance getInstanceObjectWithOrder(int type,int val) throws NotFoundException{
-        Instance instance = null;
+        Instance instance;
 
         if(type == 1){
             instance = Main.Raid.get(val);
@@ -296,11 +295,13 @@ public class CreateEventListener extends ListenerAdapter {
                 DateFormat df = new SimpleDateFormat("HH:mm");
                 Date date = df.parse(msg.getContentDisplay());
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(newRaid.getDateToDate());
-                calendar.add(Calendar.HOUR,date.getHours());
-                calendar.add(Calendar.MINUTE,date.getMinutes());
-                newRaid.setDate(calendar.getTime());
+                Calendar newDate = Calendar.getInstance();
+                newDate.setTime(newRaid.getDateToDate());
+                Calendar heure = Calendar.getInstance();
+                heure.setTime(date);
+                newDate.add(Calendar.HOUR,heure.get(Calendar.HOUR_OF_DAY));
+                newDate.add(Calendar.MINUTE,heure.get(Calendar.MINUTE));
+                newRaid.setDate(newDate.getTime());
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");

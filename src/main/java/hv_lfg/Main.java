@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import javax.security.auth.login.LoginException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -17,18 +16,16 @@ public class Main {
     static ArrayList<OrganizedDate> listDate = new ArrayList<>();
     static ArrayList<OrganizedDate> waitListDate = new ArrayList<>();
 
-    public final static ArrayList<Instance> Raid = new ArrayList<>();
-    public final static ArrayList<Instance> Donjon = new ArrayList<>();
-    public final static ArrayList<Instance> BattleGround = new ArrayList<>();
-    public final static ArrayList<Instance> Arene = new ArrayList<>();
-    public final static ArrayList<Difficulty> diff = new ArrayList<>();
+    final static ArrayList<Instance> Raid = new ArrayList<>();
+    final static ArrayList<Instance> Donjon = new ArrayList<>();
+    private final static ArrayList<Instance> BattleGround = new ArrayList<>();
+    private final static ArrayList<Instance> Arene = new ArrayList<>();
 
     public static void main(String[] args) throws LoginException {
         InitialiseRaid();
         InitialiseDonjon();
         InitialiseBattleground();
         InitialiseArene();
-        InitialiseDifficulty();
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         builder.setToken("NTUwNjkyOTI0NzE1OTU4Mjgz.XVMwhw.W62qdD2FPvgB7rewV5AmpwfknsY");
@@ -95,21 +92,6 @@ public class Main {
                 instance.setName(rs.getString("name"));
                 instance.setThumbmail(rs.getString("thumbmail"));
                 Arene.add(instance);
-            }
-            rs.close();
-        }
-        catch (SQLException ex) { ex.printStackTrace(); }
-    }
-
-    private static void InitialiseDifficulty(){
-        ResultSet rs = bdd.getTable("SELECT * FROM Difficulty");
-        try{
-            while (rs.next()){
-                Difficulty difficulty = new Difficulty();
-                difficulty.setId(rs.getInt("id"));
-                difficulty.setName(rs.getString("name"));
-
-                diff.add(difficulty);
             }
             rs.close();
         }

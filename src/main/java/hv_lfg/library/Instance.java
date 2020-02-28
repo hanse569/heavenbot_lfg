@@ -6,14 +6,7 @@ public class Instance {
     private int type;
     private String thumbnail;
 
-    public Instance() {
-    }
-
-    public Instance(int idInstance, String name, String thumbnail) {
-        this.idInstance = idInstance;
-        this.name = name;
-        this.thumbnail = thumbnail;
-    }
+    public Instance() {}
 
     public int getIdInstance() { return idInstance; }
     public String getName() { return name; }

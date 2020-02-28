@@ -25,13 +25,6 @@ public class bdd {
         return rs;
     }
 
-    public static void Insert(String query){
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(query);
-        } catch (SQLException ex) { ex.printStackTrace(); }
-    }
-
     public static void addEvent(OrganizedDate od) {
         if(od != null){
             try {
@@ -49,7 +42,7 @@ public class bdd {
         }
     }
 
-    public static void insertOrRemoveRole(String request,int idEvent,String idMember){
+    static void insertOrRemoveRole(String request, int idEvent, String idMember){
         try{
             PreparedStatement statement = conn.prepareStatement(request);
             statement.setInt(1,idEvent);
