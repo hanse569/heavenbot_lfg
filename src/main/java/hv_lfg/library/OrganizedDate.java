@@ -1,5 +1,6 @@
 package hv_lfg.library;
 
+import hv_lfg.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
 
     private int id;
     private String idMessageDiscord;
-    private RegisteredMember admin;
+    private String admin;
     private Instance instance;
     private int difficulty;
     private int keyNumber = 0;
@@ -27,9 +28,9 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     public int type = -1;
 
     public OrganizedDate() { }
-    public OrganizedDate(RegisteredMember admin) { this.admin = admin; }
+    public OrganizedDate(String admin) { this.setAdmin(admin); }
     public void setId(int id) { this.id = id; }
-    public void setAdmin(RegisteredMember admin) { this.admin = admin; }
+    public void setAdmin(String admin) { this.admin = admin; }
     public void setIdMessageDiscord(String id) { this.idMessageDiscord = id; }
     public void setInstance(Instance instance) {
         this.instance = instance;
@@ -46,11 +47,11 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     }
 
     public int getId() { return id; }
-    public RegisteredMember getAdmin() { return admin; }
+    public String getAdminId() { return this.admin; }
+    public String getAdmin() { return Main.getNameOfMember(jda,this.admin); }
     public String getIdMessageDiscord() { return idMessageDiscord; }
     public Instance getInstance() { return instance; }
     public int getDifficulty() { return difficulty; }
-    public int getKeyNumber() { return keyNumber; }
     public Date getDateToDate() { return date; }
     public String getDateToString() {
         return DateFormat.getDateTimeInstance(DateFormat.FULL,DateFormat.SHORT,Locale.FRANCE).format(this.getDateToDate());//Depuis Dossier LCR
@@ -61,6 +62,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         return dateFormat.format(this.getDateToDate());
     }
     public String getDescription() { return description; }
+    public int getKeyNumber() { return keyNumber; }
 
     public EmbedBuilder getEmbedBuilder(){
         EmbedBuilder eb = new EmbedBuilder();
@@ -68,7 +70,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         eb.setTitle(this.getInstance().getName());
         eb.setDescription(this.getDescription());
         eb.setThumbnail(this.getInstance().getThumbmail());
-        eb.setFooter("Cree par " + this.getAdmin().getName() + " - Powered by HeavenBot");
+        eb.setFooter("Cree par " + this.getAdmin() + " - Powered by HeavenBot");
 
         eb.addField("Date: ","  " + this.getDateToString(),false);
         eb.addField("TANK",getStringOfTankList(),true);
@@ -106,7 +108,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         if(TankList.size() > 0){
             String buffer = "";
             for (String tmp : TankList){
-                buffer = buffer.concat(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getMemberById(tmp).getEffectiveName() + "  ");
+                buffer = buffer.concat(Main.getNameOfMember(jda,tmp) + "  ");
             }
             return buffer;
         }
@@ -116,7 +118,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         if(HealList.size() > 0){
             String buffer = "";
             for (String tmp : HealList){
-                buffer = buffer.concat(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getMemberById(tmp).getEffectiveName() + "  ");
+                buffer = buffer.concat(Main.getNameOfMember(jda,tmp) + "  ");
             }
             return buffer;
         }
@@ -126,7 +128,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         if(DpsList.size() > 0){
             String buffer = "";
             for (String tmp : DpsList){
-                buffer = buffer.concat(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getMemberById(tmp).getEffectiveName() + "  ");
+                buffer = buffer.concat(Main.getNameOfMember(jda,tmp) + "  ");
             }
             return buffer;
         }
@@ -135,7 +137,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
 
     @Override
     public String toString() {
-        return this.getInstance().getName() + " de " + this.getAdmin().getName() + " le " + this.getDateToRequest();
+        return this.getDateToRequest() + ": " + this.getInstance().getName() + " de " + this.getAdmin();
     }
 
     @Override

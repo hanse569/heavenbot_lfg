@@ -56,7 +56,7 @@ public class CreateEventListener extends ListenerAdapter {
                 try{
                     OrganizedDate od = new OrganizedDate();
                     od.setId(rs.getInt("id"));
-                    od.setAdmin(new RegisteredMember(rs.getString("admin"),guild.getMemberById(rs.getString("admin")).getEffectiveName()));
+                    od.setAdmin(rs.getString("admin"));
                     od.setInstance(this.getInstanceObjectWithId(rs.getInt("instance")));
                     od.setDifficulty(rs.getInt("difficulty"));
                     od.setDate(new SimpleDateFormat("dd/MM/yyyy hh:mm aa").parse(rs.getString("date")));
@@ -163,7 +163,7 @@ public class CreateEventListener extends ListenerAdapter {
 
         OrganizedDate newOD = null;
         for (OrganizedDate obj: tmpListDate) {
-            if(obj.getAdmin().getIdDiscord().equals(user.getId()))
+            if(obj.getAdminId().equals(user.getId()))
                 newOD = obj;
         }
 
@@ -177,7 +177,7 @@ public class CreateEventListener extends ListenerAdapter {
             );
 
             if(newOD==null) {
-                newOD = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
+                newOD = new OrganizedDate(user.getId());
                 tmpListDate.add(newOD);
             }
 

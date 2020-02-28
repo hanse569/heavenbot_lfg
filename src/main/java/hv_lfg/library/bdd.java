@@ -6,7 +6,7 @@ public class bdd {
 
     private static Connection conn = bdd.getConn();
 
-    public static Connection getConn(){
+    private static Connection getConn(){
         Connection conn = null;
         try{
             String url = "jdbc:sqlite:C:/Users/hanse/hv_lfg.db";
@@ -35,29 +35,18 @@ public class bdd {
     public static void addEvent(OrganizedDate od) {
         if(od != null){
             try {
-                String myStatement = "INSERT INTO OrganizedDate ('idMessageDiscord','admin','instance','difficulty','date','description') VALUES (?,?,?,?,?,?);";
+                String myStatement = "INSERT INTO OrganizedDate ('admin','instance','difficulty','date','description') VALUES (?,?,?,?,?);";
                 PreparedStatement statement = conn.prepareStatement(myStatement);
-                statement.setString(1,od.getIdMessageDiscord());
-                statement.setString(2,od.getAdmin().getIdDiscord());
-                statement.setInt(3,od.getInstance().getIdInstance());
-                statement.setInt(4,od.getDifficulty());
-                statement.setString(5,od.getDateToRequest());
-                statement.setString(6,od.getDescription().replace("'","''"));
+                statement.setString(1,od.getAdminId());
+                statement.setInt(2,od.getInstance().getIdInstance());
+                statement.setInt(3,od.getDifficulty());
+                statement.setString(4,od.getDateToRequest());
+                statement.setString(5,od.getDescription().replace("'","''"));
 
                 statement.executeUpdate();
 
             } catch (SQLException ex) { ex.printStackTrace(); }
         }
-    }
-
-    public static void updateIdMessageEvent(int id,String newIdMessageDiscord){
-        try{
-            String myStatement = "UPDATE OrganizedDate set idMessageDiscord = ? WHERE id = ?;";
-            PreparedStatement statement = conn.prepareStatement(myStatement);
-            statement.setString(1,newIdMessageDiscord);
-            statement.setInt(2,id);
-            statement.executeUpdate();
-        } catch (SQLException ex) { ex.printStackTrace(); }
     }
 
     public static void insertOrRemoveRole(String request,int idEvent,String idMember){

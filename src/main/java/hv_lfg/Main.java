@@ -2,6 +2,7 @@ package hv_lfg;
 
 import hv_lfg.library.*;
 import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
 import javax.security.auth.login.LoginException;
@@ -9,6 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 public class Main {
 
@@ -129,5 +131,9 @@ public class Main {
 
     static void TriListInstance(){
         Collections.sort(listDate);
+    }
+
+    public static String getNameOfMember(JDA jda, String id){
+        return Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getMemberById(id)).getEffectiveName();
     }
 }

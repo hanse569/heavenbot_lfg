@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class RegistrationListener extends ListenerAdapter {
     @Override
@@ -17,11 +18,11 @@ public class RegistrationListener extends ListenerAdapter {
             String messageId = event.getMessageId();
 
             if(event.getUser().isBot()){ //Permet de relié le message à l'event
-                String realAuthor = me.getFooter().getText();
-                realAuthor = realAuthor.substring("Cree par ".length(),realAuthor.length()-  " - Powered by HeavenBot".length());
+                String realAuthor = Objects.requireNonNull(me.getFooter()).getText();
+                realAuthor = Objects.requireNonNull(realAuthor).substring("Cree par ".length(),realAuthor.length()-  " - Powered by HeavenBot".length());
 
                 OrganizedDate od = null;
-                for (OrganizedDate tmp: Main.waitListDate) if(tmp.getAdmin().getName().equals(realAuthor)) od = tmp;
+                for (OrganizedDate tmp: Main.waitListDate) if(tmp.getAdmin().equals(realAuthor)) od = tmp;
                 if(od != null) Main.confirmEvent(od,messageId);
             }
             else {
