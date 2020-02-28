@@ -31,9 +31,9 @@ public class CreateEventListener extends ListenerAdapter {
             OrganizedDate.jda = event.getJDA();
 
             for (Guild guild : event.getJDA().getGuilds()){
-                if(guild.getId().equals("241110646677176320")){
+                if(guild.getId().equals(Settings.getIdDiscordHeaven())){
                     System.out.println("Connecte a " + guild.getName());
-                    clear(Objects.requireNonNull(guild.getTextChannelById("550694482132074506")));
+                    clear(Objects.requireNonNull(guild.getTextChannelById(Settings.getIdChannelHeavenBot())));
                     InitialiseEvent(event);
                 }
             }
@@ -148,7 +148,7 @@ public class CreateEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if(nr > 0 && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals("550694482132074506") && event.getAuthor().isBot()){
+        if(nr > 0 && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals(Settings.getIdChannelHeavenBot()) && event.getAuthor().isBot()){
             OrganizedDate od = Main.listDate.get(Main.listDate.size() - nr);
             od.setIdMessageDiscord(event.getMessageId());
             nr--;
@@ -335,16 +335,16 @@ public class CreateEventListener extends ListenerAdapter {
     }
 
     private void SendPublicMessage(JDA jda,String message){
-        Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getTextChannelById("550694482132074506")).sendMessage(message).queue();
+        Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById(Settings.getIdDiscordHeaven())).getTextChannelById(Settings.getIdChannelHeavenBot())).sendMessage(message).queue();
     }
 
     private void SendPublicRichEmbed(JDA jda,OrganizedDate od){
-        Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getTextChannelById("550694482132074506")).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
+        Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById(Settings.getIdDiscordHeaven())).getTextChannelById(Settings.getIdChannelHeavenBot())).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
         {
-            message.addReaction("\uD83D\uDEE1").queue();
-            message.addReaction("\uD83D\uDC89").queue();
-            message.addReaction("\u2694").queue();
-            message.addReaction("\u274C").queue();
+            message.addReaction(Settings.getEmojiTANKforSend()).queue();
+            message.addReaction(Settings.getEmojiHEALforSend()).queue();
+            message.addReaction(Settings.getEmojiDPSforSend()).queue();
+            message.addReaction(Settings.getEmojiDELETEforSend()).queue();
         });
     }
 

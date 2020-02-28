@@ -28,7 +28,7 @@ public class Main {
         InitialiseArene();
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
-        builder.setToken("NTUwNjkyOTI0NzE1OTU4Mjgz.XVMwhw.W62qdD2FPvgB7rewV5AmpwfknsY");
+        builder.setToken(Settings.getDiscordToken());
 
         builder.addEventListeners(new CreateEventListener());
         builder.addEventListeners(new RegistrationListener());
@@ -116,6 +116,6 @@ public class Main {
     }
 
     public static String getNameOfMember(JDA jda, String id){
-        return Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById("241110646677176320")).getMemberById(id)).getEffectiveName();
+        return Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById(Settings.getIdDiscordHeaven())).getMemberById(id)).getEffectiveName();
     }
 }

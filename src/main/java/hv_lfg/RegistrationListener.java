@@ -1,6 +1,7 @@
 package hv_lfg;
 
 import hv_lfg.library.OrganizedDate;
+import hv_lfg.library.Settings;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -12,7 +13,7 @@ import java.util.Objects;
 public class RegistrationListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
-        if(event.getChannel().getId().equals("550694482132074506")){
+        if(event.getChannel().getId().equals(Settings.getIdChannelHeavenBot())){
             Message message = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
             MessageEmbed me = message.getEmbeds().get(0);
             String messageId = event.getMessageId();
@@ -30,26 +31,23 @@ public class RegistrationListener extends ListenerAdapter {
 
                 for (OrganizedDate tmp : Main.listDate){
                     if(tmp.getIdMessageDiscord().equals(messageId)){
-                        switch (event.getReactionEmote().toString()){
-                            case "RE:U+1f6e1":
-                                System.out.println("Ajout d un tank dans " + tmp.getIdMessageDiscord());
-                                tmp.addTank(event.getUser().getId());
-                                break;
+                        String emoteReceive = event.getReactionEmote().toString();
 
-                            case "RE:U+1f489":
-                                System.out.println("Ajout d un heal dans " + tmp.getIdMessageDiscord());
-                                tmp.addHeal(event.getUser().getId());
-                                break;
-
-                            case "RE:U+2694":
-                                System.out.println("Ajout d un dps dans " + tmp.getIdMessageDiscord());
-                                tmp.addDps(event.getUser().getId());
-                                break;
-
-                            case "RE:U+274c":
-                                System.out.println("Suppresion dans " + tmp.getIdMessageDiscord());
-                                tmp.removeRoleList(event.getUser().getId());
-                                break;
+                        if(emoteReceive.equals(Settings.getEmojiTANKforReceive())){
+                            System.out.println("Ajout d un tank dans " + tmp.getIdMessageDiscord());
+                            tmp.addTank(event.getUser().getId());
+                        }
+                        else if(emoteReceive.equals(Settings.getEmojiHEALforReceive())){
+                            System.out.println("Ajout d un heal dans " + tmp.getIdMessageDiscord());
+                            tmp.addHeal(event.getUser().getId());
+                        }
+                        else if(emoteReceive.equals(Settings.getEmojiDPSforReceive())){
+                            System.out.println("Ajout d un dps dans " + tmp.getIdMessageDiscord());
+                            tmp.addDps(event.getUser().getId());
+                        }
+                        else if(emoteReceive.equals(Settings.getEmojiDELETEforReceive())){
+                            System.out.println("Suppresion dans " + tmp.getIdMessageDiscord());
+                            tmp.removeRoleList(event.getUser().getId());
                         }
 
                         //ajouter l'actualisation du message
