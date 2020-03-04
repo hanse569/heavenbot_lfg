@@ -26,8 +26,6 @@ public class Main {
         InitialiseDonjon();
         InitialiseBattleground();
         InitialiseArene();
-		
-		//hello
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         builder.setToken(Settings.getDiscordToken());
