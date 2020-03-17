@@ -334,7 +334,7 @@ public class CreateEventListener extends ListenerAdapter {
         user.openPrivateChannel().queue( (channel) -> channel.sendMessage(embedBuilder.build()).queue());
     }
 
-    private void SendPublicMessage(JDA jda,String message){
+    public static void SendPublicMessage(JDA jda,String message){
         Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById(Settings.getIdDiscordHeaven())).getTextChannelById(Settings.getIdChannelHeavenBot())).sendMessage(message).queue();
     }
 

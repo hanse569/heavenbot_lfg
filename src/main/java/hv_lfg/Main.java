@@ -33,6 +33,8 @@ public class Main {
         builder.addEventListeners(new CreateEventListener());
         builder.addEventListeners(new RegistrationListener());
 
+        builder.addEventListeners(new BotMusic());
+
         builder.build();
     }
 
