@@ -24,7 +24,7 @@ public class BotMusic extends ListenerAdapter {
         User user = event.getAuthor();
         Message command = event.getMessage();
 
-        if(!user.isBot() && event.getChannel().getId().equals(Settings.getIdChannelHeavenBot())){
+        if(!user.isBot()/* && event.getChannel().getId().equals(Settings.getIdChannelHeavenBot())*/){
             if (command.getContentDisplay().startsWith("/play")){
                 this.play(guild,textChannel,user,command.getContentDisplay());
             }
@@ -34,6 +34,9 @@ public class BotMusic extends ListenerAdapter {
             else if (command.getContentDisplay().startsWith("/clear")){
                 this.clear(textChannel);
             }
+        }
+        else if (command.getContentDisplay().startsWith("/play")){
+            command.delete().queue();
         }
     }
 
@@ -77,7 +80,7 @@ public class BotMusic extends ListenerAdapter {
         }
 
         manager.getPlayer(guild).skipTrack();
-        textChannel.sendMessage("La lecture est passé a la piste suivante.").queue();
+        textChannel.sendMessage("La lecture est passe a la piste suivante.").queue();
     }
 
     private void clear(TextChannel textChannel){
