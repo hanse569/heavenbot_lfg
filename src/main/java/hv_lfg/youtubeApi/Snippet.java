@@ -1,6 +1,5 @@
 package hv_lfg.youtubeApi;
 
-import java.util.*;
 import com.fasterxml.jackson.annotation.*;
 
 public class Snippet {
@@ -11,6 +10,7 @@ public class Snippet {
     private Thumbnails thumbnails;
     private String channelTitle;
     private String liveBroadcastContent;
+    private String publishTime;
 
     @JsonProperty("publishedAt")
     public String getPublishedAt() { return publishedAt; }
@@ -46,4 +46,9 @@ public class Snippet {
     public String getLiveBroadcastContent() { return liveBroadcastContent; }
     @JsonProperty("liveBroadcastContent")
     public void setLiveBroadcastContent(String value) { this.liveBroadcastContent = value; }
+
+    @JsonProperty("publishTime")
+    public String getPublishTime() { return publishTime; }
+    @JsonProperty("publishTime")
+    public void setPublishTime(String value) { this.publishTime = value; }
 }

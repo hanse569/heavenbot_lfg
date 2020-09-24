@@ -1,7 +1,7 @@
 package hv_lfg.youtubeApi;
 
-import java.util.*;
 import com.fasterxml.jackson.annotation.*;
+import java.util.List;
 
 public class YoutubeMusic {
     private String kind;
