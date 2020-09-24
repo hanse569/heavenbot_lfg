@@ -4,6 +4,7 @@ import hv_lfg.library.*;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 
 import javax.security.auth.login.LoginException;
 import java.sql.*;
@@ -34,6 +35,8 @@ public class Main {
         builder.addEventListeners(new RegistrationListener());
 
         builder.addEventListeners(new BotMusic());
+
+        builder.setActivity(Activity.watching("Comment faire fonctionner ce bot de merde !"));
 
         builder.build();
     }

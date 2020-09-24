@@ -11,11 +11,6 @@ import java.util.List;
 
 public class HttpRequest {
 
-    /*
-String retourDeLaPage = get(« http://www.perdu.com »);
-String retourDeLaPage = get(« http://www.perdu.com?pseudonyme=Idleman&pasword=danstesreves »);
-     */
-
     public static String get(String url) throws IOException {
 
         String source ="";
@@ -32,21 +27,6 @@ String retourDeLaPage = get(« http://www.perdu.com?pseudonyme=Idleman&pasword=d
         return source;
     }
 
-    /*
-List<String> keys = new ArrayList<String>();
-
-List<String> values= new ArrayList<String>();
-
-keys.add("pseudonyme");
-
-keys.add("password");
-
-values.add("idleman");
-
-values.add("danstesreves");
-
-String retourDeLaPage = post("http://www.perdu.com",keys,values);
-     */
     public static String post(String adress, List<String> keys, List<String> values) throws IOException{
         String result = "";
         OutputStreamWriter writer = null;
@@ -63,14 +43,10 @@ String retourDeLaPage = post("http://www.perdu.com",keys,values);
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
 
-
 //envoi de la requête
             writer = new OutputStreamWriter(conn.getOutputStream());
             writer.write(data);
             writer.flush();
-
-
-
 
 //lecture de la réponse
             reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));

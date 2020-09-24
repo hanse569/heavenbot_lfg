@@ -1,7 +1,6 @@
 package hv_lfg;
 
 import hv_lfg.library.HttpRequest;
-import hv_lfg.library.Settings;
 import hv_lfg.music.MusicManager;
 import hv_lfg.music.MusicPlayer;
 import hv_lfg.youtubeApi.Converter;
