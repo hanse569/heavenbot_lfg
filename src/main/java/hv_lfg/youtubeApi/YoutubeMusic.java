@@ -44,4 +44,12 @@ public class YoutubeMusic {
     public String getVideoId(){
         return this.getItems().get(0).getid().getVideoId();
     }
+
+    public String getVideoName(){
+        return this.getItems().get(0).getSnippet().getTitle();
+    }
+
+    public String getMiniature(){
+        return this.getItems().get(0).getSnippet().getThumbnails().getThumbnailsDefault().geturl();
+    }
 }
