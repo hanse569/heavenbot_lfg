@@ -5,6 +5,7 @@ import hv_lfg.music.MusicManager;
 import hv_lfg.music.MusicPlayer;
 import hv_lfg.youtubeApi.Converter;
 import hv_lfg.youtubeApi.YoutubeMusic;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -63,13 +64,22 @@ public class BotMusic extends ListenerAdapter {
                 String query = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&key=AIzaSyA_d2KclU41UmiYSrBjaEZPsuFRl7UT14s&q="+key;
                 YoutubeMusic data = Converter.fromJsonString(HttpRequest.get(query));
                 manager.loadTrack(textChannel,"https://www.youtube.com/watch?v=" + data.getVideoId());
-                textChannel.sendMessage("/play https://www.youtube.com/watch?v=" + data.getVideoId()).queue();
+
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setTitle("Lecture en cours","https://www.youtube.com/watch?v=" + data.getVideoId());
+                embedBuilder.setColor(8716032);
+                embedBuilder.setDescription(data.getVideoName());
+                embedBuilder.addField("**[Musique suivant]**  ","Aucune",false);
+                embedBuilder.setAuthor("Bot Musique");
+                embedBuilder.setThumbnail(data.getMiniature());
+                textChannel.sendMessage(embedBuilder.build()).queue();
             }
             catch (IOException e) {
                 textChannel.sendMessage("Impossible d'executer la requete vers Youtube").queue();
                 return;
             }
         }
+
     }
 
     private void skip(Guild guild, TextChannel textChannel){

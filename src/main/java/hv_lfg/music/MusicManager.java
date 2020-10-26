@@ -35,7 +35,7 @@ public class MusicManager {
         manager.loadItemOrdered(player, source, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                channel.sendMessage("Ajout de la piste "+track.getInfo().title+".").queue();
+                //channel.sendMessage("Ajout de la piste "+track.getInfo().title+".").queue(); //Une richEmbed est de toutes facons affichés si la musique est trouvé
                 player.playTrack(track);
             }
 
