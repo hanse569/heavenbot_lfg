@@ -35,9 +35,9 @@ public class BotMusic extends ListenerAdapter {
                 this.clear(textChannel);
             }
         }
-        else if (command.getContentDisplay().startsWith("/play")){
+        /*else if (command.getContentDisplay().startsWith("/play")){
             command.delete().queue();
-        }
+        }*/
     }
 
     private void play(Guild guild, TextChannel textChannel, User user, String command){
