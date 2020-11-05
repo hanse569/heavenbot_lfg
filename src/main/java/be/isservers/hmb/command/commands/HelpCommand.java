@@ -2,13 +2,14 @@ package be.isservers.hmb.command.commands;
 
 import be.isservers.hmb.CommandManager;
 import be.isservers.hmb.VeryBadDesign;
-import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
+import be.isservers.hmb.command.IPublicCommand;
+import be.isservers.hmb.command.PublicCommandContext;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-public class HelpCommand implements ICommand {
+public class HelpCommand implements IPublicCommand {
 
     private final CommandManager manager;
 
@@ -17,7 +18,7 @@ public class HelpCommand implements ICommand {
     }
 
     @Override
-    public void handle(CommandContext ctx) {
+    public void handle(PublicCommandContext ctx) {
         List<String> args = ctx.getArgs();
         TextChannel channel = ctx.getChannel();
 
@@ -27,7 +28,7 @@ public class HelpCommand implements ICommand {
 
             builder.append("Liste des commandes\n");
 
-            manager.getCommands().stream().map(ICommand::getName).forEach(
+            manager.getPublicCommands().stream().map(ICommand::getName).forEach(
                     (it) -> builder.append('`')
                             .append(prefix)
                             .append(it)
@@ -39,7 +40,7 @@ public class HelpCommand implements ICommand {
         }
 
         String search = args.get(0);
-        ICommand command = manager.getCommand(search);
+        ICommand command = manager.getPublicCommand(search);
 
         if (command == null){
             channel.sendMessage("Rien trouvé pour " + search).queue();

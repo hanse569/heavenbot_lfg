@@ -1,6 +1,6 @@
 package be.isservers.hmb.youtubeApi;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Default {
     private String url;

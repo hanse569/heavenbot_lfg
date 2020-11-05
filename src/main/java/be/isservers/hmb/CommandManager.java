@@ -1,11 +1,18 @@
 package be.isservers.hmb;
 
-import be.isservers.hmb.command.*;
-import be.isservers.hmb.command.commands.*;
-import be.isservers.hmb.command.commands.admin.*;
+import be.isservers.hmb.command.IPrivateCommand;
+import be.isservers.hmb.command.IPublicCommand;
+import be.isservers.hmb.command.PrivateCommandContext;
+import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.commands.HelpCommand;
+import be.isservers.hmb.command.commands.JokeCommand;
+import be.isservers.hmb.command.commands.MemeCommand;
+import be.isservers.hmb.command.commands.PingCommand;
+import be.isservers.hmb.command.commands.admin.ClearChannelCommand;
+import be.isservers.hmb.command.commands.admin.SetPrefixCommand;
 import be.isservers.hmb.command.commands.music.*;
-
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -14,44 +21,72 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommandManager {
-    private final List<ICommand> commands = new ArrayList<>();
+    private final List<IPublicCommand> publicCommands = new ArrayList<>();
+    private final List<IPrivateCommand> privateCommands = new ArrayList<>();
 
     CommandManager() {
-        addCommand(new PingCommand());
-        addCommand(new HelpCommand(this));
-        addCommand(new MemeCommand());
-        addCommand(new JokeCommand());
+        addPublicCommand(new PingCommand());
+        addPublicCommand(new HelpCommand(this));
+        addPublicCommand(new MemeCommand());
+        addPublicCommand(new JokeCommand());
 
-        addCommand(new SetPrefixCommand());
-        addCommand(new ClearChannelCommand());
+        addPublicCommand(new SetPrefixCommand());
+        addPublicCommand(new ClearChannelCommand());
 
-        addCommand(new JoinCommand());
-        addCommand(new PlayCommand());
-        addCommand(new StopCommand());
-        addCommand(new SkipCommand());
-        addCommand(new NowPlayingCommand());
-        addCommand(new QueueCommand());
+        addPublicCommand(new JoinCommand());
+        addPublicCommand(new PlayCommand());
+        addPublicCommand(new StopCommand());
+        addPublicCommand(new SkipCommand());
+        addPublicCommand(new NowPlayingCommand());
+        addPublicCommand(new QueueCommand());
     }
 
-    private void addCommand(ICommand cmd){
-        boolean nameFound = this.commands.stream().anyMatch((it) -> it.getName().equalsIgnoreCase(cmd.getName()));
+    private void addPublicCommand(IPublicCommand cmd){
+        boolean nameFound = this.publicCommands.stream().anyMatch((it) -> it.getName().equalsIgnoreCase(cmd.getName()));
 
         if (nameFound){
             throw new IllegalArgumentException("A command with this name is already present");
         }
 
-        commands.add(cmd);
+        publicCommands.add(cmd);
     }
 
-    public List<ICommand> getCommands(){
-        return commands;
+    private void addPrivateCommand(IPrivateCommand cmd){
+        boolean nameFound = this.privateCommands.stream().anyMatch((it) -> it.getName().equalsIgnoreCase(cmd.getName()));
+
+        if (nameFound){
+            throw new IllegalArgumentException("A command with this name is already present");
+        }
+
+        privateCommands.add(cmd);
+    }
+
+    public List<IPublicCommand> getPublicCommands(){
+        return publicCommands;
+    }
+    public List<IPrivateCommand> getPrivateCommands(){
+        return privateCommands;
     }
 
     @Nullable
-    public ICommand getCommand(String search){
+    public IPublicCommand getPublicCommand(String search){
         String searchLower = search.toLowerCase();
 
-        for (ICommand cmd : this.commands) {
+        for (IPublicCommand cmd : this.publicCommands) {
+            if (cmd.getName().equals(searchLower)
+                    || cmd.getAliases().contains(searchLower)){
+                return cmd;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public IPrivateCommand getPrivateCommand(String search){
+        String searchLower = search.toLowerCase();
+
+        for (IPrivateCommand cmd : this.privateCommands) {
             if (cmd.getName().equals(searchLower)
                     || cmd.getAliases().contains(searchLower)){
                 return cmd;
@@ -67,13 +102,31 @@ public class CommandManager {
                 .split("\\s+");
 
         String invoke = split[0].toLowerCase();
-        ICommand cmd = this.getCommand(invoke);
+        IPublicCommand cmd = this.getPublicCommand(invoke);
 
         if (cmd != null){
             event.getChannel().sendTyping().queue();
             List<String> args = Arrays.asList(split).subList(1, split.length);
 
-            CommandContext ctx = new CommandContext(event, args);
+            PublicCommandContext ctx = new PublicCommandContext(event, args);
+
+            cmd.handle(ctx);
+        }
+    }
+
+    void handle(PrivateMessageReceivedEvent event, String prefix){
+        String[] split = event.getMessage().getContentRaw()
+                .replaceFirst("(?i)" + Pattern.quote(prefix),"")
+                .split("\\s+");
+
+        String invoke = split[0].toLowerCase();
+        IPrivateCommand cmd = this.getPrivateCommand(invoke);
+
+        if (cmd != null){
+            event.getChannel().sendTyping().queue();
+            List<String> args = Arrays.asList(split).subList(1, split.length);
+
+            PrivateCommandContext ctx = new PrivateCommandContext(event, args);
 
             cmd.handle(ctx);
         }

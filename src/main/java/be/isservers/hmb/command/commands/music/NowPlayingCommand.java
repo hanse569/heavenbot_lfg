@@ -1,7 +1,7 @@
 package be.isservers.hmb.command.commands.music;
 
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.command.ICommand;
+import be.isservers.hmb.command.IPublicCommand;
+import be.isservers.hmb.command.PublicCommandContext;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
 import be.isservers.hmb.utils.HvmAudioTrack_youtube;
@@ -15,10 +15,10 @@ import java.util.List;
 
 import static me.duncte123.botcommons.messaging.MessageUtils.sendEmbed;
 
-public class NowPlayingCommand implements ICommand {
+public class NowPlayingCommand implements IPublicCommand {
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
     @Override
-    public void handle(CommandContext ctx) {
+    public void handle(PublicCommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
 
         final Member self = ctx.getSelfMember();

@@ -1,7 +1,7 @@
 package be.isservers.hmb.command.commands.music;
 
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.command.ICommand;
+import be.isservers.hmb.command.IPublicCommand;
+import be.isservers.hmb.command.PublicCommandContext;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -9,9 +9,9 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 @SuppressWarnings("ConstantConditions")
-public class JoinCommand implements ICommand {
+public class JoinCommand implements IPublicCommand {
     @Override
-    public void handle(CommandContext ctx) {
+    public void handle(PublicCommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         final Member self = ctx.getSelfMember();
         final GuildVoiceState selfVoiceState = self.getVoiceState();

@@ -1,8 +1,8 @@
 package be.isservers.hmb;
 
 import be.isservers.hmb.database.SQLiteDataSource;
-import be.isservers.hmb.lfg.LFGmain;
 import be.isservers.hmb.lfg.LFGemoteManagement;
+import be.isservers.hmb.lfg.LFGmain;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDABuilder;

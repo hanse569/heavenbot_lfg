@@ -1,16 +1,16 @@
 package be.isservers.hmb.command.commands;
 
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.command.ICommand;
+import be.isservers.hmb.command.IPublicCommand;
+import be.isservers.hmb.command.PublicCommandContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import me.duncte123.botcommons.web.WebUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class MemeCommand implements ICommand {
+public class MemeCommand implements IPublicCommand {
     @Override
-    public void handle(CommandContext ctx) {
+    public void handle(PublicCommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         WebUtils.ins.getJSONObject("https://apis.duncte123.me/meme").async((json) -> {
             if (!json.get("success").asBoolean()){

@@ -1,6 +1,7 @@
 package be.isservers.hmb.youtubeApi;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class YoutubeMusic {

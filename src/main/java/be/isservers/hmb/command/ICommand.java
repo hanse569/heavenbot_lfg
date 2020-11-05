@@ -3,7 +3,6 @@ package be.isservers.hmb.command;
 import java.util.List;
 
 public interface ICommand {
-    void handle(CommandContext ctx);
 
     String getName();
 
