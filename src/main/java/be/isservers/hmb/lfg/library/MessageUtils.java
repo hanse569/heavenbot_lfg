@@ -3,6 +3,7 @@ package be.isservers.hmb.lfg.library;
 import be.isservers.hmb.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -16,9 +17,17 @@ public class MessageUtils {
         user.openPrivateChannel().queue( (channel) -> channel.sendMessage(embedBuilder.build()).queue());
     }
 
+    public static void SendPublicMessage(TextChannel tc, String message){
+        tc.sendMessage(message).queue();
+    }
+
+    public static void SendPublicRichEmbed(TextChannel tc, MessageEmbed me){
+        tc.sendMessage(me).queue();
+    }
+
     @SuppressWarnings("ConstantConditions")
     public static void SendPublicMessage(JDA jda, String message){
-        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()).sendMessage(message).queue();
+        SendPublicMessage(jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()),message);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -32,7 +41,7 @@ public class MessageUtils {
         });
     }
 
-    public static void SendPublicRichEmbed(TextChannel tc, MessageEmbed me){
-        tc.sendMessage(me).queue();
-    }
+
+
+
 }

@@ -3,7 +3,7 @@ package be.isservers.hmb.command.publicCommands.admin;
 import be.isservers.hmb.VeryBadDesign;
 import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PublicCommandContext;
-import be.isservers.hmb.lfg.library.SQLiteSource;
+import be.isservers.hmb.utils.SQLiteSource;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;

@@ -1,4 +1,6 @@
-package be.isservers.hmb.lfg.library;
+package be.isservers.hmb.utils;
+
+import be.isservers.hmb.lfg.library.OrganizedDate;
 
 import java.sql.*;
 

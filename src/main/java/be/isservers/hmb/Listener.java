@@ -2,7 +2,7 @@ package be.isservers.hmb;
 
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.lfg.LFGmain;
-import be.isservers.hmb.lfg.library.SQLiteSource;
+import be.isservers.hmb.utils.SQLiteSource;
 import me.duncte123.botcommons.BotCommons;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
