@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class LFGrl extends ListenerAdapter {
+public class LFGemoteManagement extends ListenerAdapter {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
@@ -24,11 +24,11 @@ public class LFGrl extends ListenerAdapter {
                 realAuthor = realAuthor.substring("Cree par ".length(),realAuthor.length()-  " - Powered by HeavenBot".length());
 
                 OrganizedDate od = null;
-                for (OrganizedDate tmp: LFGdata.waitListDate) if(tmp.getAdmin().equals(realAuthor)) od = tmp;
-                if(od != null) LFGdata.confirmEvent(od,messageId);
+                for (OrganizedDate tmp: LFGdataManagement.waitListDate) if(tmp.getAdmin().equals(realAuthor)) od = tmp;
+                if(od != null) LFGdataManagement.confirmEvent(od,messageId);
             }
             else {
-                for (OrganizedDate tmp : LFGdata.listDate){
+                for (OrganizedDate tmp : LFGdataManagement.listDate){
                     if(tmp.getIdMessageDiscord().equals(messageId)){
                         String emoteReceive = event.getReactionEmote().toString();
 

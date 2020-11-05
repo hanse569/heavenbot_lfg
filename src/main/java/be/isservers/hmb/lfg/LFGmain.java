@@ -22,10 +22,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static be.isservers.hmb.lfg.LFGdata.getInstanceObjectWithOrder;
+import static be.isservers.hmb.lfg.LFGdataManagement.getInstanceObjectWithOrder;
 
-public class LFGcel extends ListenerAdapter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LFGcel.class);
+public class LFGmain extends ListenerAdapter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LFGmain.class);
     private ArrayList<OrganizedDate> tmpListDate = new ArrayList<>();
     public static int nr = 0;
 
@@ -42,8 +42,8 @@ public class LFGcel extends ListenerAdapter {
                 if(guild.getId().equals(Config.getIdDiscordHeaven())){
                     LOGGER.info("Connected to " + guild.getName(), event.getJDA().getSelfUser().getAsTag());
                     clear(guild.getTextChannelById(Config.getIdChannelHeavenBot()));
-                    LFGdata.heavenDiscord = guild;
-                    LFGdata.InitializeOrganizedDate(event);
+                    LFGdataManagement.heavenDiscord = guild;
+                    LFGdataManagement.InitializeOrganizedDate(event);
                 }
             }
         }
@@ -60,7 +60,7 @@ public class LFGcel extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
         if(nr > 0 && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals(Config.getIdChannelHeavenBot()) && event.getAuthor().isBot()){
-            OrganizedDate od = LFGdata.listDate.get(LFGdata.listDate.size() - nr);
+            OrganizedDate od = LFGdataManagement.listDate.get(LFGdataManagement.listDate.size() - nr);
             od.setIdMessageDiscord(event.getMessageId());
             nr--;
         }
@@ -222,7 +222,7 @@ public class LFGcel extends ListenerAdapter {
             newRaid.etape++;
 
             tmpListDate.remove(newRaid);
-            LFGdata.addListeEvent(newRaid);
+            LFGdataManagement.addListeEvent(newRaid);
 
             MessageUtils.SendPublicRichEmbed(event.getJDA(),newRaid);
 
@@ -234,8 +234,8 @@ public class LFGcel extends ListenerAdapter {
         eb.setAuthor("Creation d'un raid");
         eb.setTitle("Choisissez l'instance a l'aide du numero: ");
         String temp = "";
-        for (int i = 0;i < LFGdata.Raid.size();i++){
-            temp = temp.concat((i+1) + " " + LFGdata.Raid.get(i) + "\n");
+        for (int i = 0; i < LFGdataManagement.Raid.size(); i++){
+            temp = temp.concat((i+1) + " " + LFGdataManagement.Raid.get(i) + "\n");
         }
         eb.setDescription(temp);
         MessageUtils.SendPrivateRichEmbed(user,eb);
@@ -246,8 +246,8 @@ public class LFGcel extends ListenerAdapter {
         eb.setAuthor("Creation d'un donjon");
         eb.setTitle("Choisissez l'instance a l'aide du numero: ");
         String temp = "";
-        for (int i = 0;i < LFGdata.Donjon.size();i++){
-            temp = temp.concat((i+1) + " " + LFGdata.Donjon.get(i) + "\n");
+        for (int i = 0; i < LFGdataManagement.Donjon.size(); i++){
+            temp = temp.concat((i+1) + " " + LFGdataManagement.Donjon.get(i) + "\n");
         }
         eb.setDescription(temp);
         MessageUtils.SendPrivateRichEmbed(user,eb);

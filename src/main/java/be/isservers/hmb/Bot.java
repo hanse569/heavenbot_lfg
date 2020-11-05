@@ -1,8 +1,8 @@
 package be.isservers.hmb;
 
 import be.isservers.hmb.database.SQLiteDataSource;
-import be.isservers.hmb.lfg.LFGcel;
-import be.isservers.hmb.lfg.LFGrl;
+import be.isservers.hmb.lfg.LFGmain;
+import be.isservers.hmb.lfg.LFGemoteManagement;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDABuilder;
@@ -39,8 +39,8 @@ public class Bot {
             )
             .enableCache(CacheFlag.VOICE_STATE)
             .addEventListeners(new Listener())
-            .addEventListeners(new LFGcel())
-            .addEventListeners(new LFGrl())
+            .addEventListeners(new LFGmain())
+            .addEventListeners(new LFGemoteManagement())
             .setActivity(Activity.watching("pour débuguer la version finale de E-Van"))
             .build();
 

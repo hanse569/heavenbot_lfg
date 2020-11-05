@@ -14,8 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class LFGdata {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LFGdata.class);
+public class LFGdataManagement {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LFGdataManagement.class);
 
     static ArrayList<OrganizedDate> listDate = new ArrayList<>();
     static ArrayList<OrganizedDate> waitListDate = new ArrayList<>();
@@ -111,8 +111,8 @@ public class LFGdata {
 
                     LOGGER.info("Event finds: " + od.toString(), event.getJDA().getSelfUser().getAsTag());
 
-                    LFGdata.listDate.add(od);
-                    LFGcel.nr++;
+                    LFGdataManagement.listDate.add(od);
+                    LFGmain.nr++;
                 }
                 catch (NotFoundException ex) { ex.printStackTrace();}
 
@@ -124,7 +124,7 @@ public class LFGdata {
                 int idEvent = rsTank.getInt("idEvent");
                 String idMember = rsTank.getString("idMember");
 
-                for (OrganizedDate od : LFGdata.listDate){
+                for (OrganizedDate od : LFGdataManagement.listDate){
                     if(od.getId() == idEvent) od.addTankToList(idMember);
                 }
             }
@@ -135,7 +135,7 @@ public class LFGdata {
                 int idEvent = rsHeal.getInt("idEvent");
                 String idMember = rsHeal.getString("idMember");
 
-                for (OrganizedDate od : LFGdata.listDate){
+                for (OrganizedDate od : LFGdataManagement.listDate){
                     if(od.getId() == idEvent) od.addHealToList(idMember);
                 }
             }
@@ -146,15 +146,15 @@ public class LFGdata {
                 int idEvent = rsDps.getInt("idEvent");
                 String idMember = rsDps.getString("idMember");
 
-                for (OrganizedDate od : LFGdata.listDate){
+                for (OrganizedDate od : LFGdataManagement.listDate){
                     if(od.getId() == idEvent) od.addDpsToList(idMember);
                 }
             }
             rsDps.close();
 
-            LFGdata.TriListInstance();
+            LFGdataManagement.TriListInstance();
 
-            for (OrganizedDate od : LFGdata.listDate){
+            for (OrganizedDate od : LFGdataManagement.listDate){
                 MessageUtils.SendPublicRichEmbed(event.getJDA(),od);
             }
 
@@ -180,19 +180,19 @@ public class LFGdata {
     }
 
     public static String getNameOfMember(String id){
-        Guild guild = LFGdata.heavenDiscord;
+        Guild guild = LFGdataManagement.heavenDiscord;
         Member member = guild.retrieveMemberById(id).complete();
         return member.getEffectiveName();
     }
 
     private static Instance getInstanceObjectWithId(int val) throws NotFoundException {
-        for (Instance obj : LFGdata.Raid){
+        for (Instance obj : LFGdataManagement.Raid){
             if(obj.getIdInstance() == val){
                 return obj;
             }
         }
 
-        for (Instance obj : LFGdata.Donjon){
+        for (Instance obj : LFGdataManagement.Donjon){
             if(obj.getIdInstance() == val){
                 return obj;
             }
@@ -205,11 +205,11 @@ public class LFGdata {
         Instance instance;
 
         if(type == 1){
-            instance = LFGdata.Raid.get(val);
+            instance = LFGdataManagement.Raid.get(val);
             if(instance != null) return instance;
         }
         else if(type == 2){
-            instance = LFGdata.Donjon.get(val);
+            instance = LFGdataManagement.Donjon.get(val);
             if(instance != null) return instance;
         }
 

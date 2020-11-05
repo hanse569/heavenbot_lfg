@@ -1,6 +1,6 @@
 package be.isservers.hmb.lfg.library;
 
-import be.isservers.hmb.lfg.LFGdata;
+import be.isservers.hmb.lfg.LFGdataManagement;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +48,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
 
     public int getId() { return id; }
     public String getAdminId() { return this.admin; }
-    public String getAdmin() { return LFGdata.getNameOfMember(this.admin); }
+    public String getAdmin() { return LFGdataManagement.getNameOfMember(this.admin); }
     public String getIdMessageDiscord() { return idMessageDiscord; }
     public Instance getInstance() { return instance; }
     public int getDifficulty() { return difficulty; }
@@ -116,7 +116,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         if(TankList.size() > 0){
             String buffer = "";
             for (String tmp : TankList){
-                buffer = buffer.concat(LFGdata.getNameOfMember(tmp) + "  ");
+                buffer = buffer.concat(LFGdataManagement.getNameOfMember(tmp) + "  ");
             }
             return buffer;
         }
@@ -126,7 +126,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         if(HealList.size() > 0){
             String buffer = "";
             for (String tmp : HealList){
-                buffer = buffer.concat(LFGdata.getNameOfMember(tmp) + "  ");
+                buffer = buffer.concat(LFGdataManagement.getNameOfMember(tmp) + "  ");
             }
             return buffer;
         }
@@ -136,7 +136,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         if(DpsList.size() > 0){
             String buffer = "";
             for (String tmp : DpsList){
-                buffer = buffer.concat(LFGdata.getNameOfMember(tmp) + "  ");
+                buffer = buffer.concat(LFGdataManagement.getNameOfMember(tmp) + "  ");
             }
             return buffer;
         }
