@@ -23,6 +23,6 @@ public class PingCommand implements ICommand {
 
     @Override
     public String getName() {
-        return "Affiche le ping actuel du bot vers les serveurs Discord";
+        return "ping";
     }
 }
