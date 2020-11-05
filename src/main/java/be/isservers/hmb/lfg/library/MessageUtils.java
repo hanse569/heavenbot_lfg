@@ -3,6 +3,8 @@ package be.isservers.hmb.lfg.library;
 import be.isservers.hmb.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
 public class MessageUtils {
@@ -28,5 +30,9 @@ public class MessageUtils {
             message.addReaction(Config.getEmojiDPS()).queue();
             message.addReaction(Config.getEmojiDELETE()).queue();
         });
+    }
+
+    public static void SendPublicRichEmbed(TextChannel tc, MessageEmbed me){
+        tc.sendMessage(me).queue();
     }
 }

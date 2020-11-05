@@ -4,6 +4,7 @@ import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PublicCommandContext;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
+import be.isservers.hmb.lfg.library.MessageUtils;
 import be.isservers.hmb.utils.HvmAudioTrack_youtube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,8 +13,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
-
-import static me.duncte123.botcommons.messaging.MessageUtils.sendEmbed;
 
 public class NowPlayingCommand implements IPublicCommand {
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
@@ -56,8 +55,7 @@ public class NowPlayingCommand implements IPublicCommand {
         eb.setDescription("Ajouté par " + audioTrackYoutube.get_hvm_author().getName());
         eb.setThumbnail("https://img.youtube.com/vi/"+audioTrackYoutube.getIdentifier()+"/1.jpg");
         eb.setAuthor("\uD83C\uDFB5 Lecture en cours");
-        sendEmbed(channel,eb.build());
-
+        MessageUtils.SendPublicRichEmbed(channel,eb.build());
     }
 
     @Override

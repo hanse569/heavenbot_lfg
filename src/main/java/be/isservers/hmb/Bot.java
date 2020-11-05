@@ -13,7 +13,7 @@ import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
 
 public class Bot {
-    private Bot() throws LoginException, SQLException {
+    private Bot() throws LoginException {
 
         EmbedUtils.setEmbedBuilder(
             () -> new EmbedBuilder()

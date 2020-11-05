@@ -4,6 +4,7 @@ import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PublicCommandContext;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
+import be.isservers.hmb.lfg.library.MessageUtils;
 import be.isservers.hmb.utils.HvmAudioTrack_youtube;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -11,8 +12,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
-
-import static me.duncte123.botcommons.messaging.MessageUtils.sendEmbed;
 
 public class QueueCommand implements IPublicCommand {
     @Override
@@ -49,7 +48,7 @@ public class QueueCommand implements IPublicCommand {
         }
         eb.setDescription(description.toString());
 
-        sendEmbed(channel,eb.build());
+        MessageUtils.SendPublicRichEmbed(channel,eb.build());
     }
 
     @Override

@@ -3,7 +3,6 @@ package be.isservers.hmb.command.publicCommands;
 import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PublicCommandContext;
 import com.fasterxml.jackson.databind.JsonNode;
-import me.duncte123.botcommons.messaging.EmbedUtils;
 import me.duncte123.botcommons.web.WebUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -23,7 +22,7 @@ public class JokeCommand implements IPublicCommand {
             final String title = data.get("title").asText();
             final String url = data.get("url").asText();
             final String body = data.get("body").asText();
-            final EmbedBuilder embed = EmbedUtils.defaultEmbed()
+            final EmbedBuilder embed = new EmbedBuilder()
                     .setTitle(title,url)
                     .setDescription(body);
 
