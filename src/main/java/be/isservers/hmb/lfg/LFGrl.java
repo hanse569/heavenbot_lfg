@@ -28,35 +28,26 @@ public class LFGrl extends ListenerAdapter {
                 if(od != null) LFGdata.confirmEvent(od,messageId);
             }
             else {
-                //System.out.println(event.getUser().getName() + " a reagi avec " + event.getReactionEmote() + " sur le message " + event.getMessageId());
-
                 for (OrganizedDate tmp : LFGdata.listDate){
                     if(tmp.getIdMessageDiscord().equals(messageId)){
                         String emoteReceive = event.getReactionEmote().toString();
 
                         if(emoteReceive.equals("RE:" + Config.getEmojiTANK())){
-                            //System.out.println("Ajout d un tank dans " + tmp.getIdMessageDiscord());
                             tmp.addTank(event.getUser().getId());
                         }
                         else if(emoteReceive.equals("RE:" + Config.getEmojiHEAL())){
-                            //System.out.println("Ajout d un heal dans " + tmp.getIdMessageDiscord());
                             tmp.addHeal(event.getUser().getId());
                         }
                         else if(emoteReceive.equals("RE:" + Config.getEmojiDPS())){
-                            //System.out.println("Ajout d un dps dans " + tmp.getIdMessageDiscord());
                             tmp.addDps(event.getUser().getId());
                         }
                         else if(emoteReceive.equals("RE:" + Config.getEmojiDELETE())){
-                            //System.out.println("Suppresion dans " + tmp.getIdMessageDiscord());
                             tmp.removeRoleList(event.getUser().getId());
                         }
-
-                        //ajouter l'actualisation du message
-                        event.getChannel().editMessageById(event.getMessageId(),tmp.getEmbedBuilder().build()).complete();
+                        event.getChannel().editMessageById(event.getMessageId(),tmp.getEmbedBuilder().build()).complete();//ajoute l'actualisation du message
                         break;
                     }
                 }
-
                 event.getReaction().removeReaction(event.getUser()).queue();
             }
         }
