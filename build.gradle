@@ -25,7 +25,6 @@ dependencies {
     implementation group: 'org.menudocs', name: 'paste-client-java', version: '1.0.16'
     implementation group: 'club.minnced', name: 'discord-webhooks', version: '0.1.8'
 
-    implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.32.3.2'
 
     implementation group: 'com.sedmelluq', name: 'lavaplayer', version: '1.3.55'

@@ -88,7 +88,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     public void addTank(String id) {
         removeRoleList(id);
         TankList.add(id);
-        bdd.insertOrRemoveRole("INSERT INTO LFG_ParticiperTANK VALUES(?,?);",this.getId(),id);
+        SQLiteSource.insertOrRemoveRole("INSERT INTO LFG_ParticiperTANK VALUES(?,?);",this.getId(),id);
     }
 
     public void addHealToList(String id){
@@ -97,7 +97,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     public void addHeal(String id) {
         removeRoleList(id);
         HealList.add(id);
-        bdd.insertOrRemoveRole("INSERT INTO LFG_ParticiperHEAL VALUES(?,?);",this.getId(),id);
+        SQLiteSource.insertOrRemoveRole("INSERT INTO LFG_ParticiperHEAL VALUES(?,?);",this.getId(),id);
     }
 
     public void addDpsToList(String id){
@@ -106,12 +106,12 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     public void addDps(String id) {
         removeRoleList(id);
         DpsList.add(id);
-        bdd.insertOrRemoveRole("INSERT INTO LFG_ParticiperDPS VALUES(?,?);",this.getId(),id);
+        SQLiteSource.insertOrRemoveRole("INSERT INTO LFG_ParticiperDPS VALUES(?,?);",this.getId(),id);
     }
     public void removeRoleList(String id){
-        if(TankList.remove(id)) bdd.insertOrRemoveRole("DELETE FROM LFG_ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
-        if(HealList.remove(id)) bdd.insertOrRemoveRole("DELETE FROM LFG_ParticiperHEAL WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
-        if(DpsList.remove(id))  bdd.insertOrRemoveRole("DELETE FROM LFG_ParticiperDPS WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
+        if(TankList.remove(id)) SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
+        if(HealList.remove(id)) SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperHEAL WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
+        if(DpsList.remove(id))  SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperDPS WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
     }
 
     private String getStringOfTankList(){

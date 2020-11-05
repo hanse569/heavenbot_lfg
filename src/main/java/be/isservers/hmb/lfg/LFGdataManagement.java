@@ -35,7 +35,7 @@ public class LFGdataManagement {
     }
 
     private static void InitialiseRaid(){
-        ResultSet rs = bdd.getTable("SELECT * FROM ViewRaid");
+        ResultSet rs = SQLiteSource.getTable("SELECT * FROM ViewRaid");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
@@ -51,7 +51,7 @@ public class LFGdataManagement {
     }
 
     private static void InitialiseDonjon(){
-        ResultSet rs = bdd.getTable("SELECT * FROM ViewDonjon");
+        ResultSet rs = SQLiteSource.getTable("SELECT * FROM ViewDonjon");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
@@ -67,7 +67,7 @@ public class LFGdataManagement {
     }
 
     private static void InitialiseBattleground(){
-        ResultSet rs = bdd.getTable("SELECT * FROM ViewBattleground");
+        ResultSet rs = SQLiteSource.getTable("SELECT * FROM ViewBattleground");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
@@ -82,7 +82,7 @@ public class LFGdataManagement {
     }
 
     private static void InitialiseArene(){
-        ResultSet rs = bdd.getTable("SELECT * FROM ViewArene");
+        ResultSet rs = SQLiteSource.getTable("SELECT * FROM ViewArene");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
@@ -98,7 +98,7 @@ public class LFGdataManagement {
 
     public static void InitializeOrganizedDate(ReadyEvent event) {
         try{
-            ResultSet rs = bdd.getTable("SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM LFG_OrganizedDate;");
+            ResultSet rs = SQLiteSource.getTable("SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM LFG_OrganizedDate;");
             while (rs.next()){
                 try{
                     OrganizedDate od = new OrganizedDate();
@@ -119,7 +119,7 @@ public class LFGdataManagement {
             }
             rs.close();
 
-            ResultSet rsTank = bdd.getTable("SELECT * FROM LFG_ParticiperTANK;");
+            ResultSet rsTank = SQLiteSource.getTable("SELECT * FROM LFG_ParticiperTANK;");
             while (rsTank.next()){
                 int idEvent = rsTank.getInt("idEvent");
                 String idMember = rsTank.getString("idMember");
@@ -130,7 +130,7 @@ public class LFGdataManagement {
             }
             rsTank.close();
 
-            ResultSet rsHeal = bdd.getTable("SELECT * FROM LFG_ParticiperHEAL;");
+            ResultSet rsHeal = SQLiteSource.getTable("SELECT * FROM LFG_ParticiperHEAL;");
             while (rsHeal.next()){
                 int idEvent = rsHeal.getInt("idEvent");
                 String idMember = rsHeal.getString("idMember");
@@ -141,7 +141,7 @@ public class LFGdataManagement {
             }
             rsHeal.close();
 
-            ResultSet rsDps = bdd.getTable("SELECT * FROM LFG_ParticiperDPS;");
+            ResultSet rsDps = SQLiteSource.getTable("SELECT * FROM LFG_ParticiperDPS;");
             while (rsDps.next()){
                 int idEvent = rsDps.getInt("idEvent");
                 String idMember = rsDps.getString("idMember");
@@ -172,7 +172,7 @@ public class LFGdataManagement {
         od.setIdMessageDiscord(id);
         listDate.add(od);
 
-        bdd.addEvent(od);
+        SQLiteSource.addEvent(od);
     }
 
     private static void TriListInstance(){

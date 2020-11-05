@@ -1,8 +1,8 @@
 package be.isservers.hmb;
 
-import be.isservers.hmb.database.SQLiteDataSource;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.lfg.LFGmain;
+import be.isservers.hmb.lfg.library.SQLiteSource;
 import me.duncte123.botcommons.BotCommons;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
@@ -87,8 +87,8 @@ public class Listener extends ListenerAdapter {
     }
 
     private String getPrefix(long guildId){
-        try (final PreparedStatement preparedStatement = SQLiteDataSource
-                .getConnection()
+        try (final PreparedStatement preparedStatement = SQLiteSource
+                .getConn()
                 .prepareStatement("SELECT prefix FROM MB_guild_settings WHERE guild_id = ?")){
 
             preparedStatement.setString(1,String.valueOf(guildId));
@@ -99,8 +99,8 @@ public class Listener extends ListenerAdapter {
                 }
             }
             
-            try (final PreparedStatement insertStatement  = SQLiteDataSource
-                    .getConnection()
+            try (final PreparedStatement insertStatement  = SQLiteSource
+                    .getConn()
                     .prepareStatement("INSERT INTO MB_guild_settings(guild_id) VALUES(?)")) {
 
                 insertStatement.setString(1, String.valueOf(guildId));

@@ -1,6 +1,5 @@
 package be.isservers.hmb;
 
-import be.isservers.hmb.database.SQLiteDataSource;
 import be.isservers.hmb.lfg.LFGemoteManagement;
 import be.isservers.hmb.lfg.LFGmain;
 import me.duncte123.botcommons.messaging.EmbedUtils;
@@ -15,7 +14,6 @@ import java.sql.SQLException;
 
 public class Bot {
     private Bot() throws LoginException, SQLException {
-        SQLiteDataSource.getConnection();
 
         EmbedUtils.setEmbedBuilder(
             () -> new EmbedBuilder()

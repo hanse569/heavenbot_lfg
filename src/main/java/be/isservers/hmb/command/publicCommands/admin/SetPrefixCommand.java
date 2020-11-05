@@ -3,7 +3,7 @@ package be.isservers.hmb.command.publicCommands.admin;
 import be.isservers.hmb.VeryBadDesign;
 import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PublicCommandContext;
-import be.isservers.hmb.database.SQLiteDataSource;
+import be.isservers.hmb.lfg.library.SQLiteSource;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -49,8 +49,8 @@ public class SetPrefixCommand implements IPublicCommand {
     private void updatePrefix(long guildId, String newPrefix){
         VeryBadDesign.PREFIXES.put(guildId, newPrefix);
 
-        try (final PreparedStatement preparedStatement = SQLiteDataSource
-                .getConnection()
+        try (final PreparedStatement preparedStatement = SQLiteSource
+                .getConn()
                 .prepareStatement("UPDATE MB_guild_settings SET prefix = ? WHERE guild_id = ?")) {
 
             preparedStatement.setString(1, newPrefix);

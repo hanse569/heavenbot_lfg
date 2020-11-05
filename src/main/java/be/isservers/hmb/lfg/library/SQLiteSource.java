@@ -2,10 +2,9 @@ package be.isservers.hmb.lfg.library;
 
 import java.sql.*;
 
-public class bdd {
-    private static Connection conn = bdd.getConn();
+public class SQLiteSource {
 
-    private static Connection getConn(){
+    public static Connection getConn(){
         Connection conn = null;
         try{
             String url = "jdbc:sqlite:database.db";
@@ -18,7 +17,7 @@ public class bdd {
         ResultSet rs = null;
         try {
             Statement stmt;
-            stmt = conn.createStatement();
+            stmt = getConn().createStatement();
             rs = stmt.executeQuery(query);
         } catch (SQLException ex) { ex.printStackTrace(); }
         return rs;
@@ -28,7 +27,7 @@ public class bdd {
         if(od != null){
             try {
                 String myStatement = "INSERT INTO LFG_OrganizedDate ('admin','instance','difficulty','date','description') VALUES (?,?,?,?,?);";
-                PreparedStatement statement = conn.prepareStatement(myStatement);
+                PreparedStatement statement = getConn().prepareStatement(myStatement);
                 statement.setString(1,od.getAdminId());
                 statement.setInt(2,od.getInstance().getIdInstance());
                 statement.setInt(3,od.getDifficulty());
@@ -43,7 +42,7 @@ public class bdd {
 
     static void insertOrRemoveRole(String request, int idEvent, String idMember){
         try{
-            PreparedStatement statement = conn.prepareStatement(request);
+            PreparedStatement statement = getConn().prepareStatement(request);
             statement.setInt(1,idEvent);
             statement.setString(2,idMember);
             statement.executeUpdate();
