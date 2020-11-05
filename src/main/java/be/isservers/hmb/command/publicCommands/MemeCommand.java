@@ -1,4 +1,4 @@
-package be.isservers.hmb.command.commands;
+package be.isservers.hmb.command.publicCommands;
 
 import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PublicCommandContext;
@@ -8,11 +8,11 @@ import me.duncte123.botcommons.web.WebUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class JokeCommand implements IPublicCommand {
+public class MemeCommand implements IPublicCommand {
     @Override
     public void handle(PublicCommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
-        WebUtils.ins.getJSONObject("https://apis.duncte123.me/joke").async((json) -> {
+        WebUtils.ins.getJSONObject("https://apis.duncte123.me/meme").async((json) -> {
             if (!json.get("success").asBoolean()){
                 channel.sendMessage(":x: Une erreur s'est produite, réessayez plus tard").queue();
                 System.out.println(json);
@@ -22,22 +22,21 @@ public class JokeCommand implements IPublicCommand {
             final JsonNode data = json.get("data");
             final String title = data.get("title").asText();
             final String url = data.get("url").asText();
-            final String body = data.get("body").asText();
-            final EmbedBuilder embed = EmbedUtils.defaultEmbed()
-                    .setTitle(title,url)
-                    .setDescription(body);
+            final String image = data.get("image").asText();
+            final EmbedBuilder embed = EmbedUtils.embedImageWithTitle(title, url, image);
 
             channel.sendMessage(embed.build()).queue();
         });
+
     }
 
     @Override
     public String getName() {
-        return "joke";
+        return "meme";
     }
 
     @Override
     public String getHelp() {
-        return ":x: Une erreur s'est produite, réessayez plus tard";
+        return "Montre un meme aléatoire";
     }
 }

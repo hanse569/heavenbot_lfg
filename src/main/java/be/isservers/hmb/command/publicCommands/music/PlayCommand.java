@@ -1,4 +1,4 @@
-package be.isservers.hmb.command.commands.music;
+package be.isservers.hmb.command.publicCommands.music;
 
 import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PublicCommandContext;

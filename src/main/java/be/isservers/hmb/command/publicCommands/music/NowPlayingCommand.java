@@ -1,19 +1,26 @@
-package be.isservers.hmb.command.commands.music;
+package be.isservers.hmb.command.publicCommands.music;
 
 import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PublicCommandContext;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
+import be.isservers.hmb.utils.HvmAudioTrack_youtube;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class StopCommand implements IPublicCommand {
+import java.util.List;
 
+import static me.duncte123.botcommons.messaging.MessageUtils.sendEmbed;
+
+public class NowPlayingCommand implements IPublicCommand {
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
     @Override
     public void handle(PublicCommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
+
         final Member self = ctx.getSelfMember();
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
@@ -36,20 +43,35 @@ public class StopCommand implements IPublicCommand {
         }
 
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
+        final AudioPlayer audioPlayer = musicManager.audioPlayer;
+        HvmAudioTrack_youtube audioTrackYoutube = (HvmAudioTrack_youtube) audioPlayer.getPlayingTrack();
 
-        musicManager.scheduler.player.stopTrack();
-        musicManager.scheduler.queue.clear();
+        if (audioTrackYoutube == null) {
+            channel.sendMessage("Il n'y a pas de lecture actuellement").queue();
+            return;
+        }
 
-        channel.sendMessage("Le bot music a été arrêté et la file d'attente a été effacée").queue();
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle(audioTrackYoutube.getInfo().title,audioTrackYoutube.getInfo().uri);
+        eb.setDescription("Ajouté par " + audioTrackYoutube.get_hvm_author().getName());
+        eb.setThumbnail("https://img.youtube.com/vi/"+audioTrackYoutube.getIdentifier()+"/1.jpg");
+        eb.setAuthor("\uD83C\uDFB5 Lecture en cours");
+        sendEmbed(channel,eb.build());
+
     }
 
     @Override
     public String getName() {
-        return "stop";
+        return "nowplaying";
     }
 
     @Override
     public String getHelp() {
-        return "Arrête la chanson en cours et efface la file d'attente";
+        return "Affiche la chanson en cours de lecture";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("now", "np");
     }
 }

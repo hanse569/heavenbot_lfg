@@ -1,4 +1,4 @@
-package be.isservers.hmb.command.commands;
+package be.isservers.hmb.command.publicCommands;
 
 import be.isservers.hmb.CommandManager;
 import be.isservers.hmb.VeryBadDesign;
