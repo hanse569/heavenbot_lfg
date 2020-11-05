@@ -6,8 +6,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 
 public class MessageUtils {
-    public static void SendPrivateMessage(User user){
-        user.openPrivateChannel().queue( (channel) -> channel.sendMessage("__*Syntaxe: !lfg <raid|donjon|bg|arene>*__").queue() );
+    public static void SendPrivateMessage(User user, String message){
+        user.openPrivateChannel().queue( (channel) -> channel.sendMessage(message).queue() );
     }
 
     public static void SendPrivateRichEmbed(User user, EmbedBuilder embedBuilder){

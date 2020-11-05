@@ -25,7 +25,7 @@ public class LFGdataManagement {
     private final static ArrayList<Instance> BattleGround = new ArrayList<>();
     private final static ArrayList<Instance> Arene = new ArrayList<>();
 
-    static Guild heavenDiscord;
+    public static Guild heavenDiscord;
 
     static  {
         InitialiseRaid();
@@ -96,7 +96,7 @@ public class LFGdataManagement {
         catch (SQLException ex) { ex.printStackTrace(); }
     }
 
-    static void InitializeOrganizedDate(ReadyEvent event) {
+    public static void InitializeOrganizedDate(ReadyEvent event) {
         try{
             ResultSet rs = bdd.getTable("SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM LFG_OrganizedDate;");
             while (rs.next()){

@@ -2,7 +2,6 @@ package be.isservers.hmb.lfg.library;
 
 import be.isservers.hmb.lfg.LFGdataManagement;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
@@ -13,7 +12,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class OrganizedDate implements Comparable<OrganizedDate>{
-    public static JDA jda;
+    //public static JDA jda;
 
     private int id;
     private String idMessageDiscord;

@@ -4,6 +4,7 @@ import be.isservers.hmb.command.IPrivateCommand;
 import be.isservers.hmb.command.IPublicCommand;
 import be.isservers.hmb.command.PrivateCommandContext;
 import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.privateCommand.LfgCommand;
 import be.isservers.hmb.command.publicCommands.HelpCommand;
 import be.isservers.hmb.command.publicCommands.JokeCommand;
 import be.isservers.hmb.command.publicCommands.MemeCommand;
@@ -39,6 +40,8 @@ public class CommandManager {
         addPublicCommand(new SkipCommand());
         addPublicCommand(new NowPlayingCommand());
         addPublicCommand(new QueueCommand());
+
+        addPrivateCommand(new LfgCommand());
     }
 
     private void addPublicCommand(IPublicCommand cmd){
@@ -118,8 +121,18 @@ public class CommandManager {
         String[] split = event.getMessage().getContentRaw()
                 .replaceFirst("(?i)" + Pattern.quote(prefix),"")
                 .split("\\s+");
-
         String invoke = split[0].toLowerCase();
+
+        genericHandle(event,invoke,split);
+    }
+
+    void handle(PrivateMessageReceivedEvent event) {
+        String[] split = event.getMessage().getContentRaw().split("\\s+");
+
+        genericHandle(event,"lfg",split);
+    }
+
+    private void genericHandle(PrivateMessageReceivedEvent event, String invoke, String[] split) {
         IPrivateCommand cmd = this.getPrivateCommand(invoke);
 
         if (cmd != null){

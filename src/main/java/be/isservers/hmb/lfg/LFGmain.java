@@ -5,11 +5,9 @@ import be.isservers.hmb.lfg.library.MessageUtils;
 import be.isservers.hmb.lfg.library.NotFoundException;
 import be.isservers.hmb.lfg.library.OrganizedDate;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -29,30 +27,10 @@ import static be.isservers.hmb.lfg.LFGdataManagement.getInstanceObjectWithOrder;
 
 public class LFGmain extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGmain.class);
-    private ArrayList<OrganizedDate> tmpListDate = new ArrayList<>();
-    public static int nr = 0;
+    private static ArrayList<OrganizedDate> tmpListDate = new ArrayList<>();
+    static int nr = 0;
 
-    @SuppressWarnings({"PlaceholderCountMatchesArgumentCount", "ConstantConditions"})
-    @Override
-    public void onReady(@Nonnull ReadyEvent event) {
-        if(event.getJDA().getGuilds().isEmpty()){
-            LOGGER.info("This bot is not on any guilds!", event.getJDA().getSelfUser().getAsTag());
-        }
-        else{
-            OrganizedDate.jda = event.getJDA();
-
-            for (Guild guild : event.getJDA().getGuilds()){
-                if(guild.getId().equals(Config.getIdDiscordHeaven())){
-                    LOGGER.info("Connected to " + guild.getName(), event.getJDA().getSelfUser().getAsTag());
-                    clear(guild.getTextChannelById(Config.getIdChannelHeavenBot()));
-                    LFGdataManagement.heavenDiscord = guild;
-                    LFGdataManagement.InitializeOrganizedDate(event);
-                }
-            }
-        }
-    }
-
-    private void clear(TextChannel channel){
+    public static void Clear(TextChannel channel){
         List<Message> messages = channel.getHistory().retrievePast(50).complete();
         if(!(messages.isEmpty() || messages.size() < 2)) {
             LOGGER.info("Deleting messages in the channel " + channel);
@@ -69,62 +47,57 @@ public class LFGmain extends ListenerAdapter {
         }
     }
 
-    @Override
-    public void onPrivateMessageReceived(@Nonnull PrivateMessageReceivedEvent event) {
-        User user = event.getAuthor();
-        Message msg = event.getMessage();
+    public static void  privateMessageReceivedEvent(PrivateMessageReceivedEvent ctx, List<String> args) {
 
         OrganizedDate newOD = null;
         for (OrganizedDate obj: tmpListDate) {
-            if(obj.getAdminId().equals(user.getId()))
+            if(obj.getAdminId().equals(ctx.getAuthor().getId()))
                 newOD = obj;
         }
 
-        if(!event.getAuthor().isBot()) {
-            if(newOD==null) {
-                newOD = new OrganizedDate(user.getId());
-                tmpListDate.add(newOD);
-            }
-
-            if(newOD.etape == 0){
-                if(msg.getContentDisplay().startsWith("!lfg raid")){
-                    AfficheListRaid(user);
-
-                    newOD.type = 1;
-                    newOD.etape++;
-                }
-                else if(msg.getContentDisplay().startsWith("!lfg donjon")){
-                    AfficheListDonjon(user);
-
-                    newOD.type = 2;
-                    newOD.etape++;
-                }/*
-                else if(msg.getContentDisplay().startsWith("!lfg bg")){
-                    tmpDate = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
-                    this.SendPrivateMessage(user,"**Creation d'un bg**");
-                    this.etape = 3;
-                    etape++;
-                }
-                else if(msg.getContentDisplay().startsWith("!lfg arene")){
-                    tmpDate = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
-                    this.SendPrivateMessage(user,"**Creation d'une arene**");
-                    this.etape = 4;
-                    etape++;
-                }*/
-                else{
-                    MessageUtils.SendPrivateMessage(user);
-                }
-            }
-            else if(newOD.type > 0){
-                if(newOD.type == 1 || newOD.type == 2){
-                    ProgrammationInstance(event,newOD);
-                }
-            }
-
+        if(newOD==null) {
+            newOD = new OrganizedDate(ctx.getAuthor().getId());
+            tmpListDate.add(newOD);
         }
+
+        if(newOD.etape == 0){
+            if(args.get(0).startsWith("raid")){
+                AfficheListRaid(ctx.getAuthor());
+
+                newOD.type = 1;
+                newOD.etape++;
+            }
+            else if(args.get(0).startsWith("donjon")){
+                AfficheListDonjon(ctx.getAuthor());
+
+                newOD.type = 2;
+                newOD.etape++;
+            }/*
+            else if(msg.getContentDisplay().startsWith("!lfg bg")){
+                tmpDate = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
+                this.SendPrivateMessage(user,"**Creation d'un bg**");
+                this.etape = 3;
+                etape++;
+            }
+            else if(msg.getContentDisplay().startsWith("!lfg arene")){
+                tmpDate = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
+                this.SendPrivateMessage(user,"**Creation d'une arene**");
+                this.etape = 4;
+                etape++;
+            }*/
+            else{
+                MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|bg|arene>*__");
+            }
+        }
+        else if(newOD.type > 0){
+            if(newOD.type == 1 || newOD.type == 2){
+                ProgrammationInstance(ctx,newOD);
+            }
+        }
+
     }
 
-    private void ProgrammationInstance(PrivateMessageReceivedEvent event, OrganizedDate newRaid){
+    private static void ProgrammationInstance(PrivateMessageReceivedEvent event, OrganizedDate newRaid){
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
@@ -232,7 +205,7 @@ public class LFGmain extends ListenerAdapter {
         } //Enregistrement description
     }
 
-    private void AfficheListRaid(User user){
+    private static void AfficheListRaid(User user){
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor("Creation d'un raid");
         eb.setTitle("Choisissez l'instance a l'aide du numero: ");
@@ -244,7 +217,7 @@ public class LFGmain extends ListenerAdapter {
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
-    private void AfficheListDonjon(User user){
+    private static void AfficheListDonjon(User user){
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor("Creation d'un donjon");
         eb.setTitle("Choisissez l'instance a l'aide du numero: ");

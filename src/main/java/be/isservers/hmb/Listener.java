@@ -1,10 +1,14 @@
 package be.isservers.hmb;
 
 import be.isservers.hmb.database.SQLiteDataSource;
+import be.isservers.hmb.lfg.LFGdataManagement;
+import be.isservers.hmb.lfg.LFGmain;
 import me.duncte123.botcommons.BotCommons;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +23,24 @@ public class Listener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
     private final CommandManager manager = new CommandManager();
 
+    @SuppressWarnings({"ConstantConditions", "PlaceholderCountMatchesArgumentCount"})
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
         LOGGER.info("{} is ready", event.getJDA().getSelfUser().getAsTag());
+
+        if(event.getJDA().getGuilds().isEmpty()){
+            LOGGER.info("This bot is not on any guilds!", event.getJDA().getSelfUser().getAsTag());
+        }
+        else{
+            for (Guild guild : event.getJDA().getGuilds()){
+                if(guild.getId().equals(Config.getIdDiscordHeaven())){
+                    LOGGER.info("Connected to " + guild.getName(), event.getJDA().getSelfUser().getAsTag());
+                    LFGmain.Clear(guild.getTextChannelById(Config.getIdChannelHeavenBot()));
+                    LFGdataManagement.heavenDiscord = guild;
+                    LFGdataManagement.InitializeOrganizedDate(event);
+                }
+            }
+        }
     }
 
     @Override
@@ -45,6 +64,25 @@ public class Listener extends ListenerAdapter {
 
         if (raw.startsWith(prefix)){
             manager.handle(event,prefix);
+        }
+    }
+
+    @Override
+    public void onPrivateMessageReceived(@Nonnull PrivateMessageReceivedEvent event) {
+        User user = event.getAuthor();
+
+        if (user.isBot()){
+            return;
+        }
+
+        String prefix = "!";
+        String raw = event.getMessage().getContentRaw();
+
+        if (raw.startsWith(prefix)){
+            manager.handle(event,prefix);
+        }
+        else {
+            manager.handle(event);
         }
     }
 
