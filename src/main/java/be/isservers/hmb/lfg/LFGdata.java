@@ -2,6 +2,7 @@ package be.isservers.hmb.lfg;
 
 import be.isservers.hmb.Config;
 import be.isservers.hmb.lfg.library.Instance;
+import be.isservers.hmb.lfg.library.NotFoundException;
 import be.isservers.hmb.lfg.library.OrganizedDate;
 import be.isservers.hmb.lfg.library.bdd;
 import net.dv8tion.jda.api.JDA;
@@ -116,4 +117,37 @@ public class LFGdata {
         Member member = guild.retrieveMemberById(id).complete();
         return member.getEffectiveName();
     }
+
+    public static Instance getInstanceObjectWithId(int val) throws NotFoundException {
+        for (Instance obj : LFGdata.Raid){
+            if(obj.getIdInstance() == val){
+                return obj;
+            }
+        }
+
+        for (Instance obj : LFGdata.Donjon){
+            if(obj.getIdInstance() == val){
+                return obj;
+            }
+        }
+
+        throw new NotFoundException();
+    }
+
+    public static Instance getInstanceObjectWithOrder(int type,int val) throws NotFoundException{
+        Instance instance;
+
+        if(type == 1){
+            instance = LFGdata.Raid.get(val);
+            if(instance != null) return instance;
+        }
+        else if(type == 2){
+            instance = LFGdata.Donjon.get(val);
+            if(instance != null) return instance;
+        }
+
+        throw new NotFoundException();
+    }
+
+
 }

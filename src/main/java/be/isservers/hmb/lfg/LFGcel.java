@@ -26,6 +26,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static be.isservers.hmb.lfg.LFGdata.getInstanceObjectWithId;
+import static be.isservers.hmb.lfg.LFGdata.getInstanceObjectWithOrder;
+
 public class LFGcel extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGcel.class);
     private ArrayList<OrganizedDate> tmpListDate = new ArrayList<>();
@@ -67,7 +70,7 @@ public class LFGcel extends ListenerAdapter {
                     OrganizedDate od = new OrganizedDate();
                     od.setId(rs.getInt("id"));
                     od.setAdmin(rs.getString("admin"));
-                    od.setInstance(this.getInstanceObjectWithId(rs.getInt("instance")));
+                    od.setInstance(getInstanceObjectWithId(rs.getInt("instance")));
                     od.setDifficulty(rs.getInt("difficulty"));
                     od.setDate(new SimpleDateFormat("dd/MM/yyyy hh:mm aa").parse(rs.getString("date")));
                     od.setDescription(rs.getString("description"));
@@ -125,36 +128,9 @@ public class LFGcel extends ListenerAdapter {
         catch (SQLException | ParseException ex) { ex.printStackTrace(); }
     }
 
-    private Instance getInstanceObjectWithId(int val) throws NotFoundException{
-        for (Instance obj : LFGdata.Raid){
-            if(obj.getIdInstance() == val){
-                return obj;
-            }
-        }
 
-        for (Instance obj : LFGdata.Donjon){
-            if(obj.getIdInstance() == val){
-                return obj;
-            }
-        }
 
-        throw new NotFoundException();
-    }
 
-    private Instance getInstanceObjectWithOrder(int type,int val) throws NotFoundException{
-        Instance instance;
-
-        if(type == 1){
-            instance = LFGdata.Raid.get(val);
-            if(instance != null) return instance;
-        }
-        else if(type == 2){
-            instance = LFGdata.Donjon.get(val);
-            if(instance != null) return instance;
-        }
-
-        throw new NotFoundException();
-    }
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
@@ -235,7 +211,7 @@ public class LFGcel extends ListenerAdapter {
         if(newRaid.etape == 1){ //Enregistrement raid et Demande difficulté
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
-                newRaid.setInstance(this.getInstanceObjectWithOrder(newRaid.type,val-1));
+                newRaid.setInstance(getInstanceObjectWithOrder(newRaid.type,val-1));
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
