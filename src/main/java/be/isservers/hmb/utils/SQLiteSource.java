@@ -42,7 +42,7 @@ public class SQLiteSource {
         }
     }
 
-    static void insertOrRemoveRole(String request, int idEvent, String idMember){
+    public static void insertOrRemoveRole(String request, int idEvent, String idMember){
         try{
             PreparedStatement statement = getConn().prepareStatement(request);
             statement.setInt(1,idEvent);
