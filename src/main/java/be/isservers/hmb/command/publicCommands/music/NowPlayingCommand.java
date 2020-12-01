@@ -1,7 +1,7 @@
 package be.isservers.hmb.command.publicCommands.music;
 
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
 import be.isservers.hmb.lfg.library.MessageUtils;
@@ -14,10 +14,9 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-public class NowPlayingCommand implements IPublicCommand {
+public class NowPlayingCommand implements ICommand {
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
-    @Override
-    public void handle(PublicCommandContext ctx) {
+    public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
 
         final Member self = ctx.getSelfMember();
@@ -56,6 +55,11 @@ public class NowPlayingCommand implements IPublicCommand {
         eb.setThumbnail("https://img.youtube.com/vi/"+audioTrackYoutube.getIdentifier()+"/1.jpg");
         eb.setAuthor("\uD83C\uDFB5 Lecture en cours");
         MessageUtils.SendPublicRichEmbed(channel,eb.build());
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override

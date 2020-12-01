@@ -1,7 +1,7 @@
 package be.isservers.hmb.command.publicCommands.music;
 
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
@@ -11,10 +11,9 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-public class SkipCommand implements IPublicCommand {
+public class SkipCommand implements ICommand {
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
-    @Override
-    public void handle(PublicCommandContext ctx) {
+    public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         final Member self = ctx.getSelfMember();
         final GuildVoiceState selfVoiceState = self.getVoiceState();
@@ -47,6 +46,11 @@ public class SkipCommand implements IPublicCommand {
 
         musicManager.scheduler.nextTrack();
         channel.sendMessage(":fast_forward: Passage à la musique suivante").queue();
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override

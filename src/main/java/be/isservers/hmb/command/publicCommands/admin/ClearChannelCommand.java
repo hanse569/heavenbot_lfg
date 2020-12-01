@@ -1,7 +1,7 @@
 package be.isservers.hmb.command.publicCommands.admin;
 
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class ClearChannelCommand implements IPublicCommand {
-    @Override
-    public void handle(PublicCommandContext ctx) {
+public class ClearChannelCommand implements ICommand {
+    public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         final List<String> args = ctx.getArgs();
         final Member member = ctx.getMember();
@@ -75,6 +74,11 @@ public class ClearChannelCommand implements IPublicCommand {
 
                 return 0;
             });
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override

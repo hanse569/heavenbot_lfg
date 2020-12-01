@@ -1,7 +1,7 @@
 package be.isservers.hmb.command.publicCommands.music;
 
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
 import be.isservers.hmb.lfg.library.MessageUtils;
@@ -13,9 +13,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
-public class QueueCommand implements IPublicCommand {
-    @Override
-    public void handle(PublicCommandContext ctx) {
+public class QueueCommand implements ICommand {
+    public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
         final BlockingQueue<HvmAudioTrack_youtube> queue = musicManager.scheduler.queue;
@@ -49,6 +48,11 @@ public class QueueCommand implements IPublicCommand {
         eb.setDescription(description.toString());
 
         MessageUtils.SendPublicRichEmbed(channel,eb.build());
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override

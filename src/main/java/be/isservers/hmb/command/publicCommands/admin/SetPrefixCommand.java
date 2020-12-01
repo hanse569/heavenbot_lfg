@@ -1,8 +1,8 @@
 package be.isservers.hmb.command.publicCommands.admin;
 
 import be.isservers.hmb.VeryBadDesign;
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.utils.SQLiteSource;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -12,9 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class SetPrefixCommand implements IPublicCommand {
-    @Override
-    public void handle(PublicCommandContext ctx) {
+public class SetPrefixCommand implements ICommand {
+    public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         final List<String> args = ctx.getArgs();
         final Member member = ctx.getMember();
@@ -33,6 +32,11 @@ public class SetPrefixCommand implements IPublicCommand {
         updatePrefix(ctx.getGuild().getIdLong(), newPrefix);
 
         channel.sendMessageFormat("New prefix has been set to `%s`",newPrefix).queue();
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override

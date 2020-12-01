@@ -1,12 +1,11 @@
 package be.isservers.hmb.command.publicCommands;
 
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import net.dv8tion.jda.api.JDA;
 
-public class PingCommand implements IPublicCommand {
-    @Override
-    public void handle(PublicCommandContext ctx) {
+public class PingCommand implements ICommand {
+    public void handle(CommandContext ctx) {
         JDA jda = ctx.getJDA();
 
         jda.getRestPing().queue(
@@ -14,6 +13,11 @@ public class PingCommand implements IPublicCommand {
                 .sendMessageFormat("Reset ping: %sms\nWS ping: %sms",ping,jda.getGatewayPing()).queue()
         );
 
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override

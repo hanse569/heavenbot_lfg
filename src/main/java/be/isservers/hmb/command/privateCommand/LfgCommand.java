@@ -1,13 +1,17 @@
 package be.isservers.hmb.command.privateCommand;
 
-import be.isservers.hmb.command.IPrivateCommand;
-import be.isservers.hmb.command.PrivateCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lfg.LFGmain;
 
-public class LfgCommand implements IPrivateCommand {
+public class LfgCommand implements ICommand {
+    public void handle(CommandContext ctx) {
+        LFGmain.privateMessageReceivedEvent(ctx.getPrivateEvent(),ctx.getArgs());
+    }
+
     @Override
-    public void handle(PrivateCommandContext ctx) {
-        LFGmain.privateMessageReceivedEvent(ctx.getEvent(),ctx.getArgs());
+    public int getType() {
+        return this.PRIVATE_COMMAND;
     }
 
     @Override

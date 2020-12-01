@@ -1,7 +1,7 @@
 package be.isservers.hmb.command.publicCommands.music;
 
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.PlayerManager;
 import be.isservers.hmb.utils.HttpRequest;
 import be.isservers.hmb.youtubeApi.Converter;
@@ -16,10 +16,9 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 @SuppressWarnings("DuplicatedCode")
-public class PlayCommand implements IPublicCommand {
+public class PlayCommand implements ICommand {
     @SuppressWarnings("ConstantConditions")
-    @Override
-    public void handle(PublicCommandContext ctx) {
+    public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
 
         if (ctx.getArgs().isEmpty()) {
@@ -66,6 +65,11 @@ public class PlayCommand implements IPublicCommand {
         }
 
         PlayerManager.getInstance().loadAndPlay(channel, link, ctx.getAuthor());
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override

@@ -4,6 +4,13 @@ import java.util.List;
 
 public interface ICommand {
 
+    int PUBLIC_COMMAND = 1;
+    int PRIVATE_COMMAND = 2;
+
+    void handle(CommandContext ctx);
+
+    int getType();
+
     String getName();
 
     String getHelp();
@@ -11,4 +18,6 @@ public interface ICommand {
     default List<String> getAliases(){
         return List.of();
     }
+
+
 }

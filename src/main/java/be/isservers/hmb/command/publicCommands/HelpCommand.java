@@ -2,14 +2,13 @@ package be.isservers.hmb.command.publicCommands;
 
 import be.isservers.hmb.CommandManager;
 import be.isservers.hmb.VeryBadDesign;
+import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-public class HelpCommand implements IPublicCommand {
+public class HelpCommand implements ICommand {
 
     private final CommandManager manager;
 
@@ -17,8 +16,7 @@ public class HelpCommand implements IPublicCommand {
         this.manager = manager;
     }
 
-    @Override
-    public void handle(PublicCommandContext ctx) {
+    public void handle(CommandContext ctx) {
         List<String> args = ctx.getArgs();
         TextChannel channel = ctx.getChannel();
 
@@ -28,26 +26,42 @@ public class HelpCommand implements IPublicCommand {
 
             builder.append("Liste des commandes\n");
 
-            manager.getPublicCommands().stream().map(ICommand::getName).forEach(
-                    (it) -> builder.append('`')
+            for (ICommand command : manager.getCommands()) {
+                if (command.getType() == ICommand.PUBLIC_COMMAND)
+                    builder.append('`')
                             .append(prefix)
-                            .append(it)
-                            .append("`\n")
-            );
+                            .append(command.getName())
+                            .append("`\n");
+            }
 
             channel.sendMessage(builder.toString()).queue();
             return;
         }
 
         String search = args.get(0);
-        ICommand command = manager.getPublicCommand(search);
+        ICommand command = manager.getCommand(search);
 
         if (command == null){
             channel.sendMessage("Rien trouvé pour " + search).queue();
             return;
         }
 
+        if (ctx.getGuildEvent() != null && command.getType() == ICommand.PRIVATE_COMMAND) {
+            channel.sendMessage(search + " est une commande réservé au chat privé").queue();
+            return;
+        }
+
+        if (ctx.getPrivateEvent() != null && command.getType() == ICommand.PUBLIC_COMMAND) {
+            channel.sendMessage(search + " est une commande réservé au channel heavenbot / bot-spam").queue();
+            return;
+        }
+
         channel.sendMessage(command.getHelp()).queue();
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override

@@ -1,15 +1,14 @@
 package be.isservers.hmb.command.publicCommands;
 
-import be.isservers.hmb.command.IPublicCommand;
-import be.isservers.hmb.command.PublicCommandContext;
+import be.isservers.hmb.command.CommandContext;
+import be.isservers.hmb.command.ICommand;
 import com.fasterxml.jackson.databind.JsonNode;
 import me.duncte123.botcommons.web.WebUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class JokeCommand implements IPublicCommand {
-    @Override
-    public void handle(PublicCommandContext ctx) {
+public class JokeCommand implements ICommand {
+    public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         WebUtils.ins.getJSONObject("https://apis.duncte123.me/joke").async((json) -> {
             if (!json.get("success").asBoolean()){
@@ -28,6 +27,11 @@ public class JokeCommand implements IPublicCommand {
 
             channel.sendMessage(embed.build()).queue();
         });
+    }
+
+    @Override
+    public int getType() {
+        return this.PUBLIC_COMMAND;
     }
 
     @Override
