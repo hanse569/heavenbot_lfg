@@ -192,6 +192,12 @@ public class LFGdataManagement {
             }
         }
 
+        for (Instance obj : LFGdataManagement.JcJ){
+            if(obj.getIdInstance() == val){
+                return obj;
+            }
+        }
+
         throw new NotFoundException();
     }
 
