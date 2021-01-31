@@ -46,7 +46,7 @@ public class ClearChannelCommand implements ICommand {
         }
 
         channel.getIterableHistory()
-            .takeAsync(amount)
+            .takeAsync(amount+1)
             .thenApplyAsync((messages) -> {
                 List<Message> goodMessages = messages.stream()
                     .filter((m) -> !m.getTimeCreated().isAfter(
@@ -59,7 +59,7 @@ public class ClearChannelCommand implements ICommand {
                 return goodMessages.size();
             })
             .whenCompleteAsync(
-                (count,thr) -> channel.sendMessageFormat("Messages `%d` supprimés",count).queue(
+                (count,thr) -> channel.sendMessageFormat("`%d` Messages supprimés",count-1).queue(
                         (message) -> message.delete().queueAfter(10, TimeUnit.SECONDS)
                 )
             )
