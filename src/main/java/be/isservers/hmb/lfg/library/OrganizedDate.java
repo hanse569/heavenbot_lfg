@@ -13,14 +13,12 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class OrganizedDate implements Comparable<OrganizedDate>{
-    //public static JDA jda;
 
     private int id;
     private String idMessageDiscord;
     private String admin;
     private Instance instance;
     private int difficulty;
-    private int keyNumber = 0;
     private Date date;
     private String description;
     private ArrayList<String> TankList = new ArrayList<>();
@@ -45,9 +43,6 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         this.description = description;
     }
     public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
-    public void setKeyNumber(int keyNumber) {
-        this.keyNumber = keyNumber;
-    }
 
     public int getId() { return id; }
     public String getAdminId() { return this.admin; }
@@ -65,7 +60,6 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         return dateFormat.format(this.getDateToDate());
     }
     public String getDescription() { return description; }
-    public int getKeyNumber() { return keyNumber; }
 
     public EmbedBuilder getEmbedBuilder(){
         EmbedBuilder eb = new EmbedBuilder();
