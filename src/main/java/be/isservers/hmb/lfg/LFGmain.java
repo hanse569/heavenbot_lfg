@@ -1,9 +1,11 @@
 package be.isservers.hmb.lfg;
 
 import be.isservers.hmb.Config;
+import be.isservers.hmb.lfg.library.Instance;
 import be.isservers.hmb.lfg.library.MessageUtils;
 import be.isservers.hmb.lfg.library.NotFoundException;
 import be.isservers.hmb.lfg.library.OrganizedDate;
+import be.isservers.hmb.utils.EmoteNumber;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -27,7 +29,7 @@ import static be.isservers.hmb.lfg.LFGdataManagement.getInstanceObjectWithOrder;
 
 public class LFGmain extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGmain.class);
-    private static ArrayList<OrganizedDate> tmpListDate = new ArrayList<>();
+    private static ArrayList<EditEvent> listEventEdited = new ArrayList<>();
     static int nr = 0;
 
     public static void Clear(TextChannel channel){
@@ -48,60 +50,78 @@ public class LFGmain extends ListenerAdapter {
     }
 
     public static void  privateMessageReceivedEvent(PrivateMessageReceivedEvent ctx, List<String> args) {
-
-        OrganizedDate newOD = null;
-        for (OrganizedDate obj: tmpListDate) {
-            if(obj.getAdminId().equals(ctx.getAuthor().getId()))
-                newOD = obj;
+        EditEvent ee = null;
+        for (EditEvent obj: listEventEdited) {
+            if(obj.getOd().getAdminId().equals(ctx.getAuthor().getId()))
+                ee = obj;
         }
 
-        if(newOD==null) {
-            newOD = new OrganizedDate(ctx.getAuthor().getId());
-            tmpListDate.add(newOD);
-        }
+        if (ee == null) {
+            if (args.size() > 0) {
+                if(args.get(0).startsWith("raid")){
+                    ee = new EditEvent(EditEvent.ADD,new OrganizedDate(ctx.getAuthor().getId()));
+                    listEventEdited.add(ee);
+                    AfficheListRaid(ctx.getAuthor());
 
-        if(newOD.etape == 0){
-            if(args.get(0).startsWith("raid")){
-                AfficheListRaid(ctx.getAuthor());
+                    ee.type = 1;
+                    ee.etape++;
+                }
+                else if(args.get(0).startsWith("donjon")){
+                    ee = new EditEvent(EditEvent.ADD,new OrganizedDate(ctx.getAuthor().getId()));
+                    listEventEdited.add(ee);
+                    AfficheListDonjon(ctx.getAuthor());
 
-                newOD.type = 1;
-                newOD.etape++;
-            }
-            else if(args.get(0).startsWith("donjon")){
-                AfficheListDonjon(ctx.getAuthor());
+                    ee.type = 2;
+                    ee.etape++;
+                }
+                else if(args.get(0).startsWith("jcj")){
+                    ee = new EditEvent(EditEvent.ADD,new OrganizedDate(ctx.getAuthor().getId()));
+                    listEventEdited.add(ee);
+                    AfficheListJCJ(ctx.getAuthor());
 
-                newOD.type = 2;
-                newOD.etape++;
-            }
-            else if(args.get(0).startsWith("jcj")){
-                AfficheListJCJ(ctx.getAuthor());
+                    ee.type = 3;
+                    ee.etape++;
+                }
+                else if(args.get(0).startsWith("delete")){
+                    ee = new EditEvent(EditEvent.DELETE,new OrganizedDate(ctx.getAuthor().getId()));
+                    listEventEdited.add(ee);
+                    AfficheListEventCreateByUser(ctx.getAuthor());
 
-                newOD.type = 3;
-                newOD.etape++;
+                    ee.etape++;
+                }
+                else {
+                    MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|jcj>*__");
+                }
             }
             else{
                 MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|jcj>*__");
             }
         }
-        else if(newOD.type > 0){
-            if(newOD.type == 1 || newOD.type == 2){
-                ProgrammationPVE(ctx,newOD);
+        else
+        {
+            if (ee.getAction() == EditEvent.ADD){
+                if(ee.type == 1 || ee.type == 2){
+                    ProgrammationPVE(ctx,ee);
+                }
+                else if(ee.type == 3) {
+                    ProgrammationPVP(ctx,ee);
+                }
             }
-            else if(newOD.type == 3) {
-                ProgrammationPVP(ctx,newOD);
+            else if(ee.getAction() == EditEvent.DELETE){
+                MessageUtils.SendPrivateMessage(ctx.getAuthor(),"Event demandé à être supprimé: " + Integer.parseInt(ctx.getMessage().getContentDisplay()));
+                listEventEdited.remove(ee);
             }
         }
-
     }
 
-    private static void ProgrammationPVE(PrivateMessageReceivedEvent event, OrganizedDate newRaid){
+    private static void ProgrammationPVE(PrivateMessageReceivedEvent event, EditEvent ee){
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
-        if(newRaid.etape == 1){ //Enregistrement raid et Demande difficulté
+        if(ee.etape == 1){ //Enregistrement raid et Demande difficulté
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
-                newRaid.setInstance(getInstanceObjectWithOrder(newRaid.type,val-1));
+                ee.getOd().setInstance(getInstanceObjectWithOrder(ee.type,val-1));
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
@@ -110,17 +130,17 @@ public class LFGmain extends ListenerAdapter {
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
-                newRaid.etape++;
+                ee.etape++;
             }
             catch(NumberFormatException | NotFoundException ex){
                 AfficheListRaid(user);
             }
 
         } //Enregistrement raid et Demande difficulté
-        else if(newRaid.etape == 2){
+        else if(ee.etape == 2){
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
-                newRaid.setDifficulty(val-1);
+                ee.getOd().setDifficulty(val-1);
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
@@ -129,7 +149,7 @@ public class LFGmain extends ListenerAdapter {
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
-                newRaid.etape++;
+                ee.etape++;
             }
             catch(NumberFormatException ex){
                 EmbedBuilder eb = new EmbedBuilder();
@@ -139,11 +159,11 @@ public class LFGmain extends ListenerAdapter {
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement difficulté et Demande date
-        else if(newRaid.etape == 3){
+        else if(ee.etape == 3){
             try{
                 DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = df.parse(msg.getContentDisplay());
-                newRaid.setDate(date);
+                ee.getOd().setDate(date);
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
@@ -151,7 +171,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setDescription("*Exemple*: 21:00");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
-                newRaid.etape++;
+                ee.etape++;
             } catch (ParseException ex){
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
@@ -161,25 +181,25 @@ public class LFGmain extends ListenerAdapter {
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregristement date et demande heure
-        else if(newRaid.etape == 4){
+        else if(ee.etape == 4){
             try{
                 DateFormat df = new SimpleDateFormat("HH:mm");
                 Date date = df.parse(msg.getContentDisplay());
 
                 Calendar newDate = Calendar.getInstance();
-                newDate.setTime(newRaid.getDateToDate());
+                newDate.setTime(ee.getOd().getDateToDate());
                 Calendar heure = Calendar.getInstance();
                 heure.setTime(date);
                 newDate.add(Calendar.HOUR,heure.get(Calendar.HOUR_OF_DAY));
                 newDate.add(Calendar.MINUTE,heure.get(Calendar.MINUTE));
-                newRaid.setDate(newDate.getTime());
+                ee.getOd().setDate(newDate.getTime());
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Indique une description: ");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
-                newRaid.etape++;
+                ee.etape++;
             } catch (ParseException ex){
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
@@ -188,28 +208,28 @@ public class LFGmain extends ListenerAdapter {
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement heure et demande descritpion
-        else if(newRaid.etape == 5){
-            newRaid.setDescription(msg.getContentDisplay());
+        else if(ee.etape == 5){
+            ee.getOd().setDescription(msg.getContentDisplay());
 
-            MessageUtils.SendPrivateRichEmbed(user,newRaid.getEmbedBuilder());
-            newRaid.etape++;
+            MessageUtils.SendPrivateRichEmbed(user,ee.getOd().getEmbedBuilder());
+            ee.etape++;
 
-            tmpListDate.remove(newRaid);
-            LFGdataManagement.addListeEvent(newRaid);
+            listEventEdited.remove(ee);
+            LFGdataManagement.addListeEvent(ee.getOd());
 
-            MessageUtils.SendPublicRichEmbedPVE(event.getJDA(),newRaid);
+            MessageUtils.SendPublicRichEmbedPVE(event.getJDA(),ee.getOd());
 
         } //Enregistrement description
     }
 
-    private static void ProgrammationPVP(PrivateMessageReceivedEvent event, OrganizedDate newOD) {
+    private static void ProgrammationPVP(PrivateMessageReceivedEvent event, EditEvent ee) {
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
-        if(newOD.etape == 1){ //Enregistrement raid et Demande difficulté
+        if(ee.etape == 1){ //Enregistrement raid et Demande difficulté
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
-                newOD.setInstance(getInstanceObjectWithOrder(newOD.type,val-1));
+                ee.getOd().setInstance(getInstanceObjectWithOrder(ee.type,val-1));
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
@@ -218,17 +238,17 @@ public class LFGmain extends ListenerAdapter {
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
-                newOD.etape++;
+                ee.etape++;
             }
             catch(NumberFormatException | NotFoundException ex){
                 AfficheListJCJ(user);
             }
 
         } //Enregistrement raid et Demande difficulté
-        else if(newOD.etape == 2){
+        else if(ee.etape == 2){
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
-                newOD.setDifficulty(val-1);
+                ee.getOd().setDifficulty(val-1);
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
@@ -237,7 +257,7 @@ public class LFGmain extends ListenerAdapter {
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
-                newOD.etape++;
+                ee.etape++;
             }
             catch(NumberFormatException ex){
                 EmbedBuilder eb = new EmbedBuilder();
@@ -247,11 +267,11 @@ public class LFGmain extends ListenerAdapter {
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement difficulté et Demande date
-        else if(newOD.etape == 3){
+        else if(ee.etape == 3){
             try{
                 DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = df.parse(msg.getContentDisplay());
-                newOD.setDate(date);
+                ee.getOd().setDate(date);
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
@@ -259,7 +279,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setDescription("*Exemple*: 21:00");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
-                newOD.etape++;
+                ee.etape++;
             } catch (ParseException ex){
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
@@ -269,25 +289,25 @@ public class LFGmain extends ListenerAdapter {
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregristement date et demande heure
-        else if(newOD.etape == 4){
+        else if(ee.etape == 4){
             try{
                 DateFormat df = new SimpleDateFormat("HH:mm");
                 Date date = df.parse(msg.getContentDisplay());
 
                 Calendar newDate = Calendar.getInstance();
-                newDate.setTime(newOD.getDateToDate());
+                newDate.setTime(ee.getOd().getDateToDate());
                 Calendar heure = Calendar.getInstance();
                 heure.setTime(date);
                 newDate.add(Calendar.HOUR,heure.get(Calendar.HOUR_OF_DAY));
                 newDate.add(Calendar.MINUTE,heure.get(Calendar.MINUTE));
-                newOD.setDate(newDate.getTime());
+                ee.getOd().setDate(newDate.getTime());
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Indique une description: ");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
-                newOD.etape++;
+                ee.etape++;
             } catch (ParseException ex){
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
@@ -296,16 +316,16 @@ public class LFGmain extends ListenerAdapter {
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement heure et demande descritpion
-        else if(newOD.etape == 5){
-            newOD.setDescription(msg.getContentDisplay());
+        else if(ee.etape == 5){
+            ee.getOd().setDescription(msg.getContentDisplay());
 
-            MessageUtils.SendPrivateRichEmbed(user,newOD.getEmbedBuilder());
-            newOD.etape++;
+            MessageUtils.SendPrivateRichEmbed(user,ee.getOd().getEmbedBuilder());
+            ee.etape++;
 
-            tmpListDate.remove(newOD);
-            LFGdataManagement.addListeEvent(newOD);
+            listEventEdited.remove(ee);
+            LFGdataManagement.addListeEvent(ee.getOd());
 
-            MessageUtils.SendPublicRichEmbedPVP(event.getJDA(),newOD);
+            MessageUtils.SendPublicRichEmbedPVP(event.getJDA(),ee.getOd());
 
         } //Enregistrement description
     }
@@ -341,6 +361,27 @@ public class LFGmain extends ListenerAdapter {
         String temp = "";
         for (int i = 0; i < LFGdataManagement.JcJ.size(); i++){
             temp = temp.concat((i+1) + " " + LFGdataManagement.JcJ.get(i) + "\n");
+        }
+        eb.setDescription(temp);
+        MessageUtils.SendPrivateRichEmbed(user,eb);
+    }
+
+    private static void AfficheListEventCreateByUser(User user){
+        ArrayList<OrganizedDate> listEvent = new ArrayList<>();
+
+        for (OrganizedDate od : LFGdataManagement.listDate){
+            if (od.getAdminId().equals(user.getId())) {
+                listEvent.add(od);
+            }
+        }
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor("Suppression d'un event");
+        eb.setTitle("Choisissez l'event a l'aide du numero: ");
+        String temp = "";
+        for (int i = 0;i < listEvent.size();i++) {
+            //temp = temp.concat((i+1) + " " + listEvent.get(i).toStringWithoutAuthor() + "\n");
+            temp = temp.concat(EmoteNumber.get(i+1) + " " + listEvent.get(i).toStringWithoutAuthor() + "\n");
         }
         eb.setDescription(temp);
         MessageUtils.SendPrivateRichEmbed(user,eb);

@@ -25,9 +25,6 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     private ArrayList<String> HealList = new ArrayList<>();
     private ArrayList<String> DpsList = new ArrayList<>();
 
-    public int etape = 0;
-    public int type = -1;
-
     public OrganizedDate() { }
     public OrganizedDate(String admin) { this.setAdmin(admin); }
     public void setId(int id) { this.id = id; }
@@ -149,6 +146,10 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     @Override
     public String toString() {
         return this.getDateToRequest() + " " + this.getInstance().getName() + " de " + this.getAdmin();
+    }
+
+    public String toStringWithoutAuthor() {
+        return this.getInstance().getName() + " " + this.getDateToRequest();
     }
 
     @Override
