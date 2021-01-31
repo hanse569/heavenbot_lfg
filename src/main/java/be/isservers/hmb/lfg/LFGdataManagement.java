@@ -77,7 +77,7 @@ public class LFGdataManagement {
                 instance.setName(rs.getString("name"));
                 instance.setType(3);
                 instance.setThumbmail(rs.getString("thumbmail"));
-                Raid.add(instance);
+                JcJ.add(instance);
             }
             rs.close();
         }
