@@ -26,16 +26,14 @@ public class LFGdataManagement {
 
     final static ArrayList<Instance> Raid = new ArrayList<>();
     final static ArrayList<Instance> Donjon = new ArrayList<>();
-    private final static ArrayList<Instance> BattleGround = new ArrayList<>();
-    private final static ArrayList<Instance> Arene = new ArrayList<>();
+    final static ArrayList<Instance> JcJ = new ArrayList<>();
 
     public static Guild heavenDiscord;
 
     static  {
         InitialiseRaid();
         InitialiseDonjon();
-        InitialiseBattleground();
-        InitialiseArene();
+        InitialiseJcJ();
     }
 
     private static void InitialiseRaid(){
@@ -70,30 +68,16 @@ public class LFGdataManagement {
         catch (SQLException ex) { ex.printStackTrace(); }
     }
 
-    private static void InitialiseBattleground(){
-        ResultSet rs = SQLiteSource.getTable("SELECT * FROM ViewBattleground");
+    private static void InitialiseJcJ(){
+        ResultSet rs = SQLiteSource.getTable("SELECT * FROM ViewPVP");
         try{
             while (rs.next()){
                 Instance instance = new Instance();
                 instance.setIdInstance(rs.getInt("id"));
                 instance.setName(rs.getString("name"));
+                instance.setType(3);
                 instance.setThumbmail(rs.getString("thumbmail"));
-                BattleGround.add(instance);
-            }
-            rs.close();
-        }
-        catch (SQLException ex) { ex.printStackTrace(); }
-    }
-
-    private static void InitialiseArene(){
-        ResultSet rs = SQLiteSource.getTable("SELECT * FROM ViewArene");
-        try{
-            while (rs.next()){
-                Instance instance = new Instance();
-                instance.setIdInstance(rs.getInt("id"));
-                instance.setName(rs.getString("name"));
-                instance.setThumbmail(rs.getString("thumbmail"));
-                Arene.add(instance);
+                Raid.add(instance);
             }
             rs.close();
         }
@@ -159,7 +143,13 @@ public class LFGdataManagement {
             LFGdataManagement.TriListInstance();
 
             for (OrganizedDate od : LFGdataManagement.listDate){
-                MessageUtils.SendPublicRichEmbed(event.getJDA(),od);
+
+                if(od.getInstance().getType() == 1 || od.getInstance().getType() == 2){
+                    MessageUtils.SendPublicRichEmbedPVE(event.getJDA(),od);
+                }
+                else if(od.getInstance().getType() == 3) {
+                    MessageUtils.SendPublicRichEmbedPVP(event.getJDA(),od);
+                }
             }
 
         }
@@ -214,6 +204,10 @@ public class LFGdataManagement {
         }
         else if(type == 2){
             instance = LFGdataManagement.Donjon.get(val);
+            if(instance != null) return instance;
+        }
+        else if (type == 3){
+            instance = LFGdataManagement.JcJ.get(val);
             if(instance != null) return instance;
         }
 

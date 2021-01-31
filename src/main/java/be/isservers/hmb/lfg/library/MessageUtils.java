@@ -30,7 +30,7 @@ public class MessageUtils {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static void SendPublicRichEmbed(JDA jda,OrganizedDate od){
+    public static void SendPublicRichEmbedPVE(JDA jda,OrganizedDate od){
         jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
         {
             message.addReaction(Config.getEmojiTANK()).queue();
@@ -40,7 +40,12 @@ public class MessageUtils {
         });
     }
 
-
-
-
+    @SuppressWarnings("ConstantConditions")
+    public static void SendPublicRichEmbedPVP(JDA jda,OrganizedDate od){
+        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
+        {
+            message.addReaction(Config.getEmojiDPS()).queue();
+            message.addReaction(Config.getEmojiDELETE()).queue();
+        });
+    }
 }

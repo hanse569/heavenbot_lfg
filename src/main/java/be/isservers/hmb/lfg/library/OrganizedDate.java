@@ -76,9 +76,15 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         eb.setFooter("Cree par " + this.getAdmin() + " - Powered by HeavenBot");
 
         eb.addField("Date: ","  " + this.getDateToString(),false);
-        eb.addField("TANK",getStringOfTankList(),true);
-        eb.addField("HEAL",getStringOfHealList(),true);
-        eb.addField("DPS",getStringOfDpsList(),false);
+
+        if(this.getInstance().getType() == 1 || this.getInstance().getType() == 2){
+            eb.addField("TANK",getStringOfTankList(),true);
+            eb.addField("HEAL",getStringOfHealList(),true);
+            eb.addField("DPS",getStringOfDpsList(),false);
+        }
+        else if(this.getInstance().getType() == 3) {
+            eb.addField("PARTICIPANTS",getStringOfDpsList(),true);
+        }
 
         return eb;
     }

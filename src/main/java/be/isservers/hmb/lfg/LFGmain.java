@@ -72,32 +72,29 @@ public class LFGmain extends ListenerAdapter {
 
                 newOD.type = 2;
                 newOD.etape++;
-            }/*
-            else if(msg.getContentDisplay().startsWith("!lfg bg")){
-                tmpDate = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
-                this.SendPrivateMessage(user,"**Creation d'un bg**");
-                this.etape = 3;
-                etape++;
             }
-            else if(msg.getContentDisplay().startsWith("!lfg arene")){
-                tmpDate = new OrganizedDate(new RegisteredMember(user.getId(),user.getName()));
-                this.SendPrivateMessage(user,"**Creation d'une arene**");
-                this.etape = 4;
-                etape++;
-            }*/
+            else if(args.get(0).startsWith("jcj")){
+                AfficheListJCJ(ctx.getAuthor());
+
+                newOD.type = 3;
+                newOD.etape++;
+            }
             else{
-                MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|bg|arene>*__");
+                MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|jcj>*__");
             }
         }
         else if(newOD.type > 0){
             if(newOD.type == 1 || newOD.type == 2){
-                ProgrammationInstance(ctx,newOD);
+                ProgrammationPVE(ctx,newOD);
+            }
+            else if(newOD.type == 3) {
+                ProgrammationPVP(ctx,newOD);
             }
         }
 
     }
 
-    private static void ProgrammationInstance(PrivateMessageReceivedEvent event, OrganizedDate newRaid){
+    private static void ProgrammationPVE(PrivateMessageReceivedEvent event, OrganizedDate newRaid){
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
@@ -200,7 +197,115 @@ public class LFGmain extends ListenerAdapter {
             tmpListDate.remove(newRaid);
             LFGdataManagement.addListeEvent(newRaid);
 
-            MessageUtils.SendPublicRichEmbed(event.getJDA(),newRaid);
+            MessageUtils.SendPublicRichEmbedPVE(event.getJDA(),newRaid);
+
+        } //Enregistrement description
+    }
+
+    private static void ProgrammationPVP(PrivateMessageReceivedEvent event, OrganizedDate newOD) {
+        User user = event.getAuthor();
+        Message msg = event.getMessage();
+
+        if(newOD.etape == 1){ //Enregistrement raid et Demande difficulté
+            try{
+                int val = Integer.parseInt(msg.getContentDisplay());
+                newOD.setInstance(getInstanceObjectWithOrder(newOD.type,val-1));
+
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Creation d'un event jcj");
+                eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
+                eb.setDescription("1 Non Coté\n2 Coté");
+
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+
+                newOD.etape++;
+            }
+            catch(NumberFormatException | NotFoundException ex){
+                AfficheListJCJ(user);
+            }
+
+        } //Enregistrement raid et Demande difficulté
+        else if(newOD.etape == 2){
+            try{
+                int val = Integer.parseInt(msg.getContentDisplay());
+                newOD.setDifficulty(val-1);
+
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Creation d'un event jcj");
+                eb.setTitle("Choisissez la date: ");
+                eb.setDescription("*Exemple*: 05-01-2019");
+
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+
+                newOD.etape++;
+            }
+            catch(NumberFormatException ex){
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Creation d'un raid");
+                eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
+                eb.setDescription("1 Normal\n2 Heroique\n3 Mythique\n4 Marcheur du temps");
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+            }
+        } //Enregistrement difficulté et Demande date
+        else if(newOD.etape == 3){
+            try{
+                DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = df.parse(msg.getContentDisplay());
+                newOD.setDate(date);
+
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Creation d'un event jcj");
+                eb.setTitle("Choisissez l'heure: ");
+                eb.setDescription("*Exemple*: 21:00");
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+
+                newOD.etape++;
+            } catch (ParseException ex){
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Creation d'un event jcj");
+                eb.setTitle("Choisissez la date: ");
+                eb.setDescription("*Exemple*: 05-01-2019");
+
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+            }
+        } //Enregristement date et demande heure
+        else if(newOD.etape == 4){
+            try{
+                DateFormat df = new SimpleDateFormat("HH:mm");
+                Date date = df.parse(msg.getContentDisplay());
+
+                Calendar newDate = Calendar.getInstance();
+                newDate.setTime(newOD.getDateToDate());
+                Calendar heure = Calendar.getInstance();
+                heure.setTime(date);
+                newDate.add(Calendar.HOUR,heure.get(Calendar.HOUR_OF_DAY));
+                newDate.add(Calendar.MINUTE,heure.get(Calendar.MINUTE));
+                newOD.setDate(newDate.getTime());
+
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Creation d'un event jcj");
+                eb.setTitle("Indique une description: ");
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+
+                newOD.etape++;
+            } catch (ParseException ex){
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Creation d'un event jcj");
+                eb.setTitle("Choisissez l'heure: ");
+                eb.setDescription("*Exemple*: 21:00");
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+            }
+        } //Enregistrement heure et demande descritpion
+        else if(newOD.etape == 5){
+            newOD.setDescription(msg.getContentDisplay());
+
+            MessageUtils.SendPrivateRichEmbed(user,newOD.getEmbedBuilder());
+            newOD.etape++;
+
+            tmpListDate.remove(newOD);
+            LFGdataManagement.addListeEvent(newOD);
+
+            MessageUtils.SendPublicRichEmbedPVP(event.getJDA(),newOD);
 
         } //Enregistrement description
     }
@@ -224,6 +329,18 @@ public class LFGmain extends ListenerAdapter {
         String temp = "";
         for (int i = 0; i < LFGdataManagement.Donjon.size(); i++){
             temp = temp.concat((i+1) + " " + LFGdataManagement.Donjon.get(i) + "\n");
+        }
+        eb.setDescription(temp);
+        MessageUtils.SendPrivateRichEmbed(user,eb);
+    }
+
+    private static void AfficheListJCJ(User user){
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor("Creation d'un event jcj");
+        eb.setTitle("Choisissez l'event à l'aide du numero: ");
+        String temp = "";
+        for (int i = 0; i < LFGdataManagement.JcJ.size(); i++){
+            temp = temp.concat((i+1) + " " + LFGdataManagement.JcJ.get(i) + "\n");
         }
         eb.setDescription(temp);
         MessageUtils.SendPrivateRichEmbed(user,eb);
