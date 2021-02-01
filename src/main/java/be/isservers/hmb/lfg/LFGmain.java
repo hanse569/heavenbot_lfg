@@ -105,7 +105,11 @@ public class LFGmain extends ListenerAdapter {
         }
         else
         {
-            if (ee.getAction() == EditEvent.ADD){
+            if (args.size() > 0 && args.get(0).startsWith("cancel")) {
+                MessageUtils.SendPrivateMessage(ctx.getAuthor(),":white_check_mark: annulation de l'action en cours");
+                listEventEdited.remove(ee);
+            }
+            else if (ee.getAction() == EditEvent.ADD){
                 if(ee.type == 1 || ee.type == 2){
                     ProgrammationPVE(ctx,ee);
                 }
@@ -132,6 +136,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Normal\n2 Heroique\n3 Mythique");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
@@ -151,6 +156,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
@@ -161,6 +167,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Normal\n2 Heroique\n3 Mythique\n4 Marcheur du temps");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement difficulté et Demande date
@@ -174,6 +181,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -182,7 +190,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregristement date et demande heure
@@ -202,6 +210,7 @@ public class LFGmain extends ListenerAdapter {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Indique une description: ");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -210,6 +219,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement heure et demande descritpion
@@ -240,7 +250,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Non Coté\n2 Coté");
-
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -259,7 +269,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -269,6 +279,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Normal\n2 Heroique\n3 Mythique\n4 Marcheur du temps");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement difficulté et Demande date
@@ -282,6 +293,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -290,7 +302,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregristement date et demande heure
@@ -310,6 +322,7 @@ public class LFGmain extends ListenerAdapter {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Indique une description: ");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -318,6 +331,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement heure et demande descritpion
@@ -349,6 +363,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Suppression d'un event");
                 eb.setTitle("Confirmer votre choix a l'aide du numero: ");
                 eb.setDescription("1 :white_check_mark: Confirmé\n2 :x: Annulé");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -405,6 +420,7 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat((i+1) + " " + LFGdataManagement.Raid.get(i) + "\n");
         }
         eb.setDescription(temp);
+        eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
@@ -417,6 +433,7 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat((i+1) + " " + LFGdataManagement.Donjon.get(i) + "\n");
         }
         eb.setDescription(temp);
+        eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
@@ -429,6 +446,7 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat((i+1) + " " + LFGdataManagement.JcJ.get(i) + "\n");
         }
         eb.setDescription(temp);
+        eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
@@ -444,6 +462,7 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat(EmoteNumber.get(i+1) + " " + listEvent.get(i).toStringWithoutAuthor() + "\n");
         }
         eb.setDescription(temp);
+        eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 }

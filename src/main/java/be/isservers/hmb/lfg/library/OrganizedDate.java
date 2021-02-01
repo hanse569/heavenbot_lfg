@@ -62,7 +62,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         eb.setTitle(this.getInstance().getName());
         eb.setDescription(this.getDescription());
         eb.setThumbnail(this.getInstance().getThumbmail());
-        eb.setFooter("Cree par " + this.getAdmin() + " - Powered by HeavenBot");
+        eb.setFooter("Cree par " + this.getAdmin());
 
         eb.addField("Date: ","  " + this.getDateToString(),false);
 
