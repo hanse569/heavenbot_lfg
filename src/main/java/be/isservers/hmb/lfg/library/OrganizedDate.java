@@ -1,5 +1,6 @@
 package be.isservers.hmb.lfg.library;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.utils.SQLiteSource;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -7,10 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 public class OrganizedDate implements Comparable<OrganizedDate>{
 
@@ -21,9 +19,9 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     private int difficulty;
     private Date date;
     private String description;
-    private ArrayList<String> TankList = new ArrayList<>();
-    private ArrayList<String> HealList = new ArrayList<>();
-    private ArrayList<String> DpsList = new ArrayList<>();
+    private final ArrayList<String> TankList = new ArrayList<>();
+    private final ArrayList<String> HealList = new ArrayList<>();
+    private final ArrayList<String> DpsList = new ArrayList<>();
 
     public OrganizedDate() { }
     public OrganizedDate(String admin) { this.setAdmin(admin); }
@@ -112,6 +110,24 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         if(DpsList.remove(id))  SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperDPS WHERE idEvent = ? AND idMember = ?;",this.getId(),id);
     }
 
+    public void Delete() {
+        for (String user : TankList) {
+            SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),user);
+        }
+
+        for (String user : HealList) {
+            SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),user);
+        }
+
+        for (String user : DpsList) {
+            SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),user);
+        }
+
+        SQLiteSource.removeEvent("DELETE FROM LFG_OrganizedDate WHERE id = ?;",this.getId());
+        Objects.requireNonNull(LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelHeavenBot())).deleteMessageById(getIdMessageDiscord()).queue();
+        LFGdataManagement.RemoveEvent(this);
+    }
+
     private String getStringOfTankList(){
         if(TankList.size() > 0){
             String buffer = "";
@@ -156,4 +172,6 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     public int compareTo(@NotNull OrganizedDate o) {
         return this.date.compareTo(o.date);
     }
+
+
 }

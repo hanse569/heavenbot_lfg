@@ -1,12 +1,10 @@
 package be.isservers.hmb.lfg;
 
-import be.isservers.hmb.lfg.library.Instance;
-import be.isservers.hmb.lfg.library.MessageUtils;
-import be.isservers.hmb.lfg.library.NotFoundException;
-import be.isservers.hmb.lfg.library.OrganizedDate;
+import be.isservers.hmb.lfg.library.*;
 import be.isservers.hmb.utils.SQLiteSource;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -218,6 +216,34 @@ public class LFGdataManagement {
         }
 
         throw new NotFoundException();
+    }
+
+    static ArrayList<OrganizedDate> getEventsCreateByUser(User author) throws EmptyArrayException {
+        ArrayList<OrganizedDate> listEvent = new ArrayList<>();
+
+        for (OrganizedDate od : LFGdataManagement.listDate){
+            if (od.getAdminId().equals(author.getId())) {
+                listEvent.add(od);
+            }
+        }
+
+        if(listEvent.size() == 0)
+            throw new EmptyArrayException();
+
+        return listEvent;
+    }
+
+    static OrganizedDate getOrganizedDateByUser(User author, int number) throws EmptyArrayException, NotFoundException {
+        ArrayList<OrganizedDate> listEvent = getEventsCreateByUser(author);
+
+        OrganizedDate od = listEvent.get(number);
+        if (od != null) return od;
+
+        throw new NotFoundException();
+    }
+
+    public static boolean RemoveEvent(OrganizedDate od) {
+        return listDate.remove(od);
     }
 
 

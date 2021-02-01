@@ -13,11 +13,6 @@ public class EditEvent {
     public static int MODIFY = 2;
     public static int DELETE = 3;
 
-    public EditEvent(int action) {
-        this.action = action;
-        this.od = od;
-    }
-
     public EditEvent(int action, OrganizedDate od) {
         this.action = action;
         this.od = od;
@@ -29,5 +24,9 @@ public class EditEvent {
 
     public OrganizedDate getOd() {
         return od;
+    }
+
+    public void setOd(OrganizedDate od) {
+        this.od = od;
     }
 }

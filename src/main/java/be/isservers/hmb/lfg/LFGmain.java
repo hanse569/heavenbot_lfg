@@ -1,7 +1,7 @@
 package be.isservers.hmb.lfg;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.lfg.library.Instance;
+import be.isservers.hmb.lfg.library.EmptyArrayException;
 import be.isservers.hmb.lfg.library.MessageUtils;
 import be.isservers.hmb.lfg.library.NotFoundException;
 import be.isservers.hmb.lfg.library.OrganizedDate;
@@ -26,10 +26,11 @@ import java.util.Date;
 import java.util.List;
 
 import static be.isservers.hmb.lfg.LFGdataManagement.getInstanceObjectWithOrder;
+import static be.isservers.hmb.lfg.LFGdataManagement.getOrganizedDateByUser;
 
 public class LFGmain extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGmain.class);
-    private static ArrayList<EditEvent> listEventEdited = new ArrayList<>();
+    private static final ArrayList<EditEvent> listEventEdited = new ArrayList<>();
     static int nr = 0;
 
     public static void Clear(TextChannel channel){
@@ -85,9 +86,14 @@ public class LFGmain extends ListenerAdapter {
                 else if(args.get(0).startsWith("delete")){
                     ee = new EditEvent(EditEvent.DELETE,new OrganizedDate(ctx.getAuthor().getId()));
                     listEventEdited.add(ee);
-                    AfficheListEventCreateByUser(ctx.getAuthor());
-
-                    ee.etape++;
+                    try {
+                        AfficheListEventCreateByUser(ctx.getAuthor());
+                        ee.etape++;
+                    }
+                    catch (EmptyArrayException ex) {
+                        MessageUtils.SendPrivateMessage(ctx.getAuthor(),":x: Aucun event n'a pu être trouvé, annulation de la suppression");
+                        listEventEdited.remove(ee);
+                    }
                 }
                 else {
                     MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|jcj>*__");
@@ -108,8 +114,7 @@ public class LFGmain extends ListenerAdapter {
                 }
             }
             else if(ee.getAction() == EditEvent.DELETE){
-                MessageUtils.SendPrivateMessage(ctx.getAuthor(),"Event demandé à être supprimé: " + Integer.parseInt(ctx.getMessage().getContentDisplay()));
-                listEventEdited.remove(ee);
+                SuppressionEvent(ctx,ee);
             }
         }
     }
@@ -330,6 +335,67 @@ public class LFGmain extends ListenerAdapter {
         } //Enregistrement description
     }
 
+    private static void SuppressionEvent(PrivateMessageReceivedEvent event, EditEvent ee) {
+        User user = event.getAuthor();
+        Message msg = event.getMessage();
+
+        if(ee.etape == 1){ //Enregistrement de l'instance à supprimer et Demande confirmation
+            try{
+                int val = Integer.parseInt(msg.getContentDisplay());
+                ee.setOd(getOrganizedDateByUser(user,val-1));
+
+                MessageUtils.SendPrivateRichEmbed(user,ee.getOd().getEmbedBuilder());
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Suppression d'un event");
+                eb.setTitle("Confirmer votre choix a l'aide du numero: ");
+                eb.setDescription("1 :white_check_mark: Confirmé\n2 :x: Annulé");
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+
+                ee.etape++;
+            }
+            catch(NumberFormatException ex){
+                MessageUtils.SendPrivateMessage(user,":x: Valeur encodé n'est pas un nombre, annulation de la suppression");
+                listEventEdited.remove(ee);
+            }
+            catch (EmptyArrayException ex){
+                MessageUtils.SendPrivateMessage(user,":x: Aucun event n'a pu être trouvé, annulation de la suppression");
+                listEventEdited.remove(ee);
+            }
+            catch (NotFoundException ex){
+                MessageUtils.SendPrivateMessage(user,":x: L'event selectionné n'existe pas, annulation de la suppression");
+                listEventEdited.remove(ee);
+            }
+        }
+        else if(ee.etape == 2) {
+            try{
+                int val = Integer.parseInt(msg.getContentDisplay());
+
+                if (val != 1 && val != 2) {
+                    MessageUtils.SendPrivateMessage(user,":x: Valeur encodé n'est ni 1 ni 2, annulation de la suppression");
+                    listEventEdited.remove(ee);
+                    return;
+                }
+
+                if (val == 2) {
+                    MessageUtils.SendPrivateMessage(user,":x: Suppression Annulé");
+                    listEventEdited.remove(ee);
+                    return;
+                }
+
+                ee.getOd().Delete();
+
+                MessageUtils.SendPrivateMessage(user,":white_check_mark: Evenement supprimé/annulé !");
+                MessageUtils.SendPublicMessage(event.getJDA(), ":white_check_mark: Evenement supprimé/annulé : " + ee.getOd().toString());
+                listEventEdited.remove(ee);
+
+            }
+            catch(NumberFormatException ex){
+                MessageUtils.SendPrivateMessage(user,":x: Valeur encodé n'est pas un nombre, annulation de la suppression");
+                listEventEdited.remove(ee);
+            }
+        }
+    }
+
     private static void AfficheListRaid(User user){
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor("Creation d'un raid");
@@ -366,14 +432,8 @@ public class LFGmain extends ListenerAdapter {
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
-    private static void AfficheListEventCreateByUser(User user){
-        ArrayList<OrganizedDate> listEvent = new ArrayList<>();
-
-        for (OrganizedDate od : LFGdataManagement.listDate){
-            if (od.getAdminId().equals(user.getId())) {
-                listEvent.add(od);
-            }
-        }
+    private static void AfficheListEventCreateByUser(User user) throws EmptyArrayException {
+        ArrayList<OrganizedDate> listEvent = LFGdataManagement.getEventsCreateByUser(user);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor("Suppression d'un event");

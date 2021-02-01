@@ -50,4 +50,12 @@ public class SQLiteSource {
             statement.executeUpdate();
         } catch (SQLException ex) { ex.printStackTrace(); }
     }
+
+    public static void removeEvent(String request, int id) {
+        try{
+            PreparedStatement statement = getConn().prepareStatement(request);
+            statement.setInt(1,id);
+            statement.executeUpdate();
+        } catch (SQLException ex) { ex.printStackTrace(); }
+    }
 }

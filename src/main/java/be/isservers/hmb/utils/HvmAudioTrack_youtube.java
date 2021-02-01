@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.User;
 
 public class HvmAudioTrack_youtube extends YoutubeAudioTrack {
 
-    private User author;
+    private final User author;
 
     public HvmAudioTrack_youtube(YoutubeAudioTrack yat,User author) {
         super(yat.getInfo(), (YoutubeAudioSourceManager) yat.getSourceManager());
