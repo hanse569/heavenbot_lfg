@@ -9,6 +9,8 @@ import be.isservers.hmb.youtubeApi.YoutubeMusic;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,21 +23,16 @@ public class PlayCommand implements ICommand {
     public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
 
+        final Member self = ctx.getSelfMember();
+        final GuildVoiceState selfVoiceState = self.getVoiceState();
+
+        final Member member = ctx.getMember();
+        final GuildVoiceState memberVoiceState = member.getVoiceState();
+
         if (ctx.getArgs().isEmpty()) {
             channel.sendMessage(":x: L'utilisation correcte est `!!Play <youtube link>`").queue();
             return;
         }
-
-        final Member self = ctx.getSelfMember();
-        final GuildVoiceState selfVoiceState = self.getVoiceState();
-
-        if (!selfVoiceState.inVoiceChannel()) {
-             channel.sendMessage(":x: J'ai besoin d'être dans un canal vocal pour que cela fonctionne").queue();
-             return;
-        }
-
-        final Member member = ctx.getMember();
-        final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
             channel.sendMessage(":x: Vous devez être dans un canal vocal pour que cette commande fonctionne").queue();
@@ -47,9 +44,16 @@ public class PlayCommand implements ICommand {
             return;
         }
 
+        if (!selfVoiceState.inVoiceChannel()) {
+            final AudioManager audioManager = ctx.getGuild().getAudioManager();
+            final VoiceChannel memberChannel = memberVoiceState.getChannel();
+
+            audioManager.openAudioConnection(memberChannel);
+            channel.sendMessageFormat(":thumbsup: `%s` rejoint !",memberChannel.getName()).queue();
+        }
+
         String link = String.join(" ", ctx.getArgs());
 
-        //if (!isUrl(link)) {
         if(!link.startsWith("https://")) {
             try{
                 StringBuilder sb = new StringBuilder();
