@@ -39,7 +39,7 @@ public class Bot {
             .addEventListeners(new Listener())
             .addEventListeners(new LFGmain())
             .addEventListeners(new LFGemoteManagement())
-            .setActivity(Activity.watching("pour débuguer la version finale de E-Van"))
+            .setActivity(Activity.listening("?help"))
             .build();
 
     }

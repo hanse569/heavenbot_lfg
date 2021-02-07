@@ -21,7 +21,7 @@ public class LFGemoteManagement extends ListenerAdapter {
 
             if(event.getUser().isBot()){ //Permet de relié le message à l'event
                 String realAuthor = Objects.requireNonNull(me.getFooter()).getText();
-                realAuthor = realAuthor.substring("Cree par ".length(),realAuthor.length()-  " - Powered by HeavenBot".length());
+                realAuthor = realAuthor.substring("Cree par ".length(),realAuthor.length());
 
                 OrganizedDate od = null;
                 for (OrganizedDate tmp: LFGdataManagement.waitListDate) if(tmp.getAdmin().equals(realAuthor)) od = tmp;
