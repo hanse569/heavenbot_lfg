@@ -1,5 +1,6 @@
 package be.isservers.hmb.lfg;
 
+<<<<<<< HEAD
 import be.isservers.hmb.lfg.library.OrganizedDate;
 
 import java.awt.event.ActionEvent;
@@ -24,4 +25,7 @@ public class LFGautoDeleteEvent implements ActionListener {
             }
         }
     }
+=======
+public class LFGautoDeleteEvent {
+>>>>>>> 9944e4cf72baaccc0e413ea889eff6a6246717f7
 }
