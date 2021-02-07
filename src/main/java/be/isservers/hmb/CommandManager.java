@@ -31,9 +31,9 @@ public class CommandManager {
         addCommand(new SetPrefixCommand());
         addCommand(new ClearChannelCommand());
 
-        addCommand(new JoinCommand());
+        //addCommand(new JoinCommand());
         addCommand(new PlayCommand());
-        //addCommand(new StopCommand());
+        addCommand(new StopCommand());
         addCommand(new SkipCommand());
         addCommand(new NowPlayingCommand());
         addCommand(new QueueCommand());
