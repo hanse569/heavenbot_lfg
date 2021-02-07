@@ -29,6 +29,18 @@ public class PlayCommand implements ICommand {
         final Member member = ctx.getMember();
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
+        if (!selfVoiceState.inVoiceChannel()) {
+            final AudioManager audioManager = ctx.getGuild().getAudioManager();
+            final VoiceChannel memberChannel = memberVoiceState.getChannel();
+
+            audioManager.openAudioConnection(memberChannel);
+            channel.sendMessageFormat(":thumbsup: `%s` rejoint !",memberChannel.getName()).queue();
+        }
+        else if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
+            channel.sendMessage(":x: Vous devez être sur le même canal vocal que moi pour que cela fonctionne").queue();
+            return;
+        }
+
         if (ctx.getArgs().isEmpty()) {
             channel.sendMessage(":x: L'utilisation correcte est `!!Play <youtube link>`").queue();
             return;
@@ -37,19 +49,6 @@ public class PlayCommand implements ICommand {
         if (!memberVoiceState.inVoiceChannel()) {
             channel.sendMessage(":x: Vous devez être dans un canal vocal pour que cette commande fonctionne").queue();
             return;
-        }
-
-        if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage(":x: Vous devez être sur le même canal vocal que moi pour que cela fonctionne").queue();
-            return;
-        }
-
-        if (!selfVoiceState.inVoiceChannel()) {
-            final AudioManager audioManager = ctx.getGuild().getAudioManager();
-            final VoiceChannel memberChannel = memberVoiceState.getChannel();
-
-            audioManager.openAudioConnection(memberChannel);
-            channel.sendMessageFormat(":thumbsup: `%s` rejoint !",memberChannel.getName()).queue();
         }
 
         String link = String.join(" ", ctx.getArgs());
