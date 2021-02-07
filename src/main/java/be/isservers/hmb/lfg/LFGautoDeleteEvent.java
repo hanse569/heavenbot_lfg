@@ -1,12 +1,12 @@
 package be.isservers.hmb.lfg;
 
-<<<<<<< HEAD
 import be.isservers.hmb.lfg.library.OrganizedDate;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 public class LFGautoDeleteEvent implements ActionListener {
 
@@ -19,13 +19,11 @@ public class LFGautoDeleteEvent implements ActionListener {
         cal.add(Calendar.DATE, -14);
         Date dateBefore14Days = cal.getTime();
 
-        for (OrganizedDate od : LFGdataManagement.listDate) {
+        for (Iterator<OrganizedDate> it = LFGdataManagement.listDate.iterator(); it.hasNext();) {
+            OrganizedDate od = it.next();
             if (od.getDateToDate().before(dateBefore14Days)) {
                 od.Delete();
             }
         }
     }
-=======
-public class LFGautoDeleteEvent {
->>>>>>> 9944e4cf72baaccc0e413ea889eff6a6246717f7
 }
