@@ -1,6 +1,5 @@
 package be.isservers.hmb;
 
-import be.isservers.hmb.lfg.LFGautoDeleteEvent;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.lfg.LFGmain;
 import be.isservers.hmb.utils.SQLiteSource;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

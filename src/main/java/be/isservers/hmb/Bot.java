@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
-import java.sql.SQLException;
 
 public class Bot {
     private Bot() throws LoginException {
