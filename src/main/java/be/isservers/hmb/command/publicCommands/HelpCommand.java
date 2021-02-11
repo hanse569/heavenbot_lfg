@@ -1,6 +1,7 @@
 package be.isservers.hmb.command.publicCommands;
 
 import be.isservers.hmb.CommandManager;
+import be.isservers.hmb.Config;
 import be.isservers.hmb.VeryBadDesign;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
@@ -19,6 +20,10 @@ public class HelpCommand implements ICommand {
     public void handle(CommandContext ctx) {
         List<String> args = ctx.getArgs();
         TextChannel channel = ctx.getChannel();
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
 
         if (args.isEmpty()){
             StringBuilder builder = new StringBuilder();

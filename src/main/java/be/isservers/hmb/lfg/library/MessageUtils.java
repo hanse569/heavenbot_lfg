@@ -26,12 +26,12 @@ public class MessageUtils {
 
     @SuppressWarnings("ConstantConditions")
     public static void SendPublicMessage(JDA jda, String message){
-        SendPublicMessage(jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()),message);
+        SendPublicMessage(jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelDonjon()),message);
     }
 
     @SuppressWarnings("ConstantConditions")
     public static void SendPublicRichEmbed(JDA jda,OrganizedDate od){
-        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()).sendMessage(od.getEmbedBuilder().build()).queue( (message) -> {
+        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelDonjon()).sendMessage(od.getEmbedBuilder().build()).queue( (message) -> {
             if(od.getIdMessageDiscord() == null)od.setIdMessageDiscord(message.getId());
         });
     }

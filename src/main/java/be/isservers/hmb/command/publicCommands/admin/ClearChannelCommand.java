@@ -25,8 +25,8 @@ public class ClearChannelCommand implements ICommand {
             return;
         }
 
-        if (!selfMember.hasPermission(Permission.MANAGE_SERVER)){
-            channel.sendMessage(":x: J'ai besoin de l'autorisation MANAGE_SERVER pour utiliser sa commande").queue();
+        if (!selfMember.hasPermission(Permission.MESSAGE_MANAGE)){
+            channel.sendMessage(":x: J'ai besoin de l'autorisation MESSAGE_MANAGE pour utiliser sa commande").queue();
             return;
         }
 

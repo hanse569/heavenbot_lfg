@@ -11,7 +11,9 @@ public class Config {
     }
 
     public static String getIdDiscordHeaven(){ return get("iddiscordheaven"); }
-    public static String getIdChannelHeavenBot(){ return get("idchannelheavenbot"); }
+    public static String getIdChannelEvan(){ return get("idchannelevan"); }
+    public static String getIdChannelDonjon(){ return get("idchanneldonjon"); }
+    public static String getIdChannelGazette(){ return get("idchannelgazette"); }
 
     public static String getEmojiTANK(){ return get("EMOJITANK"); }//Pour l'envoie du message dans la fonction SendPublicRichEmbed de CreateEventListener
     public static String getEmojiHEAL(){ return get("EMOJIHEAL"); }

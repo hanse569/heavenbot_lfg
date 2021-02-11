@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands.music;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.PlayerManager;
@@ -28,6 +29,10 @@ public class PlayCommand implements ICommand {
 
         final Member member = ctx.getMember();
         final GuildVoiceState memberVoiceState = member.getVoiceState();
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
 
         if (!selfVoiceState.inVoiceChannel()) {
             final AudioManager audioManager = ctx.getGuild().getAudioManager();

@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands.music;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
@@ -18,6 +19,10 @@ public class QueueCommand implements ICommand {
         final TextChannel channel = ctx.getChannel();
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
         final BlockingQueue<HvmAudioTrack_youtube> queue = musicManager.scheduler.queue;
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
 
         if (queue.isEmpty()) {
             channel.sendMessage("La file d'attente est actuellement vide").queue();

@@ -147,14 +147,14 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         }
 
         SQLiteSource.removeEvent("DELETE FROM LFG_OrganizedDate WHERE id = ?;",this.getId());
-        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelHeavenBot()).deleteMessageById(getIdMessageDiscord()).queue();
+        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon()).deleteMessageById(getIdMessageDiscord()).queue();
         LFGdataManagement.RemoveEvent(this);
     }
 
     public void RefreshEvent() {
-        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelHeavenBot()).editMessageById(this.getIdMessageDiscord(),this.getEmbedBuilder().build()).queue();
+        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon()).editMessageById(this.getIdMessageDiscord(),this.getEmbedBuilder().build()).queue();
 
-        TextChannel tc = LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelHeavenBot());
+        TextChannel tc = LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon());
         if(this.getDateToDate().before(Calendar.getInstance().getTime()) || this.isLocked()){
             tc.removeReactionById(this.getIdMessageDiscord(),Config.getEmojiTANK()).queue();
             tc.removeReactionById(this.getIdMessageDiscord(),Config.getEmojiHEAL()).queue();

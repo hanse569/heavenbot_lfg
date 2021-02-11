@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,6 +12,11 @@ import net.dv8tion.jda.api.entities.TextChannel;
 public class MemeCommand implements ICommand {
     public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
+
         WebUtils.ins.getJSONObject("https://apis.duncte123.me/meme").async((json) -> {
             if (!json.get("success").asBoolean()){
                 channel.sendMessage(":x: Une erreur s'est produite, réessayez plus tard").queue();

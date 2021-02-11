@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands.music;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
@@ -21,6 +22,10 @@ public class NowPlayingCommand implements ICommand {
 
         final Member self = ctx.getSelfMember();
         final GuildVoiceState selfVoiceState = self.getVoiceState();
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
 
         if (!selfVoiceState.inVoiceChannel()) {
             channel.sendMessage(":x: J'ai besoin d'être dans un canal vocal pour que cela fonctionne").queue();

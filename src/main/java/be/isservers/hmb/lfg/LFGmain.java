@@ -40,7 +40,7 @@ public class LFGmain extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if(nr > 0 && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals(Config.getIdChannelHeavenBot()) && event.getAuthor().isBot()){
+        if(nr > 0 && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals(Config.getIdChannelDonjon()) && event.getAuthor().isBot()){
             OrganizedDate od = LFGdataManagement.listDate.get(LFGdataManagement.listDate.size() - nr);
             od.setIdMessageDiscord(event.getMessageId());
             nr--;

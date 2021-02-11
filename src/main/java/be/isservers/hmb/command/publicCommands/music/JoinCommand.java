@@ -1,7 +1,9 @@
 package be.isservers.hmb.command.publicCommands.music;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -14,6 +16,10 @@ public class JoinCommand implements ICommand {
         final TextChannel channel = ctx.getChannel();
         final Member self = ctx.getSelfMember();
         final GuildVoiceState selfVoiceState = self.getVoiceState();
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
 
         if (selfVoiceState.inVoiceChannel()) {
             channel.sendMessage(":x: Je suis déjà dans un canal vocal").queue();

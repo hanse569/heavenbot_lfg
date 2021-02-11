@@ -11,7 +11,7 @@ public class LFGemoteManagement extends ListenerAdapter {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
-        if(event.getChannel().getId().equals(Config.getIdChannelHeavenBot())){
+        if(event.getChannel().getId().equals(Config.getIdChannelDonjon())){
             String messageId = event.getMessageId();
 
             if(!event.getUser().isBot()){
