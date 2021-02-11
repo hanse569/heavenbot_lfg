@@ -58,4 +58,13 @@ public class SQLiteSource {
             statement.executeUpdate();
         } catch (SQLException ex) { ex.printStackTrace(); }
     }
+
+    public static void changeLockEvent(int idEvent, int valeur) {
+        try{
+            PreparedStatement statement = getConn().prepareStatement("UPDATE LFG_OrganizedDate SET locked=? WHERE id=?;");
+            statement.setInt(1,valeur);
+            statement.setInt(2,idEvent);
+            statement.executeUpdate();
+        } catch (SQLException ex) { ex.printStackTrace(); }
+    }
 }

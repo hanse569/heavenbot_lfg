@@ -4,21 +4,25 @@ import be.isservers.hmb.Config;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.utils.SQLiteSource;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@SuppressWarnings({"ConstantConditions"})
 public class OrganizedDate implements Comparable<OrganizedDate>{
 
     private int id;
-    private String idMessageDiscord;
+    private String idMessageDiscord = null;
     private String admin;
     private Instance instance;
     private int difficulty;
     private Date date;
     private String description;
+    private boolean isLock = false;
     private final ArrayList<String> TankList = new ArrayList<>();
     private final ArrayList<String> HealList = new ArrayList<>();
     private final ArrayList<String> DpsList = new ArrayList<>();
@@ -27,7 +31,12 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     public OrganizedDate(String admin) { this.setAdmin(admin); }
     public void setId(int id) { this.id = id; }
     public void setAdmin(String admin) { this.admin = admin; }
-    public void setIdMessageDiscord(String id) { this.idMessageDiscord = id; }
+    public void setIdMessageDiscord(String id) {
+        this.idMessageDiscord = id;
+        if(!this.getDateToDate().before(Calendar.getInstance().getTime()) && !this.isLocked()){
+            this.RefreshEvent();
+        }
+    }
     public void setInstance(Instance instance) {
         this.instance = instance;
     }
@@ -38,6 +47,8 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         this.description = description;
     }
     public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
+    public void setLock(int lock) { this.setLock(lock!=0); }
+    public void setLock(boolean lock) { this.isLock = lock; }
 
     public int getId() { return id; }
     public String getAdminId() { return this.admin; }
@@ -45,6 +56,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     public String getIdMessageDiscord() { return idMessageDiscord; }
     public Instance getInstance() { return instance; }
     public int getDifficulty() { return difficulty; }
+    public boolean isLocked() { return isLock; }
     public Date getDateToDate() { return date; }
     public String getDateToString() {
         return DateFormat.getDateTimeInstance(DateFormat.FULL,DateFormat.SHORT,Locale.FRANCE).format(this.getDateToDate());//Depuis Dossier LCR
@@ -63,6 +75,17 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         eb.setDescription(this.getDescription());
         eb.setThumbnail(this.getInstance().getThumbmail());
         eb.setFooter("Cree par " + this.getAdmin());
+
+
+        if (this.getDateToDate().before(Calendar.getInstance().getTime())) {
+            eb.setColor(Color.DARK_GRAY);
+        }
+        else if (this.isLocked()){
+            eb.setColor(Color.ORANGE);
+        }
+        else {
+            eb.setColor(Color.GREEN);
+        }
 
         eb.addField("Date: ","  " + this.getDateToString(),false);
 
@@ -124,8 +147,32 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         }
 
         SQLiteSource.removeEvent("DELETE FROM LFG_OrganizedDate WHERE id = ?;",this.getId());
-        Objects.requireNonNull(LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelHeavenBot())).deleteMessageById(getIdMessageDiscord()).queue();
+        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelHeavenBot()).deleteMessageById(getIdMessageDiscord()).queue();
         LFGdataManagement.RemoveEvent(this);
+    }
+
+    public void RefreshEvent() {
+        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelHeavenBot()).editMessageById(this.getIdMessageDiscord(),this.getEmbedBuilder().build()).queue();
+
+        TextChannel tc = LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelHeavenBot());
+        if(this.getDateToDate().before(Calendar.getInstance().getTime()) || this.isLocked()){
+            tc.removeReactionById(this.getIdMessageDiscord(),Config.getEmojiTANK()).queue();
+            tc.removeReactionById(this.getIdMessageDiscord(),Config.getEmojiHEAL()).queue();
+            tc.removeReactionById(this.getIdMessageDiscord(),Config.getEmojiDPS()).queue();
+            tc.removeReactionById(this.getIdMessageDiscord(),Config.getEmojiDELETE()).queue();
+        }
+        else {
+            if(this.getInstance().getType() == 1 || this.getInstance().getType() == 2){
+                tc.addReactionById(this.getIdMessageDiscord(),Config.getEmojiTANK()).queue();
+                tc.addReactionById(this.getIdMessageDiscord(),Config.getEmojiHEAL()).queue();
+            }
+            tc.addReactionById(this.getIdMessageDiscord(),Config.getEmojiDPS()).queue();
+            tc.addReactionById(this.getIdMessageDiscord(),Config.getEmojiDELETE()).queue();
+        }
+    }
+
+    public boolean isActive() {
+        return (!this.getDateToDate().before(Calendar.getInstance().getTime()) && !this.isLocked());
     }
 
     private String getStringOfTankList(){
@@ -161,7 +208,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
 
     @Override
     public String toString() {
-        return this.getDateToRequest() + " " + this.getInstance().getName() + " de " + this.getAdmin();
+        return this.isLocked() + " " + this.getDateToRequest() + " " + this.getInstance().getName() + " de " + this.getAdmin();
     }
 
     public String toStringWithoutAuthor() {

@@ -12,6 +12,8 @@ public class EditEvent {
     public static int ADD = 1;
     public static int MODIFY = 2;
     public static int DELETE = 3;
+    public static int LOCKED = 4;
+    public static int UNLOCKED = 5;
 
     public EditEvent(int action, OrganizedDate od) {
         this.action = action;

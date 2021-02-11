@@ -3,7 +3,6 @@ package be.isservers.hmb.lfg;
 import be.isservers.hmb.lfg.library.*;
 import be.isservers.hmb.utils.SQLiteSource;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ public class LFGdataManagement {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGdataManagement.class);
 
     static ArrayList<OrganizedDate> listDate = new ArrayList<>();
-    static ArrayList<OrganizedDate> waitListDate = new ArrayList<>();
 
     final static ArrayList<Instance> Raid = new ArrayList<>();
     final static ArrayList<Instance> Donjon = new ArrayList<>();
@@ -84,7 +82,7 @@ public class LFGdataManagement {
 
     public static void InitializeOrganizedDate(ReadyEvent event) {
         try{
-            ResultSet rs = SQLiteSource.getTable("SELECT id,idMessageDiscord,admin,instance,difficulty,date,description FROM LFG_OrganizedDate;");
+            ResultSet rs = SQLiteSource.getTable("SELECT id,idMessageDiscord,admin,instance,difficulty,date,description,locked FROM LFG_OrganizedDate;");
             while (rs.next()){
                 try{
                     OrganizedDate od = new OrganizedDate();
@@ -94,6 +92,7 @@ public class LFGdataManagement {
                     od.setDifficulty(rs.getInt("difficulty"));
                     od.setDate(new SimpleDateFormat("dd/MM/yyyy hh:mm aa").parse(rs.getString("date")));
                     od.setDescription(rs.getString("description"));
+                    od.setLock(rs.getInt("locked"));
 
                     LOGGER.info("Event finds: " + od.toString(), event.getJDA().getSelfUser().getAsTag());
 
@@ -141,13 +140,7 @@ public class LFGdataManagement {
             LFGdataManagement.TriListInstance();
 
             for (OrganizedDate od : LFGdataManagement.listDate){
-
-                if(od.getInstance().getType() == 1 || od.getInstance().getType() == 2){
-                    MessageUtils.SendPublicRichEmbedPVE(event.getJDA(),od);
-                }
-                else if(od.getInstance().getType() == 3) {
-                    MessageUtils.SendPublicRichEmbedPVP(event.getJDA(),od);
-                }
+                MessageUtils.SendPublicRichEmbed(event.getJDA(),od);
             }
 
         }
@@ -155,15 +148,7 @@ public class LFGdataManagement {
     }
 
     static void addListeEvent(OrganizedDate od){
-        waitListDate.add(od);
-    }
-
-    static void confirmEvent(OrganizedDate od,String id){
-        waitListDate.remove(od);
-
-        od.setIdMessageDiscord(id);
         listDate.add(od);
-
         SQLiteSource.addEvent(od);
     }
 
@@ -171,10 +156,16 @@ public class LFGdataManagement {
         Collections.sort(listDate);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static String getNameOfMember(String id){
         Guild guild = LFGdataManagement.heavenDiscord;
-        Member member = guild.retrieveMemberById(id).complete();
-        return member.getEffectiveName();
+
+        try{
+            return guild.getMemberById(id).getEffectiveName();
+        }
+        catch (NullPointerException ex){
+            return "no data found";
+        }
     }
 
     private static Instance getInstanceObjectWithId(int val) throws NotFoundException {
@@ -233,6 +224,36 @@ public class LFGdataManagement {
         return listEvent;
     }
 
+    static ArrayList<OrganizedDate> getEventsCreateByUserUnlock(User author) throws EmptyArrayException {
+        ArrayList<OrganizedDate> listEvent = new ArrayList<>();
+
+        for (OrganizedDate od : LFGdataManagement.listDate){
+            if (od.getAdminId().equals(author.getId()) && od.isActive()) {
+                listEvent.add(od);
+            }
+        }
+
+        if(listEvent.size() == 0)
+            throw new EmptyArrayException();
+
+        return listEvent;
+    }
+
+    static ArrayList<OrganizedDate> getEventsCreateByUserLock(User author) throws EmptyArrayException {
+        ArrayList<OrganizedDate> listEvent = new ArrayList<>();
+
+        for (OrganizedDate od : LFGdataManagement.listDate){
+            if (od.getAdminId().equals(author.getId()) && !od.isActive() && od.isLocked()) {
+                listEvent.add(od);
+            }
+        }
+
+        if(listEvent.size() == 0)
+            throw new EmptyArrayException();
+
+        return listEvent;
+    }
+
     static OrganizedDate getOrganizedDateByUser(User author, int number) throws EmptyArrayException, NotFoundException {
         ArrayList<OrganizedDate> listEvent = getEventsCreateByUser(author);
 
@@ -242,8 +263,26 @@ public class LFGdataManagement {
         throw new NotFoundException();
     }
 
-    public static boolean RemoveEvent(OrganizedDate od) {
-        return listDate.remove(od);
+    static OrganizedDate getOrganizedDateByUserLock(User author, int number) throws EmptyArrayException, NotFoundException {
+        ArrayList<OrganizedDate> listEvent = getEventsCreateByUser(author);
+
+        OrganizedDate od = listEvent.get(number);
+        if (od != null && !od.isActive() && od.isLocked()) return od;
+
+        throw new NotFoundException();
+    }
+
+    static OrganizedDate getOrganizedDateByUserUnlock(User author, int number) throws EmptyArrayException, NotFoundException {
+        ArrayList<OrganizedDate> listEvent = getEventsCreateByUser(author);
+
+        OrganizedDate od = listEvent.get(number);
+        if (od != null && od.isActive()) return od;
+
+        throw new NotFoundException();
+    }
+
+    public static void RemoveEvent(OrganizedDate od) {
+        listDate.remove(od);
     }
 
 

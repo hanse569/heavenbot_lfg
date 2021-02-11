@@ -30,22 +30,9 @@ public class MessageUtils {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static void SendPublicRichEmbedPVE(JDA jda,OrganizedDate od){
-        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
-        {
-            message.addReaction(Config.getEmojiTANK()).queue();
-            message.addReaction(Config.getEmojiHEAL()).queue();
-            message.addReaction(Config.getEmojiDPS()).queue();
-            message.addReaction(Config.getEmojiDELETE()).queue();
-        });
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public static void SendPublicRichEmbedPVP(JDA jda,OrganizedDate od){
-        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()).sendMessage(od.getEmbedBuilder().build()).queue( (message) ->
-        {
-            message.addReaction(Config.getEmojiDPS()).queue();
-            message.addReaction(Config.getEmojiDELETE()).queue();
+    public static void SendPublicRichEmbed(JDA jda,OrganizedDate od){
+        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelHeavenBot()).sendMessage(od.getEmbedBuilder().build()).queue( (message) -> {
+            if(od.getIdMessageDiscord() == null)od.setIdMessageDiscord(message.getId());
         });
     }
 }
