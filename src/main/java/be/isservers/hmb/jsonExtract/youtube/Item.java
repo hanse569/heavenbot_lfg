@@ -1,4 +1,4 @@
-package be.isservers.hmb.youtubeApi;
+package be.isservers.hmb.jsonExtract.youtube;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

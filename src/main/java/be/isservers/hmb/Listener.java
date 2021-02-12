@@ -3,6 +3,7 @@ package be.isservers.hmb;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.lfg.LFGmain;
 import be.isservers.hmb.utils.SQLiteSource;
+import be.isservers.hmb.weeklyInfo.Affixes;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -38,6 +39,7 @@ public class Listener extends ListenerAdapter {
                     LFGmain.Clear(guild.getTextChannelById(Config.getIdChannelDonjon()));
                     LFGdataManagement.heavenDiscord = guild;
                     LFGdataManagement.InitializeOrganizedDate(event);
+                    Affixes.Load();
                     //new Timer(TIME_BETWEEN_AUTO_DELETE,new LFGautoDeleteEvent()).start();
                 }
             }
