@@ -4,10 +4,8 @@ import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.command.privateCommand.LfgCommand;
 import be.isservers.hmb.command.publicCommands.HelpCommand;
-import be.isservers.hmb.command.publicCommands.JokeCommand;
-import be.isservers.hmb.command.publicCommands.MemeCommand;
-import be.isservers.hmb.command.publicCommands.admin.PingCommand;
 import be.isservers.hmb.command.publicCommands.admin.ClearChannelCommand;
+import be.isservers.hmb.command.publicCommands.admin.PingCommand;
 import be.isservers.hmb.command.publicCommands.admin.SetPrefixCommand;
 import be.isservers.hmb.command.publicCommands.music.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -25,8 +23,6 @@ public class CommandManager {
     CommandManager() {
         addCommand(new PingCommand());
         addCommand(new HelpCommand(this));
-        addCommand(new MemeCommand());
-        addCommand(new JokeCommand());
 
         addCommand(new SetPrefixCommand());
         addCommand(new ClearChannelCommand());

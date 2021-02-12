@@ -3,7 +3,6 @@ package be.isservers.hmb;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.lfg.LFGmain;
 import be.isservers.hmb.utils.SQLiteSource;
-import me.duncte123.botcommons.BotCommons;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -59,8 +58,7 @@ public class Listener extends ListenerAdapter {
 
         if (raw.equalsIgnoreCase(prefix + "shutdown") && user.getId().equals(Config.get("owner_id"))){
             LOGGER.info("Shutting Down");
-            event.getJDA().shutdown();
-            BotCommons.shutdown(event.getJDA());
+            Bot.Shutdown();
             return;
         }
 

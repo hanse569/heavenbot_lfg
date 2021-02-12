@@ -2,8 +2,6 @@ package be.isservers.hmb;
 
 import be.isservers.hmb.lfg.LFGemoteManagement;
 import be.isservers.hmb.lfg.LFGmain;
-import me.duncte123.botcommons.messaging.EmbedUtils;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -19,12 +17,6 @@ public class Bot {
     public static JDA jda;
 
     private Bot() throws LoginException {
-
-        EmbedUtils.setEmbedBuilder(
-            () -> new EmbedBuilder()
-            .setColor(0x3883d9)
-            .setFooter("HeavenBot - /!\\ WORK IN PROGRESS /!\\")
-        );
 
         jda = JDABuilder.createDefault(
             Config.get("token"),
@@ -49,6 +41,12 @@ public class Bot {
             .setActivity(Activity.listening("?help"))
             .build();
 
+    }
+
+    public static void Shutdown() {
+        jda.shutdown();
+        jda.getHttpClient().connectionPool().evictAll();
+        jda.getHttpClient().dispatcher().executorService().shutdown();
     }
 
     public static void main(String[] args) throws LoginException {
