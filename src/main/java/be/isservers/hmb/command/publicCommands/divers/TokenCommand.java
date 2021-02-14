@@ -14,7 +14,7 @@ public class TokenCommand implements ICommand {
     public void handle(CommandContext ctx) {
         try {
             TokenPriceToday tdt = Converter.fromJsonString(HttpRequest.get("https://wowtokenprices.com/current_prices.json"));
-            MessageUtils.SendPublicMessage(ctx.getChannel(),"Prix du token: **" + tdt.getEu().getCurrentPrice()  + "** :coin:");
+            ctx.getGuildEvent().getMessage().reply("Prix du token: **" + tdt.getEu().getCurrentPrice()  + "** :coin:").queue();
         }
         catch (IOException ex){
         }
