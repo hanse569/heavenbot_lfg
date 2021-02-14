@@ -1,5 +1,6 @@
 package be.isservers.hmb;
 
+import be.isservers.hmb.lfg.LFGautoDeleteEvent;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.lfg.LFGmain;
 import be.isservers.hmb.utils.SQLiteSource;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,7 +42,7 @@ public class Listener extends ListenerAdapter {
                     LFGdataManagement.heavenDiscord = guild;
                     LFGdataManagement.InitializeOrganizedDate(event);
                     Affixes.Load();
-                    //new Timer(TIME_BETWEEN_AUTO_DELETE,new LFGautoDeleteEvent()).start();
+                    new Timer(TIME_BETWEEN_AUTO_DELETE,new LFGautoDeleteEvent()).start();
                 }
             }
         }

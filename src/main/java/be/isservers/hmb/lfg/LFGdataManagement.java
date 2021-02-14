@@ -14,15 +14,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class LFGdataManagement {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGdataManagement.class);
 
-    static ArrayList<OrganizedDate> listDate = new ArrayList<>();
+    static List<OrganizedDate> listDate = new CopyOnWriteArrayList<>();
 
-    final static ArrayList<Instance> Raid = new ArrayList<>();
-    final static ArrayList<Instance> Donjon = new ArrayList<>();
-    final static ArrayList<Instance> JcJ = new ArrayList<>();
+    final static List<Instance> Raid = new CopyOnWriteArrayList<>();
+    final static List<Instance> Donjon = new CopyOnWriteArrayList<>();
+    final static List<Instance> JcJ = new CopyOnWriteArrayList<>();
 
     public static Guild heavenDiscord;
 
@@ -94,7 +96,7 @@ public class LFGdataManagement {
                     od.setDescription(rs.getString("description"));
                     od.setLock(rs.getInt("locked"));
 
-                    LOGGER.info("Event finds: " + od.toString(), event.getJDA().getSelfUser().getAsTag());
+                    LOGGER.info("Event find: " + od.toString(), event.getJDA().getSelfUser().getAsTag());
 
                     LFGdataManagement.listDate.add(od);
                     LFGmain.nr++;

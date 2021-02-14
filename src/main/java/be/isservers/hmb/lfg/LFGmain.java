@@ -571,7 +571,7 @@ public class LFGmain extends ListenerAdapter {
         }
     }
 
-    private static void AfficheList(User user, ArrayList<Instance> listInstance,String titre) {
+    private static void AfficheList(User user, List<Instance> listInstance,String titre) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(titre);
         eb.setTitle("Choisissez l'instance a l'aide du numero: ");
@@ -584,7 +584,7 @@ public class LFGmain extends ListenerAdapter {
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
-    private static void AfficheListEventCreateByUser(User user,ArrayList<OrganizedDate> listEvent,String titre) {
+    private static void AfficheListEventCreateByUser(User user,List<OrganizedDate> listEvent,String titre) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(titre);
         eb.setTitle("Choisissez l'event a l'aide du numero: ");

@@ -208,7 +208,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
 
     @Override
     public String toString() {
-        return this.isLocked() + " " + this.getDateToRequest() + " " + this.getInstance().getName() + " de " + this.getAdmin();
+        return this.getDateToRequest() + " " + this.getInstance().getName() + " de " + this.getAdmin();
     }
 
     public String toStringWithoutAuthor() {

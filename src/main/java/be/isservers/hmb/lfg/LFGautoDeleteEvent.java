@@ -1,6 +1,8 @@
 package be.isservers.hmb.lfg;
 
 import be.isservers.hmb.lfg.library.OrganizedDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +11,8 @@ import java.util.Date;
 import java.util.Iterator;
 
 public class LFGautoDeleteEvent implements ActionListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LFGautoDeleteEvent.class);
 
     public LFGautoDeleteEvent() {
     }
@@ -19,10 +23,10 @@ public class LFGautoDeleteEvent implements ActionListener {
         cal.add(Calendar.DATE, -14);
         Date dateBefore14Days = cal.getTime();
 
-        for (Iterator<OrganizedDate> it = LFGdataManagement.listDate.iterator(); it.hasNext();) {
-            OrganizedDate od = it.next();
+        for (OrganizedDate od : LFGdataManagement.listDate) {
             if (od.getDateToDate().before(dateBefore14Days)) {
                 od.Delete();
+                LOGGER.info("Event deleted: " + od.toString());
             }
         }
     }
