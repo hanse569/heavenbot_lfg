@@ -11,6 +11,7 @@ import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 @SuppressWarnings({"ConstantConditions"})
 public class OrganizedDate implements Comparable<OrganizedDate>{
@@ -90,12 +91,12 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         eb.addField("Date: ","  " + this.getDateToString(),false);
 
         if(this.getInstance().getType() == 1 || this.getInstance().getType() == 2){
-            eb.addField("TANK",getStringOfTankList(),true);
-            eb.addField("HEAL",getStringOfHealList(),true);
-            eb.addField("DPS",getStringOfDpsList(),false);
+            eb.addField("TANK",getStringOfList(TankList),true);
+            eb.addField("HEAL",getStringOfList(HealList),true);
+            eb.addField("DPS",getStringOfList(DpsList),false);
         }
         else if(this.getInstance().getType() == 3) {
-            eb.addField("PARTICIPANTS",getStringOfDpsList(),true);
+            eb.addField("PARTICIPANTS",getStringOfList(DpsList),true);
         }
 
         return eb;
@@ -175,30 +176,10 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         return (!this.getDateToDate().before(Calendar.getInstance().getTime()) && !this.isLocked());
     }
 
-    private String getStringOfTankList(){
-        if(TankList.size() > 0){
+    private String getStringOfList(List<String> list) {
+        if(list.size() > 0){
             String buffer = "";
-            for (String tmp : TankList){
-                buffer = buffer.concat(LFGdataManagement.getNameOfMember(tmp) + "  ");
-            }
-            return buffer;
-        }
-        return " / ";
-    }
-    private String getStringOfHealList(){
-        if(HealList.size() > 0){
-            String buffer = "";
-            for (String tmp : HealList){
-                buffer = buffer.concat(LFGdataManagement.getNameOfMember(tmp) + "  ");
-            }
-            return buffer;
-        }
-        return " / ";
-    }
-    private String getStringOfDpsList(){
-        if(DpsList.size() > 0){
-            String buffer = "";
-            for (String tmp : DpsList){
+            for (String tmp : list){
                 buffer = buffer.concat(LFGdataManagement.getNameOfMember(tmp) + "  ");
             }
             return buffer;
