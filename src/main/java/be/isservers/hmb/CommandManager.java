@@ -3,10 +3,11 @@ package be.isservers.hmb;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.command.privateCommand.LfgCommand;
-import be.isservers.hmb.command.publicCommands.HelpCommand;
+import be.isservers.hmb.command.publicCommands.divers.HelpCommand;
 import be.isservers.hmb.command.publicCommands.admin.ClearChannelCommand;
 import be.isservers.hmb.command.publicCommands.admin.PingCommand;
 import be.isservers.hmb.command.publicCommands.admin.SetPrefixCommand;
+import be.isservers.hmb.command.publicCommands.divers.TokenCommand;
 import be.isservers.hmb.command.publicCommands.music.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -21,13 +22,13 @@ public class CommandManager {
     private final List<ICommand> commands = new ArrayList<>();
 
     CommandManager() {
-        addCommand(new PingCommand());
         addCommand(new HelpCommand(this));
+        addCommand(new TokenCommand());
 
+        addCommand(new PingCommand());
         addCommand(new SetPrefixCommand());
         addCommand(new ClearChannelCommand());
 
-        //addCommand(new JoinCommand());
         addCommand(new PlayCommand());
         addCommand(new StopCommand());
         addCommand(new SkipCommand());
