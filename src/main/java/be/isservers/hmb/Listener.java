@@ -4,7 +4,6 @@ import be.isservers.hmb.lfg.LFGautoDeleteEvent;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.lfg.LFGmain;
 import be.isservers.hmb.utils.SQLiteSource;
-import be.isservers.hmb.weeklyInfo.Affixes;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -23,7 +22,8 @@ import java.sql.SQLException;
 public class Listener extends ListenerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
-    private final CommandManager manager = new CommandManager();
+    private final CommandManager commandManager = new CommandManager();
+    private final WeeklyInfoManager worldEventManager = new WeeklyInfoManager();
     private final int TIME_BETWEEN_AUTO_DELETE = 21600; //toutes les 6h
 
     @SuppressWarnings({"ConstantConditions", "PlaceholderCountMatchesArgumentCount"})
@@ -41,8 +41,8 @@ public class Listener extends ListenerAdapter {
                     LFGmain.Clear(guild.getTextChannelById(Config.getIdChannelDonjon()));
                     LFGdataManagement.heavenDiscord = guild;
                     LFGdataManagement.InitializeOrganizedDate(event);
-                    Affixes.Load();
                     new Timer(TIME_BETWEEN_AUTO_DELETE,new LFGautoDeleteEvent()).start();
+                    worldEventManager.Load();
                 }
             }
         }
@@ -67,7 +67,7 @@ public class Listener extends ListenerAdapter {
         }
 
         if (raw.startsWith(prefix)){
-            manager.handle(event,prefix);
+            commandManager.handle(event,prefix);
         }
     }
 
@@ -83,10 +83,10 @@ public class Listener extends ListenerAdapter {
         String raw = event.getMessage().getContentRaw();
 
         if (raw.startsWith(prefix)){
-            manager.handle(event,prefix);
+            commandManager.handle(event,prefix);
         }
         else {
-            manager.handle(event);
+            commandManager.handle(event);
         }
     }
 

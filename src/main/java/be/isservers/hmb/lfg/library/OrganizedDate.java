@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @SuppressWarnings({"ConstantConditions"})
 public class OrganizedDate implements Comparable<OrganizedDate>{

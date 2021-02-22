@@ -1,18 +1,13 @@
 package be.isservers.hmb.jsonExtract.raiderIO;
 
-import java.io.IOException;
-
-import be.isservers.hmb.jsonExtract.raiderIO.MythicPlus;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.json.JsonWriteContext;
-import com.fasterxml.jackson.core.json.JsonWriteFeature;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.*;
-import java.util.Date;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Converter {
     // Date-time helpers

@@ -1,6 +1,6 @@
 package be.isservers.hmb.jsonExtract.raiderIO;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.nio.charset.StandardCharsets;
 

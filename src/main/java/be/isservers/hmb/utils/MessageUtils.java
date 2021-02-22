@@ -1,6 +1,7 @@
-package be.isservers.hmb.lfg.library;
+package be.isservers.hmb.utils;
 
 import be.isservers.hmb.Config;
+import be.isservers.hmb.lfg.library.OrganizedDate;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -30,9 +31,41 @@ public class MessageUtils {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static void SendPublicRichEmbed(JDA jda,OrganizedDate od){
+    public static void SendPublicRichEmbed(JDA jda, OrganizedDate od){
         jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelDonjon()).sendMessage(od.getEmbedBuilder().build()).queue( (message) -> {
             if(od.getIdMessageDiscord() == null)od.setIdMessageDiscord(message.getId());
         });
+    }
+
+    public static String Italics(String value) {
+        return "*" + value + "*";
+    }
+
+    public static String Bold(String value) {
+        return "**" + value + "**";
+    }
+
+    public static String BoldItalics(String value) {
+        return "***" + value + "***";
+    }
+
+    public static String Underline(String value) {
+        return "__" + value + "__";
+    }
+
+    public static String UnderlineItalics(String value) {
+        return "__*" + value + "*__";
+    }
+
+    public static String UnderlineBold(String value) {
+        return "**" + value + "**";
+    }
+
+    public static String UnderlineBoldItalics(String value) {
+        return "__***" + value + "***__";
+    }
+
+    public static String Strikethrough(String value) {
+        return "~~" + value + "~~";
     }
 }

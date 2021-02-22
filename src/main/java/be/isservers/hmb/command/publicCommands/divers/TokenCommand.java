@@ -4,7 +4,6 @@ import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.jsonExtract.wowtokenprices.Converter;
 import be.isservers.hmb.jsonExtract.wowtokenprices.TokenPriceToday;
-import be.isservers.hmb.lfg.library.MessageUtils;
 import be.isservers.hmb.utils.HttpRequest;
 
 import java.io.IOException;
