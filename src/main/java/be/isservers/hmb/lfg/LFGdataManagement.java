@@ -234,7 +234,7 @@ public class LFGdataManagement {
         ArrayList<OrganizedDate> listEvent = new ArrayList<>();
 
         for (OrganizedDate od : LFGdataManagement.listDate){
-            if (od.getAdminId().equals(author.getId()) && od.isActive()) {
+            if (od.getAdminId().equals(author.getId()) && od.isActive() && !od.isLocked()) {
                 listEvent.add(od);
             }
         }
@@ -249,7 +249,22 @@ public class LFGdataManagement {
         ArrayList<OrganizedDate> listEvent = new ArrayList<>();
 
         for (OrganizedDate od : LFGdataManagement.listDate){
-            if (od.getAdminId().equals(author.getId()) && !od.isActive() && od.isLocked()) {
+            if (od.getAdminId().equals(author.getId()) && od.isActive() && od.isLocked()) {
+                listEvent.add(od);
+            }
+        }
+
+        if(listEvent.size() == 0)
+            throw new EmptyArrayException();
+
+        return listEvent;
+    }
+
+    static ArrayList<OrganizedDate> getEventsCreateByUserOnlyActive(User author) throws EmptyArrayException {
+        ArrayList<OrganizedDate> listEvent = new ArrayList<>();
+
+        for (OrganizedDate od : LFGdataManagement.listDate){
+            if (od.getAdminId().equals(author.getId()) && od.isActive()) {
                 listEvent.add(od);
             }
         }
@@ -272,8 +287,10 @@ public class LFGdataManagement {
     static OrganizedDate getOrganizedDateByUserLock(User author, int number) throws EmptyArrayException, NotFoundException {
         ArrayList<OrganizedDate> listEvent = getEventsCreateByUser(author);
 
-        OrganizedDate od = listEvent.get(number);
-        if (od != null && !od.isActive() && od.isLocked()) return od;
+        if (!(number >= listEvent.size()) && !(number < 0)) {
+            OrganizedDate od = listEvent.get(number);
+            if (od != null && od.isActive() && od.isLocked()) return od;
+        }
 
         throw new NotFoundException();
     }
@@ -281,9 +298,21 @@ public class LFGdataManagement {
     static OrganizedDate getOrganizedDateByUserUnlock(User author, int number) throws EmptyArrayException, NotFoundException {
         ArrayList<OrganizedDate> listEvent = getEventsCreateByUser(author);
 
-        OrganizedDate od = listEvent.get(number);
-        if (od != null && od.isActive()) return od;
+        if (!(number >= listEvent.size()) && !(number < 0)) {
+            OrganizedDate od = listEvent.get(number);
+            if (od != null && od.isActive() && !od.isLocked()) return od;
+        }
 
+        throw new NotFoundException();
+    }
+
+    static OrganizedDate getOrganizedDateByUserOnlyActive(User author, int number) throws EmptyArrayException, NotFoundException {
+        ArrayList<OrganizedDate> listEvent = getEventsCreateByUser(author);
+
+        if (!(number >= listEvent.size()) && !(number < 0)) {
+            OrganizedDate od = listEvent.get(number);
+            if (od != null && od.isActive()) return od;
+        }
         throw new NotFoundException();
     }
 

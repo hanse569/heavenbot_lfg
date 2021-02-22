@@ -173,7 +173,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     }
 
     public boolean isActive() {
-        return (!this.getDateToDate().before(Calendar.getInstance().getTime()) && !this.isLocked());
+        return (!this.getDateToDate().before(Calendar.getInstance().getTime()));
     }
 
     private String getStringOfList(List<String> list) {

@@ -1,6 +1,7 @@
 package be.isservers.hmb.utils;
 
 import be.isservers.hmb.lfg.library.OrganizedDate;
+import net.dv8tion.jda.api.events.UpdateEvent;
 
 import java.sql.*;
 
@@ -59,10 +60,19 @@ public class SQLiteSource {
         } catch (SQLException ex) { ex.printStackTrace(); }
     }
 
-    public static void changeLockEvent(int idEvent, int valeur) {
+    public static void updateValueOfEvent(String key,int value, int idEvent){
         try{
-            PreparedStatement statement = getConn().prepareStatement("UPDATE LFG_OrganizedDate SET locked=? WHERE id=?;");
-            statement.setInt(1,valeur);
+            PreparedStatement statement = getConn().prepareStatement("UPDATE LFG_OrganizedDate SET "+ key + "=? WHERE id=?;");
+            statement.setInt(1,value);
+            statement.setInt(2,idEvent);
+            statement.executeUpdate();
+        } catch (SQLException ex) { ex.printStackTrace(); }
+    }
+
+    public static void updateValueOfEvent(String key,String value, int idEvent){
+        try{
+            PreparedStatement statement = getConn().prepareStatement("UPDATE LFG_OrganizedDate SET " + key + "=? WHERE id=?;");
+            statement.setString(1,value);
             statement.setInt(2,idEvent);
             statement.executeUpdate();
         } catch (SQLException ex) { ex.printStackTrace(); }

@@ -120,6 +120,18 @@ public class LFGmain extends ListenerAdapter {
                         listEventEdited.remove(ee);
                     }
                 }
+                else if(args.get(0).startsWith("edit")){
+                    ee = new EditEvent(EditEvent.MODIFY,new OrganizedDate(ctx.getAuthor().getId()));
+                    listEventEdited.add(ee);
+                    try {
+                        AfficheListEventCreateByUser(ctx.getAuthor(),LFGdataManagement.getEventsCreateByUserOnlyActive(ctx.getAuthor()),"Edtion d'un event");
+                        ee.etape++;
+                    }
+                    catch (EmptyArrayException ex) {
+                        MessageUtils.SendPrivateMessage(ctx.getAuthor(),":x: Aucun event n'a pu être trouvé");
+                        listEventEdited.remove(ee);
+                    }
+                }
                 else {
                     MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|jcj|lock|unlock>*__");
                 }
@@ -150,6 +162,9 @@ public class LFGmain extends ListenerAdapter {
             }
             else if(ee.getAction() == EditEvent.UNLOCKED){
                 DeverrouillageEvent(ctx,ee);
+            }
+            else if(ee.getAction() == EditEvent.MODIFY){
+                EditionEvent(ctx,ee);
             }
         }
     }
@@ -496,7 +511,7 @@ public class LFGmain extends ListenerAdapter {
                 OrganizedDate od = ee.getOd();
 
                 od.setLock(!od.isLocked());
-                SQLiteSource.changeLockEvent(od.getId(),od.isLocked()?1:0);
+                SQLiteSource.updateValueOfEvent("locked",od.isLocked()?1:0,od.getId());
                 od.RefreshEvent();
 
                 MessageUtils.SendPrivateMessage(user,":white_check_mark: Verrouillage confirmé !");
@@ -561,7 +576,7 @@ public class LFGmain extends ListenerAdapter {
                 OrganizedDate od = ee.getOd();
 
                 od.setLock(!od.isLocked());
-                SQLiteSource.changeLockEvent(od.getId(),od.isLocked()?1:0);
+                SQLiteSource.updateValueOfEvent("locked",od.isLocked()?1:0,od.getId());
                 od.RefreshEvent();
 
                 MessageUtils.SendPrivateMessage(user,":white_check_mark: Deverrouillage confirmé !");
@@ -571,6 +586,142 @@ public class LFGmain extends ListenerAdapter {
             catch(NumberFormatException ex){
                 MessageUtils.SendPrivateMessage(user,":x: Valeur encodé n'est pas un nombre, annulation du deverrouillage");
                 listEventEdited.remove(ee);
+            }
+        }
+    }
+
+    private static void EditionEvent(PrivateMessageReceivedEvent event, EditEvent ee){
+        User user = event.getAuthor();
+        Message msg = event.getMessage();
+
+
+        if(ee.etape == 1){ //Enregistrement de l'instance à supprimer et Demande confirmation
+            try{
+                int val = Integer.parseInt(msg.getContentDisplay());
+                ee.setOd(getOrganizedDateByUserOnlyActive(user,val-1));
+
+                AfficheEditionEventMainMenu(user,ee.getOd().getEmbedBuilder());
+
+                ee.etape++;
+            }
+            catch(NumberFormatException ex){
+                MessageUtils.SendPrivateMessage(user,":x: Valeur encodé n'est pas un nombre, annulation de la suppression");
+                listEventEdited.remove(ee);
+            }
+            catch (EmptyArrayException ex){
+                MessageUtils.SendPrivateMessage(user,":x: Aucun event n'a pu être trouvé, annulation de la suppression");
+                listEventEdited.remove(ee);
+            }
+            catch (NotFoundException ex){
+                MessageUtils.SendPrivateMessage(user,":x: L'event selectionné n'existe pas, annulation de la suppression");
+                listEventEdited.remove(ee);
+            }
+        }
+        else if(ee.etape == 2){
+            try {
+                int val = Integer.parseInt(msg.getContentDisplay());
+
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Edition d'un event");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                switch (val) {
+                    case 1:
+                        ee.etape = 3;
+
+                        eb.setTitle("Indique une description: ");
+                        MessageUtils.SendPrivateRichEmbed(user,eb);
+                        break;
+
+                    case 2:
+                        ee.etape = 4;
+
+
+                        eb.setTitle("Choisissez la date: ");
+                        eb.setDescription("*Exemple*: 05-01-2019");
+                        MessageUtils.SendPrivateRichEmbed(user,eb);
+                        break;
+
+                    case 3:
+                        ee.etape = 5;
+
+                        eb.setTitle("Choisissez l'heure: ");
+                        eb.setDescription("*Exemple*: 21:00");
+                        MessageUtils.SendPrivateRichEmbed(user,eb);
+                        break;
+
+                    case 4:
+                        MessageUtils.SendPrivateMessage(user,":white_check_mark: Edition terminé !");
+                        listEventEdited.remove(ee);
+                        break;
+
+                    default:
+                        throw new NotFoundException();
+                }
+            }
+            catch(NotFoundException | NumberFormatException ex){
+                AfficheEditionEventMainMenu(user,ee.getOd().getEmbedBuilder());
+            }
+        }
+        else if(ee.etape == 3) {
+            ee.getOd().setDescription(msg.getContentDisplay());
+            SQLiteSource.updateValueOfEvent("description",ee.getOd().getDescription(),ee.getOd().getId());
+
+            MessageUtils.SendPrivateMessage(user,":white_check_mark: Edition validé, retour au menu principal !");
+            AfficheEditionEventMainMenu(user,ee.getOd().getEmbedBuilder());
+
+            ee.etape = 2;
+        }
+        else if(ee.etape == 4) {
+            try{
+                DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                Calendar oldDate = Calendar.getInstance();
+                oldDate.setTime(ee.getOd().getDateToDate());
+
+                Calendar newDate = Calendar.getInstance();
+                newDate.setTime(df.parse(msg.getContentDisplay()));
+                newDate.set(Calendar.HOUR_OF_DAY,oldDate.get(Calendar.HOUR_OF_DAY));
+                newDate.set(Calendar.MINUTE,oldDate.get(Calendar.MINUTE));
+                ee.getOd().setDate(newDate.getTime());
+                SQLiteSource.updateValueOfEvent("date",ee.getOd().getDateToRequest(),ee.getOd().getId());
+
+
+                MessageUtils.SendPrivateMessage(user,":white_check_mark: Edition validé, retour au menu principal !");
+                AfficheEditionEventMainMenu(user,ee.getOd().getEmbedBuilder());
+
+                ee.etape = 2;
+            } catch (ParseException ex){
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Edition d'un event");
+                eb.setTitle("Choisissez la date: ");
+                eb.setDescription("*Exemple*: 05-01-2019");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                MessageUtils.SendPrivateRichEmbed(user,eb);
+            }
+        }
+        else if(ee.etape == 5) {
+            try{
+                DateFormat df = new SimpleDateFormat("HH:mm");
+                Calendar newHour = Calendar.getInstance();
+                newHour.setTime(df.parse(msg.getContentDisplay()));
+
+                Calendar date = Calendar.getInstance();
+                date.setTime(ee.getOd().getDateToDate());
+                date.set(Calendar.HOUR_OF_DAY,newHour.get(Calendar.HOUR_OF_DAY));
+                date.set(Calendar.MINUTE,newHour.get(Calendar.MINUTE));
+                ee.getOd().setDate(date.getTime());
+                SQLiteSource.updateValueOfEvent("date",ee.getOd().getDateToRequest(),ee.getOd().getId());
+
+                MessageUtils.SendPrivateMessage(user,":white_check_mark: Edition validé, retour au menu principal !");
+                AfficheEditionEventMainMenu(user,ee.getOd().getEmbedBuilder());
+
+                ee.etape = 2;
+            } catch (ParseException ex){
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Edition d'un event");
+                eb.setTitle("Choisissez l'heure: ");
+                eb.setDescription("*Exemple*: 21:00");
+                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         }
     }
@@ -597,6 +748,21 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat(EmoteNumber.get(i+1) + " " + listEvent.get(i).toStringWithoutAuthor() + "\n");
         }
         eb.setDescription(temp);
+        eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+        MessageUtils.SendPrivateRichEmbed(user,eb);
+    }
+
+    private static void AfficheEditionEventMainMenu(User user,EmbedBuilder ebtmp) {
+        MessageUtils.SendPrivateRichEmbed(user,ebtmp);
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor("Edition d'un event");
+        eb.setTitle("Choisissez l'element à éditer: ");
+        StringBuilder sb = new StringBuilder()
+                .append(EmoteNumber.get(1)).append(" Description\n")
+                .append(EmoteNumber.get(2)).append(" Date\n")
+                .append(EmoteNumber.get(3)).append(" Heure\n")
+                .append(EmoteNumber.get(4)).append(" Quitter\n");
+        eb.setDescription(sb.toString());
         eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
