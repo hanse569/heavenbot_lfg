@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -133,11 +134,11 @@ public class LFGmain extends ListenerAdapter {
                     }
                 }
                 else {
-                    MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|jcj|lock|unlock>*__");
+                    AfficheHelp(ctx.getAuthor());
                 }
             }
             else{
-                MessageUtils.SendPrivateMessage(ctx.getAuthor(),"__*Syntaxe: !lfg <raid|donjon|jcj|lock|unlock>*__");
+                AfficheHelp(ctx.getAuthor());
             }
         }
         else
@@ -764,6 +765,23 @@ public class LFGmain extends ListenerAdapter {
                 .append(EmoteNumber.get(4)).append(" Quitter\n");
         eb.setDescription(sb.toString());
         eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+        MessageUtils.SendPrivateRichEmbed(user,eb);
+    }
+
+    private static void AfficheHelp(User user) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Commande disponible");
+        eb.addField("!lfg raid","```Permet de planifier un raid de Shadowlands```",false);
+        eb.addField("!lfg donjon","```Permet de planifier un donjon de Shadowlands```",false);
+        eb.addField("!lfg jcj","```Permet de planifier un évènement PVP```",false);
+        eb.addField("!lfg edit","```Permet de modifier un évènement```",false);
+        eb.addField("!lfg delete","```Permet de supprimer un évènement```",false);
+        eb.addField("!lfg lock","```Permet de verrouiller un évènement que l'on a créé```",false);
+        eb.addField("!lfg unlock","```Permet de déverrouiller un évènement que l'on a verrouillé```",false);
+        eb.addField("!lfg cancel","```Permet d'annuler toutes actions en cours```",false);
+        eb.setColor(Color.decode("#FF7A00"));
+        eb.setFooter("Powered by E-Van","https://cdn.discordapp.com/app-icons/550692924715958283/07edcffb72e15c040daf868e86496d73.png");
+
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 }
