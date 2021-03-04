@@ -16,6 +16,7 @@ public class TokenCommand implements ICommand {
             ctx.getGuildEvent().getMessage().reply("Prix du token: **" + tdt.getEu().getCurrentPrice()  + "** :coin:").queue();
         }
         catch (IOException ex){
+            ctx.getGuildEvent().getMessage().reply("Impossible d'obtenir cette donnée pour le moment").queue();
         }
     }
 
