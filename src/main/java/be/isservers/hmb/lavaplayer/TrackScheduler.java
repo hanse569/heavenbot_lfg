@@ -30,6 +30,13 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     @Override
+    public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        if (track instanceof HvmAudioTrack_youtube) {
+            track.setPosition(((HvmAudioTrack_youtube) track).getTimecode());
+        }
+    }
+
+    @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.mayStartNext) {
             nextTrack();

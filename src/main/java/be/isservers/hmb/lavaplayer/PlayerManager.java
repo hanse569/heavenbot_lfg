@@ -49,7 +49,13 @@ public class PlayerManager {
         this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                HvmAudioTrack_youtube audioTrackYoutube = new HvmAudioTrack_youtube((YoutubeAudioTrack) track,final_author);
+                long timecode = 0;
+                if(trackUrl.contains("?t=")){
+                    String buffer = trackUrl.substring(trackUrl.indexOf("?t=")+3);
+                    timecode = Long.parseLong(buffer) * 1000;
+                }
+
+                HvmAudioTrack_youtube audioTrackYoutube = new HvmAudioTrack_youtube((YoutubeAudioTrack) track,final_author,timecode);
                 musicManager.scheduler.queue(audioTrackYoutube);
 
                 EmbedBuilder eb = new EmbedBuilder();
