@@ -1,7 +1,6 @@
 package be.isservers.hmb.utils;
 
 import be.isservers.hmb.lfg.library.OrganizedDate;
-import net.dv8tion.jda.api.events.UpdateEvent;
 
 import java.sql.*;
 

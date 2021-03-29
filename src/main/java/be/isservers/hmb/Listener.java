@@ -41,6 +41,7 @@ public class Listener extends ListenerAdapter {
                     LFGmain.Clear(guild.getTextChannelById(Config.getIdChannelDonjon()));
                     LFGdataManagement.heavenDiscord = guild;
                     LFGdataManagement.InitializeOrganizedDate(event);
+                    LFGdataManagement.InitializeOrdanizedDateArchived(event);
                     new Timer(TIME_BETWEEN_AUTO_DELETE,new LFGautoDeleteEvent()).start();
                     worldEventManager.Load();
                 }

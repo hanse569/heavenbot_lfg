@@ -1,6 +1,5 @@
 package be.isservers.hmb.lfg;
 
-import be.isservers.hmb.Config;
 import be.isservers.hmb.lfg.library.EmptyArrayException;
 import be.isservers.hmb.lfg.library.Instance;
 import be.isservers.hmb.lfg.library.NotFoundException;
@@ -12,13 +11,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,22 +30,12 @@ import static be.isservers.hmb.lfg.LFGdataManagement.*;
 public class LFGmain extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGmain.class);
     private static final ArrayList<EditEvent> listEventEdited = new ArrayList<>();
-    static int nr = 0;
 
     public static void Clear(TextChannel channel){
         List<Message> messages = channel.getHistory().retrievePast(50).complete();
         if(!(messages.isEmpty() || messages.size() < 2)) {
             LOGGER.info("Deleting messages in the channel " + channel);
             channel.deleteMessages(messages).complete();
-        }
-    }
-
-    @Override
-    public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if(nr > 0 && !event.getMessage().getContentDisplay().equals(".")  && event.getChannel().getId().equals(Config.getIdChannelDonjon()) && event.getAuthor().isBot()){
-            OrganizedDate od = LFGdataManagement.listDate.get(LFGdataManagement.listDate.size() - nr);
-            od.setIdMessageDiscord(event.getMessageId());
-            nr--;
         }
     }
 

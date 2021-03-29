@@ -3,6 +3,8 @@ package be.isservers.hmb.lfg.library;
 import be.isservers.hmb.Config;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.utils.SQLiteSource;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.jetbrains.annotations.NotNull;
@@ -135,19 +137,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     }
 
     public void Delete() {
-        for (String user : TankList) {
-            SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),user);
-        }
-
-        for (String user : HealList) {
-            SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),user);
-        }
-
-        for (String user : DpsList) {
-            SQLiteSource.insertOrRemoveRole("DELETE FROM LFG_ParticiperTANK WHERE idEvent = ? AND idMember = ?;",this.getId(),user);
-        }
-
-        SQLiteSource.removeEvent("DELETE FROM LFG_OrganizedDate WHERE id = ?;",this.getId());
+        SQLiteSource.removeEvent("UPDATE LFG_OrganizedDate SET archived = 1 WHERE id = ?;",this.getId());
         LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon()).deleteMessageById(getIdMessageDiscord()).queue();
         LFGdataManagement.RemoveEvent(this);
     }
@@ -201,5 +191,28 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         return this.date.compareTo(o.date);
     }
 
+    public JsonObject toJsonObject(){
+        JsonObject jo = new JsonObject();
+        jo.put("id",this.getId());
+        jo.put("admin",this.getAdmin());
+        jo.put("instance",this.getInstance().getName());
+        jo.put("difficulte",this.getDifficulty());
+        jo.put("date",this.getDateToRequest());
+        jo.put("description",this.getDescription());
+        jo.put("TANK",this.listToJsonArray(this.TankList));
+        jo.put("HEAL",this.listToJsonArray(this.HealList));
+        jo.put("DPS",this.listToJsonArray(this.DpsList));
+        jo.put("locked",this.isLocked());
+
+        return jo;
+    }
+
+    private JsonArray listToJsonArray(List<String> roleList){
+        JsonArray ja = new JsonArray();
+        for (String player : roleList) {
+            ja.add(LFGdataManagement.getNameOfMember(player));
+        }
+        return ja;
+    }
 
 }

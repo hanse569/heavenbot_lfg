@@ -24,7 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class LFGdataManagement {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGdataManagement.class);
 
-    static List<OrganizedDate> listDate = new CopyOnWriteArrayList<>();
+    public static List<OrganizedDate> listDate = new CopyOnWriteArrayList<>();
+    public static List<OrganizedDate> listDateArchived = new CopyOnWriteArrayList<>();
 
     final static List<Instance> Raid = new CopyOnWriteArrayList<>();
     final static List<Instance> Donjon = new CopyOnWriteArrayList<>();
@@ -86,9 +87,21 @@ public class LFGdataManagement {
         catch (SQLException ex) { ex.printStackTrace(); }
     }
 
-    public static void InitializeOrganizedDate(ReadyEvent event) {
+    public static void InitializeOrganizedDate(ReadyEvent event){
+        InitializeGenericOrganizedDate(event,listDate,0);
+
+        for (OrganizedDate od : listDate){
+            MessageUtils.SendPublicRichEmbed(event.getJDA(),od);
+        }
+    }
+
+    public static void InitializeOrdanizedDateArchived(ReadyEvent event){
+        InitializeGenericOrganizedDate(event,listDateArchived,1);
+    }
+
+    private static void InitializeGenericOrganizedDate(ReadyEvent event,List<OrganizedDate> tmpList,int value) {
         try{
-            ResultSet rs = SQLiteSource.getTable("SELECT id,idMessageDiscord,admin,instance,difficulty,date,description,locked FROM LFG_OrganizedDate;");
+            ResultSet rs = SQLiteSource.getTable("SELECT id,admin,instance,difficulty,date,description,locked FROM LFG_OrganizedDate WHERE archived = "+value+";");
             while (rs.next()){
                 try{
                     OrganizedDate od = new OrganizedDate();
@@ -102,8 +115,7 @@ public class LFGdataManagement {
 
                     LOGGER.info("Event find: " + od.toString(), event.getJDA().getSelfUser().getAsTag());
 
-                    LFGdataManagement.listDate.add(od);
-                    LFGmain.nr++;
+                    tmpList.add(od);
                 }
                 catch (NotFoundException ex) { ex.printStackTrace();}
 
@@ -115,7 +127,7 @@ public class LFGdataManagement {
                 int idEvent = rsTank.getInt("idEvent");
                 String idMember = rsTank.getString("idMember");
 
-                for (OrganizedDate od : LFGdataManagement.listDate){
+                for (OrganizedDate od : tmpList){
                     if(od.getId() == idEvent) od.addTankToList(idMember);
                 }
             }
@@ -126,7 +138,7 @@ public class LFGdataManagement {
                 int idEvent = rsHeal.getInt("idEvent");
                 String idMember = rsHeal.getString("idMember");
 
-                for (OrganizedDate od : LFGdataManagement.listDate){
+                for (OrganizedDate od : tmpList){
                     if(od.getId() == idEvent) od.addHealToList(idMember);
                 }
             }
@@ -137,18 +149,13 @@ public class LFGdataManagement {
                 int idEvent = rsDps.getInt("idEvent");
                 String idMember = rsDps.getString("idMember");
 
-                for (OrganizedDate od : LFGdataManagement.listDate){
+                for (OrganizedDate od : tmpList){
                     if(od.getId() == idEvent) od.addDpsToList(idMember);
                 }
             }
             rsDps.close();
 
-            LFGdataManagement.TriListInstance();
-
-            for (OrganizedDate od : LFGdataManagement.listDate){
-                MessageUtils.SendPublicRichEmbed(event.getJDA(),od);
-            }
-
+            LFGdataManagement.TriListInstance(tmpList);
         }
         catch (SQLException | ParseException ex) { ex.printStackTrace(); }
     }
@@ -158,8 +165,8 @@ public class LFGdataManagement {
         SQLiteSource.addEvent(od);
     }
 
-    private static void TriListInstance(){
-        Collections.sort(listDate);
+    private static void TriListInstance(List<OrganizedDate> list){
+        Collections.sort(list);
     }
 
     @SuppressWarnings("ConstantConditions")

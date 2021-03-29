@@ -4,6 +4,7 @@ import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.command.privateCommand.LfgCommand;
 import be.isservers.hmb.command.publicCommands.admin.ClearChannelCommand;
+import be.isservers.hmb.command.publicCommands.admin.ConnectCommand;
 import be.isservers.hmb.command.publicCommands.admin.PingCommand;
 import be.isservers.hmb.command.publicCommands.admin.SetPrefixCommand;
 import be.isservers.hmb.command.publicCommands.divers.HelpCommand;
@@ -28,6 +29,7 @@ public class CommandManager {
         addCommand(new PingCommand());
         addCommand(new SetPrefixCommand());
         addCommand(new ClearChannelCommand());
+        addCommand(new ConnectCommand());
 
         addCommand(new PlayCommand());
         addCommand(new StopCommand());

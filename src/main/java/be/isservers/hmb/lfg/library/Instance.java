@@ -1,6 +1,6 @@
 package be.isservers.hmb.lfg.library;
 
-public class Instance {
+public class Instance{
     private int idInstance;
     private String name;
     private int type;
