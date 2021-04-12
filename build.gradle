@@ -22,7 +22,6 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'com.jagrosh', name: 'jda-utilities', version: '3.0.5'
     implementation group: 'net.dv8tion', name: 'JDA', version: '4.2.1_256'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     implementation group: 'io.github.cdimascio', name: 'java-dotenv', version: '5.2.2'
