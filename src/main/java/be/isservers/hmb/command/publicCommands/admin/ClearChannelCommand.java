@@ -29,20 +29,17 @@ public class ClearChannelCommand implements ICommand {
             channel.sendMessage(":x: J'ai besoin de l'autorisation MESSAGE_MANAGE pour utiliser sa commande").queue();
             return;
         }
-
-        if (args.isEmpty()) {
-            channel.sendMessage(":x: L'utilisation correcte est `!!"+getName()+" <amount>`").queue();
-            return;
-        }
-
+        
         int amount;
-        String arg = args.get(0);
-
-        try{
-            amount = Integer.parseInt(arg);
-        } catch (NumberFormatException e) {
-            channel.sendMessageFormat("`%s` n'est pas un nombre valide", arg).queue();
-            return;
+        if (args.isEmpty()) amount = 100;
+        else {
+            String arg = args.get(0);
+            try{
+                amount = Integer.parseInt(arg);
+            } catch (NumberFormatException e) {
+                channel.sendMessageFormat("`%s` n'est pas un nombre valide", arg).queue();
+                return;
+            }
         }
 
         channel.getIterableHistory()
@@ -89,5 +86,10 @@ public class ClearChannelCommand implements ICommand {
     @Override
     public String getHelp() {
         return "COMMANDE ADMINISTRATEUR: Efface le chat";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("cc","cclear");
     }
 }
