@@ -65,12 +65,13 @@ public class CommandManager {
     }
 
     @Nullable
-    public ICommand getCommand(String search){
+    public ICommand getCommand(String search,int TYPE_COMMAND){
         String searchLower = search.toLowerCase();
 
         for (ICommand cmd : this.commands) {
-            if (cmd.getName().equals(searchLower)
-                    || cmd.getAliases().contains(searchLower)){
+            if ((cmd.getName().equals(searchLower)
+                    || cmd.getAliases().contains(searchLower))
+                && cmd.getType() == TYPE_COMMAND){
                 return cmd;
             }
         }
@@ -84,7 +85,7 @@ public class CommandManager {
                 .split("\\s+");
 
         String invoke = split[0].toLowerCase();
-        ICommand cmd = this.getCommand(invoke);
+        ICommand cmd = this.getCommand(invoke,ICommand.PUBLIC_COMMAND);
 
         if (cmd != null && cmd.getType() == ICommand.PUBLIC_COMMAND){
             event.getChannel().sendTyping().queue();
@@ -102,7 +103,7 @@ public class CommandManager {
                 .split("\\s+");
         String invoke = split[0].toLowerCase();
 
-        ICommand cmd = this.getCommand(invoke);
+        ICommand cmd = this.getCommand(invoke,ICommand.PRIVATE_COMMAND);
 
         if (cmd != null && cmd.getType() == ICommand.PRIVATE_COMMAND){
             List<String> args = Arrays.asList(split).subList(1, split.length);
@@ -116,7 +117,7 @@ public class CommandManager {
     void handle(PrivateMessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw().split("\\s+");
 
-        ICommand cmd = this.getCommand("lfg");
+        ICommand cmd = this.getCommand("lfg",ICommand.PRIVATE_COMMAND);
 
         if (cmd != null && cmd.getType() == ICommand.PRIVATE_COMMAND){
             List<String> args = Arrays.asList(split).subList(1, split.length);

@@ -44,7 +44,15 @@ public class HelpCommand implements ICommand {
         }
 
         String search = args.get(0);
-        ICommand command = manager.getCommand(search);
+        ICommand command = null;
+
+        if (ctx.getGuildEvent() != null) {
+            manager.getCommand(search,ICommand.PUBLIC_COMMAND);
+        }
+
+        if (ctx.getPrivateEvent() != null) {
+            manager.getCommand(search,ICommand.PRIVATE_COMMAND);
+        }
 
         if (command == null){
             channel.sendMessage("Rien trouvé pour " + search).queue();
