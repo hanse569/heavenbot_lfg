@@ -1,28 +1,36 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-mainClassName = "hv_lfg.Main"
+mainClassName = 'be.isservers.hmb.Bot'
 
-group 'be.is-servers.be'
-version '1.0-SNAPSHOT'
+group 'be.isservers'
+version '1.0'
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
-    mavenCentral()
     jcenter()
-    maven { url 'https://jitpack.io' }
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'net.dv8tion:JDA:4.0.0_39'
-    compile group:'org.xerial', name:'sqlite-jdbc', version:'3.27.2'
-    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.0'
-    /*implementation 'com.sedmelluq:lavaplayer:1.3.50'*/
-    implementation 'com.github.Devoxin:lavaplayer:1.3.59'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    implementation group: 'net.dv8tion', name: 'JDA', version: '4.2.1_256'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    implementation group: 'io.github.cdimascio', name: 'java-dotenv', version: '5.2.2'
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+    implementation group: 'com.sedmelluq', name: 'lavaplayer', version: '1.3.75'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+    implementation group: 'io.vertx', name: 'vertx-core', version: '4.0.3'
+    implementation group: 'io.vertx', name: 'vertx-web', version: '4.0.3'
 }
+
+compileJava.options.encoding = 'UTF-8'
+
