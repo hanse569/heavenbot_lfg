@@ -2,7 +2,6 @@ package be.isservers.hmb;
 
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
-import be.isservers.hmb.command.privateCommand.LfgCommand;
 import be.isservers.hmb.command.publicCommands.admin.ClearChannelCommand;
 import be.isservers.hmb.command.publicCommands.admin.ConnectCommand;
 import be.isservers.hmb.command.publicCommands.admin.PingCommand;
@@ -27,6 +26,7 @@ public class CommandManager {
     CommandManager() {
         addCommand(new HelpCommand(this));
         addCommand(new TokenCommand());
+        addCommand(new be.isservers.hmb.command.publicCommands.divers.LfgCommand());
 
         addCommand(new PingCommand());
         addCommand(new SetPrefixCommand());
@@ -42,11 +42,16 @@ public class CommandManager {
         addCommand(new WorldBossCommand());
         addCommand(new WorldEventCommand());
 
-        addCommand(new LfgCommand());
+        addCommand(new be.isservers.hmb.command.privateCommand.LfgCommand());
     }
 
     private void addCommand(ICommand cmd){
-        boolean nameFound = this.commands.stream().anyMatch((it) -> it.getName().equalsIgnoreCase(cmd.getName()));
+        //boolean nameFound = this.commands.stream().anyMatch((it) -> it.getName().equalsIgnoreCase(cmd.getName()));
+        boolean nameFound = false;
+        for (ICommand command : commands) {
+            if (cmd.getType() == command.getType() && cmd.getName().equals(command.getName()))
+                nameFound = true;
+        }
 
         if (nameFound){
             throw new IllegalArgumentException("A command with this name is already present");

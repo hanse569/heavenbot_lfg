@@ -761,6 +761,10 @@ public class LFGmain extends ListenerAdapter {
     }
 
     private static void AfficheHelp(User user) {
+        MessageUtils.SendPrivateRichEmbed(user,GenerateLFGHelp());
+    }
+
+    public static EmbedBuilder GenerateLFGHelp() {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Commande disponible");
         eb.addField("!lfg raid","```Permet de planifier un raid de Shadowlands```",false);
@@ -773,7 +777,6 @@ public class LFGmain extends ListenerAdapter {
         eb.addField("!lfg cancel","```Permet d'annuler toutes actions en cours```",false);
         eb.setColor(Color.decode("#FF7A00"));
         eb.setFooter("Powered by E-Van","https://cdn.discordapp.com/app-icons/550692924715958283/07edcffb72e15c040daf868e86496d73.png");
-
-        MessageUtils.SendPrivateRichEmbed(user,eb);
+        return eb;
     }
 }
