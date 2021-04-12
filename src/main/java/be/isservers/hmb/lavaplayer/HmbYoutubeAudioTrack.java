@@ -1,28 +1,26 @@
-package be.isservers.hmb.utils;
+package be.isservers.hmb.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import net.dv8tion.jda.api.entities.User;
 
-public class HvmAudioTrack_youtube extends YoutubeAudioTrack {
+public class HmbYoutubeAudioTrack extends YoutubeAudioTrack {
 
-    private final User author;
+    private User author;
     private long timecode;
 
-    public HvmAudioTrack_youtube(YoutubeAudioTrack yat,User author) {
+    public HmbYoutubeAudioTrack(YoutubeAudioTrack yat, User author) {
         super(yat.getInfo(), (YoutubeAudioSourceManager) yat.getSourceManager());
         this.author = author;
         this.timecode = 0;
     }
 
-    public HvmAudioTrack_youtube(YoutubeAudioTrack yat,User author,long timecode) {
+    public HmbYoutubeAudioTrack(YoutubeAudioTrack yat, User author, long timecode) {
         super(yat.getInfo(), (YoutubeAudioSourceManager) yat.getSourceManager());
         this.author = author;
         this.timecode = timecode;
     }
 
-    public User get_hvm_author() {
-        return this.author;
-    }
+    public User getAuthor() { return author; }
     public long getTimecode() { return timecode; }
 }

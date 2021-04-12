@@ -1,10 +1,11 @@
 package be.isservers.hmb.lavaplayer;
 
-import be.isservers.hmb.utils.HvmAudioTrack_youtube;
+import be.isservers.hmb.lfg.LFGmain;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -13,12 +14,15 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PlayerManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerManager.class);
     private static PlayerManager INSTANCE;
 
     private final Map<Long, GuildMusicManager> musicManagers;
@@ -55,14 +59,29 @@ public class PlayerManager {
                     timecode = Long.parseLong(buffer) * 1000;
                 }
 
-                HvmAudioTrack_youtube audioTrackYoutube = new HvmAudioTrack_youtube((YoutubeAudioTrack) track,final_author,timecode);
-                musicManager.scheduler.queue(audioTrackYoutube);
+                AudioTrack at = null;
+                if (track instanceof YoutubeAudioTrack) {
+                    at = new HmbYoutubeAudioTrack((YoutubeAudioTrack) track,final_author,timecode);
+                }
+                else if (track instanceof TwitchStreamAudioTrack) {
+                    at = new HmbTwitchAudioTrack((TwitchStreamAudioTrack) track,final_author);
+                }
 
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setTitle(audioTrackYoutube.getInfo().title,audioTrackYoutube.getInfo().uri);
-                eb.setThumbnail("https://img.youtube.com/vi/"+audioTrackYoutube.getIdentifier()+"/1.jpg");
-                eb.setAuthor("\u2705 Ajouté à la file d'attente");
-                channel.sendMessage(eb.build()).queue();
+
+                if (at != null){
+                    musicManager.scheduler.queue(at);
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setTitle(at.getInfo().title,at.getInfo().uri);
+                    if (at instanceof HmbYoutubeAudioTrack) {
+                        eb.setThumbnail("https://img.youtube.com/vi/"+ at.getIdentifier()+"/1.jpg");
+                    }
+                    eb.setAuthor("\u2705 Ajouté à la file d'attente");
+                    channel.sendMessage(eb.build()).queue();
+                }
+                else {
+                    LOGGER.error("Pas trouvé l'instance of");
+                    channel.sendMessage(":x: Seul Youtube, Youtube Music et Twitch (Audio uniquement) sont pris en charge !").queue();
+                }
             }
 
             @Override
@@ -70,7 +89,7 @@ public class PlayerManager {
                 final List<AudioTrack> tracks = playlist.getTracks();
 
                 for (final AudioTrack track : tracks) {
-                    HvmAudioTrack_youtube audioTrackYoutube = new HvmAudioTrack_youtube((YoutubeAudioTrack) track,final_author);
+                    HmbYoutubeAudioTrack audioTrackYoutube = new HmbYoutubeAudioTrack((YoutubeAudioTrack) track,final_author);
                     musicManager.scheduler.queue(audioTrackYoutube);
                 }
 

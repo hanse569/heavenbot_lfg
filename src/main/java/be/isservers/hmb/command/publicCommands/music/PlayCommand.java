@@ -58,7 +58,7 @@ public class PlayCommand implements ICommand {
 
         String link = String.join(" ", ctx.getArgs());
 
-        if(!link.startsWith("https://")) {
+        if(!link.startsWith("https://") && !link.startsWith("http://")) {
             try{
                 StringBuilder sb = new StringBuilder();
                 for (String arg : ctx.getArgs()) {
@@ -72,7 +72,14 @@ public class PlayCommand implements ICommand {
             }
         }
 
-        PlayerManager.getInstance().loadAndPlay(channel, link, ctx.getAuthor());
+        if(link.contains("youtu.be/") || link.contains("youtube.com/") || link.contains("twitch.tv/")) {
+            PlayerManager.getInstance().loadAndPlay(channel, link, ctx.getAuthor());
+        }
+        else {
+            channel.sendMessage(":x: Seul Youtube, Youtube Music et Twitch sont pris en charge !").queue();
+        }
+
+
     }
 
     @Override

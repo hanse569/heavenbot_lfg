@@ -4,10 +4,13 @@ import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
+import be.isservers.hmb.lavaplayer.HmbTwitchAudioTrack;
 import be.isservers.hmb.lavaplayer.PlayerManager;
-import be.isservers.hmb.utils.HvmAudioTrack_youtube;
+import be.isservers.hmb.lavaplayer.HmbYoutubeAudioTrack;
 import be.isservers.hmb.utils.MessageUtils;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -45,20 +48,28 @@ public class NowPlayingCommand implements ICommand {
             return;
         }
 
-        final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
-        final AudioPlayer audioPlayer = musicManager.audioPlayer;
-        HvmAudioTrack_youtube audioTrackYoutube = (HvmAudioTrack_youtube) audioPlayer.getPlayingTrack();
+        final AudioPlayer audioPlayer = PlayerManager.getInstance().getMusicManager(ctx.getGuild()).audioPlayer;
+        final AudioTrack audioTrack = audioPlayer.getPlayingTrack();
 
-        if (audioTrackYoutube == null) {
+        if (audioPlayer.getPlayingTrack() == null) {
             channel.sendMessage("Il n'y a pas de lecture actuellement").queue();
             return;
         }
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle(audioTrackYoutube.getInfo().title,audioTrackYoutube.getInfo().uri);
-        eb.setDescription("Ajouté par " + audioTrackYoutube.get_hvm_author().getName());
-        eb.setThumbnail("https://img.youtube.com/vi/"+audioTrackYoutube.getIdentifier()+"/1.jpg");
+        eb.setTitle(audioTrack.getInfo().title,audioTrack.getInfo().uri);
         eb.setAuthor("\uD83C\uDFB5 Lecture en cours");
+
+        if (audioTrack instanceof HmbYoutubeAudioTrack) {
+            HmbYoutubeAudioTrack audioTrackYoutube = (HmbYoutubeAudioTrack) audioTrack;
+            eb.setDescription("Ajouté par " + audioTrackYoutube.getAuthor().getName());
+            eb.setThumbnail("https://img.youtube.com/vi/"+audioTrackYoutube.getIdentifier()+"/1.jpg");
+        }
+        else if (audioPlayer.getPlayingTrack() instanceof HmbTwitchAudioTrack) {
+            HmbTwitchAudioTrack audioTrackTwitch = (HmbTwitchAudioTrack) audioTrack;
+            eb.setDescription("Ajouté par " + audioTrackTwitch.getAuthor().getName());
+            eb.setThumbnail("https://img.youtube.com/vi/"+audioTrackTwitch.getIdentifier()+"/1.jpg");
+        }
         MessageUtils.SendPublicRichEmbed(channel,eb.build());
     }
 

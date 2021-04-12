@@ -1,6 +1,5 @@
 package be.isservers.hmb.lavaplayer;
 
-import be.isservers.hmb.utils.HvmAudioTrack_youtube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -12,14 +11,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TrackScheduler extends AudioEventAdapter {
 
     public final AudioPlayer player;
-    public final BlockingQueue<HvmAudioTrack_youtube> queue;
+    public final BlockingQueue<AudioTrack> queue;
 
     TrackScheduler(AudioPlayer player) {
         this.player = player;
         this.queue = new LinkedBlockingQueue<>();
     }
 
-    public void queue(HvmAudioTrack_youtube track) {
+    public void queue(AudioTrack track) {
         if (!this.player.startTrack(track, true)) {
             this.queue.offer(track);
         }
@@ -31,8 +30,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        if (track instanceof HvmAudioTrack_youtube) {
-            track.setPosition(((HvmAudioTrack_youtube) track).getTimecode());
+        if (track instanceof HmbYoutubeAudioTrack) {
+            track.setPosition(((HmbYoutubeAudioTrack) track).getTimecode());
         }
     }
 
