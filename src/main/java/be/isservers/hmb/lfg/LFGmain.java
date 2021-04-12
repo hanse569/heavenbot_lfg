@@ -325,6 +325,10 @@ public class LFGmain extends ListenerAdapter {
             try{
                 DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = df.parse(msg.getContentDisplay());
+
+                if (date.before(Calendar.getInstance().getTime()))
+                    throw new PreviousDateException();
+
                 ee.getOd().setDate(date);
 
                 EmbedBuilder eb = new EmbedBuilder();
@@ -335,7 +339,7 @@ public class LFGmain extends ListenerAdapter {
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
-            } catch (ParseException ex){
+            } catch (ParseException | PreviousDateException ex){
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez la date: ");
