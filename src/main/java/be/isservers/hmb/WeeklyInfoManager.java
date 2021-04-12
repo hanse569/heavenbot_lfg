@@ -2,8 +2,6 @@ package be.isservers.hmb;
 
 import be.isservers.hmb.weeklyInfo.Affixes;
 import be.isservers.hmb.weeklyInfo.WeeklyInfo;
-import be.isservers.hmb.weeklyInfo.WorldBoss;
-import be.isservers.hmb.weeklyInfo.WorldEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +11,6 @@ class WeeklyInfoManager {
 
     WeeklyInfoManager() {
         addEvent(new Affixes());
-        addEvent(new WorldEvent());
-        addEvent(new WorldBoss());
     }
 
     private void addEvent(WeeklyInfo event){

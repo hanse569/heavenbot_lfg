@@ -9,6 +9,8 @@ import be.isservers.hmb.command.publicCommands.admin.PingCommand;
 import be.isservers.hmb.command.publicCommands.admin.SetPrefixCommand;
 import be.isservers.hmb.command.publicCommands.divers.HelpCommand;
 import be.isservers.hmb.command.publicCommands.divers.TokenCommand;
+import be.isservers.hmb.command.publicCommands.info.WorldBossCommand;
+import be.isservers.hmb.command.publicCommands.info.WorldEventCommand;
 import be.isservers.hmb.command.publicCommands.music.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -36,6 +38,9 @@ public class CommandManager {
         addCommand(new SkipCommand());
         addCommand(new NowPlayingCommand());
         addCommand(new QueueCommand());
+
+        addCommand(new WorldBossCommand());
+        addCommand(new WorldEventCommand());
 
         addCommand(new LfgCommand());
     }
