@@ -1,9 +1,6 @@
 package be.isservers.hmb.lfg;
 
-import be.isservers.hmb.lfg.library.EmptyArrayException;
-import be.isservers.hmb.lfg.library.Instance;
-import be.isservers.hmb.lfg.library.NotFoundException;
-import be.isservers.hmb.lfg.library.OrganizedDate;
+import be.isservers.hmb.lfg.library.*;
 import be.isservers.hmb.utils.EmoteNumber;
 import be.isservers.hmb.utils.MessageUtils;
 import be.isservers.hmb.utils.SQLiteSource;
@@ -212,6 +209,10 @@ public class LFGmain extends ListenerAdapter {
             try{
                 DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = df.parse(msg.getContentDisplay());
+
+                if (date.before(Calendar.getInstance().getTime()))
+                    throw new PreviousDateException();
+
                 ee.getOd().setDate(date);
 
                 EmbedBuilder eb = new EmbedBuilder();
@@ -222,7 +223,7 @@ public class LFGmain extends ListenerAdapter {
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
-            } catch (ParseException ex){
+            } catch (ParseException | PreviousDateException ex) {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la date: ");
