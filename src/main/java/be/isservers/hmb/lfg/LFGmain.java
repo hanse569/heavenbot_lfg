@@ -28,8 +28,7 @@ import static be.isservers.hmb.lfg.LFGdataManagement.*;
 public class LFGmain extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGmain.class);
     private static final ArrayList<EditEvent> listEventEdited = new ArrayList<>();
-
-    private static String footerValue = "Annuler vos action à tout moment avec " + Config.getPrefix() + "lfg cancel";
+    private static final EmbedBuilder eb = new EmbedBuilder().setFooter("Annuler vos action à tout moment avec " + Config.getPrefix() + "lfg cancel");
 
     public static void Clear(TextChannel channel){
         List<Message> messages = channel.getHistory().retrievePast(50).complete();
@@ -136,10 +135,10 @@ public class LFGmain extends ListenerAdapter {
             }
             else if (ee.getAction() == EditEvent.ADD){
                 if(ee.type == 1 || ee.type == 2){
-                    ProgrammationPVE(ctx,ee);
+                    Programmation(ctx,ee);
                 }
                 else if(ee.type == 3) {
-                    ProgrammationPVP(ctx,ee);
+                    Programmation(ctx,ee);
                 }
             }
             else if(ee.getAction() == EditEvent.DELETE){
@@ -157,20 +156,30 @@ public class LFGmain extends ListenerAdapter {
         }
     }
 
-    private static void ProgrammationPVE(PrivateMessageReceivedEvent event, EditEvent ee){
+    private static void Programmation(PrivateMessageReceivedEvent event, EditEvent ee) {
         User user = event.getAuthor();
         Message msg = event.getMessage();
+
+        if (ee.type == 1)
+            eb.setAuthor("Creation d'un raid");
+        else if(ee.type == 2)
+            eb.setAuthor("Creation d'un donjon");
+        else if(ee.type == 3)
+            eb.setAuthor("Creation d'un event jcj");
 
         if(ee.etape == 1){ //Enregistrement raid et Demande difficulté
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
                 ee.getOd().setInstance(getInstanceObjectWithOrder(ee.type,val-1));
 
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un raid");
-                eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
-                eb.setDescription("1 Normal\n2 Heroique\n3 Mythique");
-                eb.setFooter(footerValue);
+                if(ee.type == 1 || ee.type == 2){
+                    eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
+                    eb.setDescription("1 Normal\n2 Heroique\n3 Mythique");
+                }
+                else if(ee.type == 3) {
+                    eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
+                    eb.setDescription("1 Non Coté\n2 Coté");
+                }
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
@@ -181,30 +190,25 @@ public class LFGmain extends ListenerAdapter {
                     AfficheList(user, Raid,"Creation d'un raid");
                 else if(ee.type == 2)
                     AfficheList(user, Donjon,"Creation d'un donjon");
+                else if(ee.type == 3)
+                    AfficheList(user, JcJ,"Creation d'un event jcj");
             }
 
-        } //Enregistrement raid et Demande difficulté
+        }
         else if(ee.etape == 2){
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
                 ee.getOd().setDifficulty(val-1);
 
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter(footerValue);
-
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
             }
             catch(NumberFormatException ex){
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Normal\n2 Heroique\n3 Mythique\n4 Marcheur du temps");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement difficulté et Demande date
@@ -218,136 +222,14 @@ public class LFGmain extends ListenerAdapter {
 
                 ee.getOd().setDate(date);
 
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter(footerValue);
-                MessageUtils.SendPrivateRichEmbed(user,eb);
-
-                ee.etape++;
-            } catch (ParseException | PreviousDateException ex) {
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un raid");
-                eb.setTitle("Choisissez la date: ");
-                eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter(footerValue);
-                MessageUtils.SendPrivateRichEmbed(user,eb);
-            }
-        } //Enregristement date et demande heure
-        else if(ee.etape == 4){
-            try{
-                DateFormat df = new SimpleDateFormat("HH:mm");
-                Date date = df.parse(msg.getContentDisplay());
-
-                Calendar newDate = Calendar.getInstance();
-                newDate.setTime(ee.getOd().getDateToDate());
-                Calendar heure = Calendar.getInstance();
-                heure.setTime(date);
-                newDate.add(Calendar.HOUR,heure.get(Calendar.HOUR_OF_DAY));
-                newDate.add(Calendar.MINUTE,heure.get(Calendar.MINUTE));
-                ee.getOd().setDate(newDate.getTime());
-
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un raid");
-                eb.setTitle("Indique une description: ");
-                eb.setFooter(footerValue);
-                MessageUtils.SendPrivateRichEmbed(user,eb);
-
-                ee.etape++;
-            } catch (ParseException ex){
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un raid");
-                eb.setTitle("Choisissez l'heure: ");
-                eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter(footerValue);
-                MessageUtils.SendPrivateRichEmbed(user,eb);
-            }
-        } //Enregistrement heure et demande descritpion
-        else if(ee.etape == 5){
-            ee.getOd().setDescription(msg.getContentDisplay());
-
-            MessageUtils.SendPrivateRichEmbed(user,ee.getOd().getEmbedBuilder());
-            ee.etape++;
-
-            listEventEdited.remove(ee);
-            LFGdataManagement.addListeEvent(ee.getOd());
-
-            MessageUtils.SendPublicRichEmbed(event.getJDA(),ee.getOd());
-
-        } //Enregistrement description
-    }
-
-    private static void ProgrammationPVP(PrivateMessageReceivedEvent event, EditEvent ee) {
-        User user = event.getAuthor();
-        Message msg = event.getMessage();
-
-        if(ee.etape == 1){ //Enregistrement raid et Demande difficulté
-            try{
-                int val = Integer.parseInt(msg.getContentDisplay());
-                ee.getOd().setInstance(getInstanceObjectWithOrder(ee.type,val-1));
-
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un event jcj");
-                eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
-                eb.setDescription("1 Non Coté\n2 Coté");
-                eb.setFooter(footerValue);
-                MessageUtils.SendPrivateRichEmbed(user,eb);
-
-                ee.etape++;
-            }
-            catch(NumberFormatException | NotFoundException ex){
-                AfficheList(user, JcJ,"Creation d'un event jcj");
-            }
-
-        } //Enregistrement raid et Demande difficulté
-        else if(ee.etape == 2){
-            try{
-                int val = Integer.parseInt(msg.getContentDisplay());
-                ee.getOd().setDifficulty(val-1);
-
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un event jcj");
-                eb.setTitle("Choisissez la date: ");
-                eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter(footerValue);
-                MessageUtils.SendPrivateRichEmbed(user,eb);
-
-                ee.etape++;
-            }
-            catch(NumberFormatException ex){
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un raid");
-                eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
-                eb.setDescription("1 Normal\n2 Heroique\n3 Mythique\n4 Marcheur du temps");
-                eb.setFooter(footerValue);
-                MessageUtils.SendPrivateRichEmbed(user,eb);
-            }
-        } //Enregistrement difficulté et Demande date
-        else if(ee.etape == 3){
-            try{
-                DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-                Date date = df.parse(msg.getContentDisplay());
-
-                if (date.before(Calendar.getInstance().getTime()))
-                    throw new PreviousDateException();
-
-                ee.getOd().setDate(date);
-
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un event jcj");
-                eb.setTitle("Choisissez l'heure: ");
-                eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
             } catch (ParseException | PreviousDateException ex){
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregristement date et demande heure
@@ -364,19 +246,14 @@ public class LFGmain extends ListenerAdapter {
                 newDate.add(Calendar.MINUTE,heure.get(Calendar.MINUTE));
                 ee.getOd().setDate(newDate.getTime());
 
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Indique une description: ");
-                eb.setFooter(footerValue);
+                eb.setDescription("");
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
             } catch (ParseException ex){
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement heure et demande descritpion
@@ -398,17 +275,16 @@ public class LFGmain extends ListenerAdapter {
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
+        eb.setAuthor("Suppression d'un event");
+
         if(ee.etape == 1){ //Enregistrement de l'instance à supprimer et Demande confirmation
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
                 ee.setOd(getOrganizedDateByUser(user,val-1));
 
                 MessageUtils.SendPrivateRichEmbed(user,ee.getOd().getEmbedBuilder());
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Suppression d'un event");
                 eb.setTitle("Confirmer votre choix a l'aide du numero: ");
                 eb.setDescription("1 :white_check_mark: Confirmé\n2 :x: Annulé");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -460,17 +336,16 @@ public class LFGmain extends ListenerAdapter {
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
+        eb.setAuthor("Verrouillage d'un event");
+
         if(ee.etape == 1){ //Enregistrement de l'instance à supprimer et Demande confirmation
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
                 ee.setOd(getOrganizedDateByUserUnlock(user,val));
 
                 MessageUtils.SendPrivateRichEmbed(user,ee.getOd().getEmbedBuilder());
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Verrouillage d'un event");
                 eb.setTitle("Confirmer votre choix a l'aide du numero: ");
                 eb.setDescription("1 :white_check_mark: Confirmé\n2 :x: Annulé");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -525,17 +400,16 @@ public class LFGmain extends ListenerAdapter {
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
+        eb.setAuthor("Devrouillage d'un event");
+
         if(ee.etape == 1){ //Enregistrement de l'instance à supprimer et Demande confirmation
             try{
                 int val = Integer.parseInt(msg.getContentDisplay());
                 ee.setOd(getOrganizedDateByUserLock(user,val));
 
                 MessageUtils.SendPrivateRichEmbed(user,ee.getOd().getEmbedBuilder());
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Devrouillage d'un event");
                 eb.setTitle("Confirmer votre choix a l'aide du numero: ");
                 eb.setDescription("1 :white_check_mark: Confirmé\n2 :x: Annulé");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -590,6 +464,7 @@ public class LFGmain extends ListenerAdapter {
         User user = event.getAuthor();
         Message msg = event.getMessage();
 
+        eb.setAuthor("Edition d'un event");
 
         if(ee.etape == 1){ //Enregistrement de l'instance à supprimer et Demande confirmation
             try{
@@ -617,21 +492,15 @@ public class LFGmain extends ListenerAdapter {
             try {
                 int val = Integer.parseInt(msg.getContentDisplay());
 
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Edition d'un event");
-                eb.setFooter(footerValue);
                 switch (val) {
                     case 1:
                         ee.etape = 3;
-
                         eb.setTitle("Indique une description: ");
                         MessageUtils.SendPrivateRichEmbed(user,eb);
                         break;
 
                     case 2:
                         ee.etape = 4;
-
-
                         eb.setTitle("Choisissez la date: ");
                         eb.setDescription("*Exemple*: 05-01-2019");
                         MessageUtils.SendPrivateRichEmbed(user,eb);
@@ -639,7 +508,6 @@ public class LFGmain extends ListenerAdapter {
 
                     case 3:
                         ee.etape = 5;
-
                         eb.setTitle("Choisissez l'heure: ");
                         eb.setDescription("*Exemple*: 21:00");
                         MessageUtils.SendPrivateRichEmbed(user,eb);
@@ -686,11 +554,8 @@ public class LFGmain extends ListenerAdapter {
 
                 ee.etape = 2;
             } catch (ParseException ex){
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Edition d'un event");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         }
@@ -712,18 +577,14 @@ public class LFGmain extends ListenerAdapter {
 
                 ee.etape = 2;
             } catch (ParseException ex){
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Edition d'un event");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         }
     }
 
     private static void AfficheList(User user, List<Instance> listInstance,String titre) {
-        EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(titre);
         eb.setTitle("Choisissez l'instance a l'aide du numero: ");
         String temp = "";
@@ -731,12 +592,10 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat(EmoteNumber.get(i+1) + " " + listInstance.get(i) + "\n");
         }
         eb.setDescription(temp);
-        eb.setFooter(footerValue);
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
     private static void AfficheListEventCreateByUser(User user,List<OrganizedDate> listEvent,String titre) {
-        EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(titre);
         eb.setTitle("Choisissez l'event a l'aide du numero: ");
         String temp = "";
@@ -744,13 +603,11 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat(EmoteNumber.get(i+1) + " " + listEvent.get(i).toStringWithoutAuthor() + "\n");
         }
         eb.setDescription(temp);
-        eb.setFooter(footerValue);
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
     private static void AfficheEditionEventMainMenu(User user,EmbedBuilder ebtmp) {
         MessageUtils.SendPrivateRichEmbed(user,ebtmp);
-        EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor("Edition d'un event");
         eb.setTitle("Choisissez l'element à éditer: ");
         String sb = EmoteNumber.get(1) + " Description\n" +
@@ -758,7 +615,6 @@ public class LFGmain extends ListenerAdapter {
                 EmoteNumber.get(3) + " Heure\n" +
                 EmoteNumber.get(4) + " Quitter\n";
         eb.setDescription(sb);
-        eb.setFooter(footerValue);
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
@@ -767,19 +623,19 @@ public class LFGmain extends ListenerAdapter {
     }
 
     public static EmbedBuilder GenerateLFGHelp() {
-        EmbedBuilder eb = new EmbedBuilder();
+        EmbedBuilder ebb = new EmbedBuilder();
         String prefix = Config.getPrefix();
-        eb.setTitle("Commande disponible");
-        eb.addField(prefix + "lfg raid","```Permet de planifier un raid de Shadowlands```",false);
-        eb.addField(prefix + "lfg donjon","```Permet de planifier un donjon de Shadowlands```",false);
-        eb.addField(prefix + "lfg jcj","```Permet de planifier un évènement PVP```",false);
-        eb.addField(prefix + "lfg edit","```Permet de modifier un évènement```",false);
-        eb.addField(prefix + "lfg delete","```Permet de supprimer un évènement```",false);
-        eb.addField(prefix + "lfg lock","```Permet de verrouiller un évènement que l'on a créé```",false);
-        eb.addField(prefix + "lfg unlock","```Permet de déverrouiller un évènement que l'on a verrouillé```",false);
-        eb.addField(prefix + "lfg cancel","```Permet d'annuler toutes actions en cours```",false);
-        eb.setColor(Color.decode("#FF7A00"));
-        eb.setFooter("Powered by E-Van","https://cdn.discordapp.com/app-icons/550692924715958283/07edcffb72e15c040daf868e86496d73.png");
-        return eb;
+        ebb.setTitle("Commande disponible");
+        ebb.addField(prefix + "lfg raid","```Permet de planifier un raid de Shadowlands```",false);
+        ebb.addField(prefix + "lfg donjon","```Permet de planifier un donjon de Shadowlands```",false);
+        ebb.addField(prefix + "lfg jcj","```Permet de planifier un évènement PVP```",false);
+        ebb.addField(prefix + "lfg edit","```Permet de modifier un évènement```",false);
+        ebb.addField(prefix + "lfg delete","```Permet de supprimer un évènement```",false);
+        ebb.addField(prefix + "lfg lock","```Permet de verrouiller un évènement que l'on a créé```",false);
+        ebb.addField(prefix + "lfg unlock","```Permet de déverrouiller un évènement que l'on a verrouillé```",false);
+        ebb.addField(prefix + "lfg cancel","```Permet d'annuler toutes actions en cours```",false);
+        ebb.setColor(Color.decode("#FF7A00"));
+        ebb.setFooter("Powered by E-Van","https://cdn.discordapp.com/app-icons/550692924715958283/07edcffb72e15c040daf868e86496d73.png");
+        return ebb;
     }
 }
