@@ -2,7 +2,6 @@ package be.isservers.hmb.command.publicCommands.info;
 
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
-import be.isservers.hmb.utils.MessageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

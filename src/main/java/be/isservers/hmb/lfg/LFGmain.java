@@ -1,5 +1,6 @@
 package be.isservers.hmb.lfg;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.lfg.library.*;
 import be.isservers.hmb.utils.EmoteNumber;
 import be.isservers.hmb.utils.MessageUtils;
@@ -27,6 +28,8 @@ import static be.isservers.hmb.lfg.LFGdataManagement.*;
 public class LFGmain extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LFGmain.class);
     private static final ArrayList<EditEvent> listEventEdited = new ArrayList<>();
+
+    private static String footerValue = "Annuler vos action à tout moment avec " + Config.getPrefix() + "lfg cancel";
 
     public static void Clear(TextChannel channel){
         List<Message> messages = channel.getHistory().retrievePast(50).complete();
@@ -167,7 +170,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Normal\n2 Heroique\n3 Mythique");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
@@ -190,7 +193,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
 
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
@@ -201,7 +204,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Normal\n2 Heroique\n3 Mythique\n4 Marcheur du temps");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement difficulté et Demande date
@@ -219,7 +222,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -228,7 +231,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregristement date et demande heure
@@ -248,7 +251,7 @@ public class LFGmain extends ListenerAdapter {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Indique une description: ");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -257,7 +260,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement heure et demande descritpion
@@ -288,7 +291,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Non Coté\n2 Coté");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -307,7 +310,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -317,7 +320,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un raid");
                 eb.setTitle("Choisissez la difficulte a l'aide du numero: ");
                 eb.setDescription("1 Normal\n2 Heroique\n3 Mythique\n4 Marcheur du temps");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement difficulté et Demande date
@@ -335,7 +338,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -344,7 +347,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregristement date et demande heure
@@ -364,7 +367,7 @@ public class LFGmain extends ListenerAdapter {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Indique une description: ");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -373,7 +376,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Creation d'un event jcj");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         } //Enregistrement heure et demande descritpion
@@ -405,7 +408,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Suppression d'un event");
                 eb.setTitle("Confirmer votre choix a l'aide du numero: ");
                 eb.setDescription("1 :white_check_mark: Confirmé\n2 :x: Annulé");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -467,7 +470,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Verrouillage d'un event");
                 eb.setTitle("Confirmer votre choix a l'aide du numero: ");
                 eb.setDescription("1 :white_check_mark: Confirmé\n2 :x: Annulé");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -532,7 +535,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Devrouillage d'un event");
                 eb.setTitle("Confirmer votre choix a l'aide du numero: ");
                 eb.setDescription("1 :white_check_mark: Confirmé\n2 :x: Annulé");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
 
                 ee.etape++;
@@ -616,7 +619,7 @@ public class LFGmain extends ListenerAdapter {
 
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Edition d'un event");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 switch (val) {
                     case 1:
                         ee.etape = 3;
@@ -687,7 +690,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Edition d'un event");
                 eb.setTitle("Choisissez la date: ");
                 eb.setDescription("*Exemple*: 05-01-2019");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         }
@@ -713,7 +716,7 @@ public class LFGmain extends ListenerAdapter {
                 eb.setAuthor("Edition d'un event");
                 eb.setTitle("Choisissez l'heure: ");
                 eb.setDescription("*Exemple*: 21:00");
-                eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+                eb.setFooter(footerValue);
                 MessageUtils.SendPrivateRichEmbed(user,eb);
             }
         }
@@ -728,7 +731,7 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat(EmoteNumber.get(i+1) + " " + listInstance.get(i) + "\n");
         }
         eb.setDescription(temp);
-        eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+        eb.setFooter(footerValue);
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
@@ -741,7 +744,7 @@ public class LFGmain extends ListenerAdapter {
             temp = temp.concat(EmoteNumber.get(i+1) + " " + listEvent.get(i).toStringWithoutAuthor() + "\n");
         }
         eb.setDescription(temp);
-        eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+        eb.setFooter(footerValue);
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
@@ -750,13 +753,12 @@ public class LFGmain extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor("Edition d'un event");
         eb.setTitle("Choisissez l'element à éditer: ");
-        StringBuilder sb = new StringBuilder()
-                .append(EmoteNumber.get(1)).append(" Description\n")
-                .append(EmoteNumber.get(2)).append(" Date\n")
-                .append(EmoteNumber.get(3)).append(" Heure\n")
-                .append(EmoteNumber.get(4)).append(" Quitter\n");
-        eb.setDescription(sb.toString());
-        eb.setFooter("Annuler vos action à tout moment avec !lfg cancel");
+        String sb = EmoteNumber.get(1) + " Description\n" +
+                EmoteNumber.get(2) + " Date\n" +
+                EmoteNumber.get(3) + " Heure\n" +
+                EmoteNumber.get(4) + " Quitter\n";
+        eb.setDescription(sb);
+        eb.setFooter(footerValue);
         MessageUtils.SendPrivateRichEmbed(user,eb);
     }
 
@@ -766,15 +768,16 @@ public class LFGmain extends ListenerAdapter {
 
     public static EmbedBuilder GenerateLFGHelp() {
         EmbedBuilder eb = new EmbedBuilder();
+        String prefix = Config.getPrefix();
         eb.setTitle("Commande disponible");
-        eb.addField("!lfg raid","```Permet de planifier un raid de Shadowlands```",false);
-        eb.addField("!lfg donjon","```Permet de planifier un donjon de Shadowlands```",false);
-        eb.addField("!lfg jcj","```Permet de planifier un évènement PVP```",false);
-        eb.addField("!lfg edit","```Permet de modifier un évènement```",false);
-        eb.addField("!lfg delete","```Permet de supprimer un évènement```",false);
-        eb.addField("!lfg lock","```Permet de verrouiller un évènement que l'on a créé```",false);
-        eb.addField("!lfg unlock","```Permet de déverrouiller un évènement que l'on a verrouillé```",false);
-        eb.addField("!lfg cancel","```Permet d'annuler toutes actions en cours```",false);
+        eb.addField(prefix + "lfg raid","```Permet de planifier un raid de Shadowlands```",false);
+        eb.addField(prefix + "lfg donjon","```Permet de planifier un donjon de Shadowlands```",false);
+        eb.addField(prefix + "lfg jcj","```Permet de planifier un évènement PVP```",false);
+        eb.addField(prefix + "lfg edit","```Permet de modifier un évènement```",false);
+        eb.addField(prefix + "lfg delete","```Permet de supprimer un évènement```",false);
+        eb.addField(prefix + "lfg lock","```Permet de verrouiller un évènement que l'on a créé```",false);
+        eb.addField(prefix + "lfg unlock","```Permet de déverrouiller un évènement que l'on a verrouillé```",false);
+        eb.addField(prefix + "lfg cancel","```Permet d'annuler toutes actions en cours```",false);
         eb.setColor(Color.decode("#FF7A00"));
         eb.setFooter("Powered by E-Van","https://cdn.discordapp.com/app-icons/550692924715958283/07edcffb72e15c040daf868e86496d73.png");
         return eb;

@@ -2,7 +2,6 @@ package be.isservers.hmb.command.publicCommands.divers;
 
 import be.isservers.hmb.CommandManager;
 import be.isservers.hmb.Config;
-import be.isservers.hmb.VeryBadDesign;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -27,14 +26,13 @@ public class HelpCommand implements ICommand {
 
         if (args.isEmpty()){
             StringBuilder builder = new StringBuilder();
-            String prefix = VeryBadDesign.PREFIXES.get(ctx.getGuild().getIdLong());
 
             builder.append("Liste des commandes\n");
 
             for (ICommand command : manager.getCommands()) {
                 if (command.getType() == ICommand.PUBLIC_COMMAND)
                     builder.append('`')
-                            .append(prefix)
+                            .append(Config.getPrefix())
                             .append(command.getName())
                             .append("`\n");
             }

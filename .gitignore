@@ -3,8 +3,6 @@ build/
 .gradle/
 out/
 .env
-database.db
-database-propre.db
 
 # Ignore Gradle GUI config
 gradle-app.setting

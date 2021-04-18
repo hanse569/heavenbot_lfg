@@ -5,7 +5,6 @@ import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
-import be.isservers.hmb.lavaplayer.HmbYoutubeAudioTrack;
 import be.isservers.hmb.utils.MessageUtils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;

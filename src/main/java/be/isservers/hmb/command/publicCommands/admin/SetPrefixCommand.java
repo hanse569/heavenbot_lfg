@@ -1,15 +1,12 @@
 package be.isservers.hmb.command.publicCommands.admin;
 
-import be.isservers.hmb.VeryBadDesign;
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
-import be.isservers.hmb.utils.SQLiteSource;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 public class SetPrefixCommand implements ICommand {
@@ -29,7 +26,7 @@ public class SetPrefixCommand implements ICommand {
         }
 
         final String newPrefix = String.join("", args);
-        updatePrefix(ctx.getGuild().getIdLong(), newPrefix);
+        Config.setPrefix(newPrefix);
 
         channel.sendMessageFormat("New prefix has been set to `%s`",newPrefix).queue();
     }
@@ -48,22 +45,5 @@ public class SetPrefixCommand implements ICommand {
     public String getHelp() {
         return "COMMANDE ADMINISTRATEUR: Définit le préfixe de ce serveur\n" +
                 "Usage: `!!setprefix <prefix>`";
-    }
-
-    private void updatePrefix(long guildId, String newPrefix){
-        VeryBadDesign.PREFIXES.put(guildId, newPrefix);
-
-        try (final PreparedStatement preparedStatement = SQLiteSource
-                .getConn()
-                .prepareStatement("UPDATE MB_guild_settings SET prefix = ? WHERE guild_id = ?")) {
-
-            preparedStatement.setString(1, newPrefix);
-            preparedStatement.setString(2, String.valueOf(guildId));
-
-            preparedStatement.executeUpdate();
-            
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
     }
 }
