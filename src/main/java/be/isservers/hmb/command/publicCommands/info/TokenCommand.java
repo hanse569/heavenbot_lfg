@@ -1,4 +1,4 @@
-package be.isservers.hmb.command.publicCommands.divers;
+package be.isservers.hmb.command.publicCommands.info;
 
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;

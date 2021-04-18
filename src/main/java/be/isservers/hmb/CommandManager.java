@@ -7,7 +7,7 @@ import be.isservers.hmb.command.publicCommands.admin.ConnectCommand;
 import be.isservers.hmb.command.publicCommands.admin.PingCommand;
 import be.isservers.hmb.command.publicCommands.admin.SetPrefixCommand;
 import be.isservers.hmb.command.publicCommands.divers.HelpCommand;
-import be.isservers.hmb.command.publicCommands.divers.TokenCommand;
+import be.isservers.hmb.command.publicCommands.info.TokenCommand;
 import be.isservers.hmb.command.publicCommands.info.WorldBossCommand;
 import be.isservers.hmb.command.publicCommands.info.WorldEventCommand;
 import be.isservers.hmb.command.publicCommands.music.*;
