@@ -7,13 +7,15 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+@SuppressWarnings("ConstantConditions")
 public class HttpRequest {
 
     public static String get(String url) throws IOException {
 
-        String source ="";
+        StringBuilder source = new StringBuilder();
         URL oracle = new URL(url);
         URLConnection yc = oracle.openConnection();
         BufferedReader in = new BufferedReader(
@@ -22,21 +24,21 @@ public class HttpRequest {
         String inputLine;
 
         while ((inputLine = in.readLine()) != null)
-            source +=inputLine;
+            source.append(inputLine);
         in.close();
-        return source;
+        return source.toString();
     }
 
-    public static String post(String adress, List<String> keys, List<String> values) throws IOException{
-        String result = "";
+    public static String post(String adress, List<String> keys, List<String> values) {
+        StringBuilder result = new StringBuilder();
         OutputStreamWriter writer = null;
         BufferedReader reader = null;
         try {
 //encodage des paramètres de la requête
-            String data="";
+            StringBuilder data= new StringBuilder();
             for(int i=0;i<keys.size();i++){
-                if (i!=0) data += "&";
-                data += URLEncoder.encode(keys.get(i), "UTF-8")+"="+URLEncoder.encode(values.get(i), "UTF-8");
+                if (i!=0) data.append("&");
+                data.append(URLEncoder.encode(keys.get(i), StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(values.get(i), StandardCharsets.UTF_8));
             }
 //création de la connection
             URL url = new URL(adress);
@@ -45,21 +47,21 @@ public class HttpRequest {
 
 //envoi de la requête
             writer = new OutputStreamWriter(conn.getOutputStream());
-            writer.write(data);
+            writer.write(data.toString());
             writer.flush();
 
 //lecture de la réponse
             reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String ligne;
             while ((ligne = reader.readLine()) != null) {
-                result+=ligne;
+                result.append(ligne);
             }
         }catch (Exception e) {
             e.printStackTrace();
         }finally{
-            try{writer.close();}catch(Exception e){}
-            try{reader.close();}catch(Exception e){}
+            try{writer.close();}catch(Exception ignored){}
+            try{reader.close();}catch(Exception ignored){}
         }
-        return result;
+        return result.toString();
     }
 }

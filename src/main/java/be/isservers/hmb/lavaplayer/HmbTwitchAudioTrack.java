@@ -8,7 +8,7 @@ public class HmbTwitchAudioTrack extends TwitchStreamAudioTrack {
 
     private User author;
 
-    public HmbTwitchAudioTrack(TwitchStreamAudioTrack yat, User author) {
+    HmbTwitchAudioTrack(TwitchStreamAudioTrack yat, User author) {
         super(yat.getInfo(), (TwitchStreamAudioSourceManager) yat.getSourceManager());
         this.author = author;
     }

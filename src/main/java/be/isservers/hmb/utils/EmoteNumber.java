@@ -17,43 +17,43 @@ public class EmoteNumber {
         }
     }
 
-    public static String getOne(){
+    private static String getOne(){
         return ":one:";
     }
 
-    public static String getTwo(){
+    private static String getTwo(){
         return ":two:";
     }
 
-    public static String getThree(){
+    private static String getThree(){
         return ":three:";
     }
 
-    public static String getFour(){
+    private static String getFour(){
         return ":four:";
     }
 
-    public static String getFive(){
+    private static String getFive(){
         return ":five:";
     }
 
-    public static String getSix(){
+    private static String getSix(){
         return ":six:";
     }
 
-    public static String getSeven(){
+    private static String getSeven(){
         return ":seven:";
     }
 
-    public static String getEight(){
+    private static String getEight(){
         return ":eight:";
     }
 
-    public static String getNine(){
+    private static String getNine(){
         return ":nine:";
     }
 
-    public static String getTen() {
+    private static String getTen() {
         return ":keycap_ten:";
     }
 }

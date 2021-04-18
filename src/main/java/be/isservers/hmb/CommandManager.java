@@ -46,7 +46,6 @@ public class CommandManager {
     }
 
     private void addCommand(ICommand cmd){
-        //boolean nameFound = this.commands.stream().anyMatch((it) -> it.getName().equalsIgnoreCase(cmd.getName()));
         boolean nameFound = false;
         for (ICommand command : commands) {
             if (cmd.getType() == command.getType() && cmd.getName().equals(command.getName()))

@@ -14,8 +14,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,11 +60,6 @@ public class PlayCommand implements ICommand {
 
         if(!link.startsWith("https://") && !link.startsWith("http://")) {
             try{
-                StringBuilder sb = new StringBuilder();
-                for (String arg : ctx.getArgs()) {
-                    sb.append(arg).append(" ");
-                }
-
                 Gson gson = new Gson();
                 Map<?, ?> map = gson.fromJson(HttpRequest.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=2&key=AIzaSyA4Q81p8z0D484MoPqADdbAwaem51vJdHM&q="+link.replace(" ","+")),Map.class);
                 LinkedTreeMap item = (LinkedTreeMap) ((ArrayList)map.get("items")).get(0);
@@ -106,14 +99,5 @@ public class PlayCommand implements ICommand {
     @Override
     public List<String> getAliases() {
         return List.of("pl", "start");
-    }
-
-    private boolean isUrl(String url) {
-        try {
-            new URI(url);
-            return true;
-        } catch (URISyntaxException e) {
-            return false;
-        }
     }
 }

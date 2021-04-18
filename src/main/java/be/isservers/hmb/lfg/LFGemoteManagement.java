@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 
 public class LFGemoteManagement extends ListenerAdapter {
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
         if(event.getChannel().getId().equals(Config.getIdChannelDonjon())){

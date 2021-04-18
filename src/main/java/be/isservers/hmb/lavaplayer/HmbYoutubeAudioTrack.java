@@ -9,18 +9,18 @@ public class HmbYoutubeAudioTrack extends YoutubeAudioTrack {
     private User author;
     private long timecode;
 
-    public HmbYoutubeAudioTrack(YoutubeAudioTrack yat, User author) {
+    HmbYoutubeAudioTrack(YoutubeAudioTrack yat, User author) {
         super(yat.getInfo(), (YoutubeAudioSourceManager) yat.getSourceManager());
         this.author = author;
         this.timecode = 0;
     }
 
-    public HmbYoutubeAudioTrack(YoutubeAudioTrack yat, User author, long timecode) {
+    HmbYoutubeAudioTrack(YoutubeAudioTrack yat, User author, long timecode) {
         super(yat.getInfo(), (YoutubeAudioSourceManager) yat.getSourceManager());
         this.author = author;
         this.timecode = timecode;
     }
 
     public User getAuthor() { return author; }
-    public long getTimecode() { return timecode; }
+    long getTimecode() { return timecode; }
 }
