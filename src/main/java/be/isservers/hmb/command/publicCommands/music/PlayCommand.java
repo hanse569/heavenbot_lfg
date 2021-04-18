@@ -3,10 +3,10 @@ package be.isservers.hmb.command.publicCommands.music;
 import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
-import be.isservers.hmb.jsonExtract.youtube.Converter;
-import be.isservers.hmb.jsonExtract.youtube.YoutubeMusic;
 import be.isservers.hmb.lavaplayer.PlayerManager;
 import be.isservers.hmb.utils.HttpRequest;
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -16,7 +16,9 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("DuplicatedCode")
 public class PlayCommand implements ICommand {
@@ -64,9 +66,14 @@ public class PlayCommand implements ICommand {
                 for (String arg : ctx.getArgs()) {
                     sb.append(arg).append(" ");
                 }
-                String query = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&key=AIzaSyA4Q81p8z0D484MoPqADdbAwaem51vJdHM&q="+link.replace(" ","+");
-                YoutubeMusic data = Converter.fromJsonString(HttpRequest.get(query));
-                link = "https://www.youtube.com/watch?v=" + data.getVideoId();
+
+                Gson gson = new Gson();
+                Map<?, ?> map = gson.fromJson(HttpRequest.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=2&key=AIzaSyA4Q81p8z0D484MoPqADdbAwaem51vJdHM&q="+link.replace(" ","+")),Map.class);
+                LinkedTreeMap item = (LinkedTreeMap) ((ArrayList)map.get("items")).get(0);
+                if (((LinkedTreeMap) item.get("id")).get("kind").equals("youtube#channel")){
+                    item = (LinkedTreeMap) ((ArrayList)map.get("items")).get(1);
+                }
+                link = "https://www.youtube.com/watch?v=" + ((LinkedTreeMap) item.get("id")).get("videoId");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -78,8 +85,6 @@ public class PlayCommand implements ICommand {
         else {
             channel.sendMessage(":x: Seul Youtube, Youtube Music et Twitch sont pris en charge !").queue();
         }
-
-
     }
 
     @Override
