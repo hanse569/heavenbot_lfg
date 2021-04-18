@@ -47,11 +47,11 @@ public class HelpCommand implements ICommand {
         ICommand command = null;
 
         if (ctx.getGuildEvent() != null) {
-            manager.getCommand(search,ICommand.PUBLIC_COMMAND);
+            command = manager.getCommand(search,ICommand.PUBLIC_COMMAND);
         }
 
         if (ctx.getPrivateEvent() != null) {
-            manager.getCommand(search,ICommand.PRIVATE_COMMAND);
+            command = manager.getCommand(search,ICommand.PRIVATE_COMMAND);
         }
 
         if (command == null){
