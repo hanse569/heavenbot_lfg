@@ -20,8 +20,10 @@ public class Bot {
 
     private Bot() throws LoginException {
 
+        Config.Initialize();
+
         jda = JDABuilder.createDefault(
-            Config.get("token"),
+            Config.getToken(),
             GatewayIntent.GUILD_MESSAGES,
             GatewayIntent.GUILD_VOICE_STATES,
             GatewayIntent.GUILD_EMOJIS,

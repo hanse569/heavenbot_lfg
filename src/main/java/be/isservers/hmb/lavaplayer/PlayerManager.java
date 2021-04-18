@@ -1,6 +1,5 @@
 package be.isservers.hmb.lavaplayer;
 
-import be.isservers.hmb.lfg.LFGmain;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;

@@ -6,13 +6,16 @@ import java.sql.*;
 
 public class SQLiteSource {
 
+    private static Connection c = null;
+
     public static Connection getConn(){
-        Connection conn = null;
         try{
-            String url = "jdbc:sqlite:database.db";
-            conn = DriverManager.getConnection(url);
+            if(c == null){
+                c = DriverManager.getConnection("jdbc:sqlite:database.db");
+            }
+            return c;
         } catch (SQLException ex) { ex.printStackTrace(); }
-        return conn;
+        return null;
     }
 
     public static ResultSet getTable(String query) {
@@ -55,6 +58,14 @@ public class SQLiteSource {
         try{
             PreparedStatement statement = getConn().prepareStatement(request);
             statement.setInt(1,id);
+            statement.executeUpdate();
+        } catch (SQLException ex) { ex.printStackTrace(); }
+    }
+
+    public static void modifyParameter(String request,String value) {
+        try{
+            PreparedStatement statement = getConn().prepareStatement(request);
+            statement.setString(1,value);
             statement.executeUpdate();
         } catch (SQLException ex) { ex.printStackTrace(); }
     }
