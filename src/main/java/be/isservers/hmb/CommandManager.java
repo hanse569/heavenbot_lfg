@@ -2,14 +2,9 @@ package be.isservers.hmb;
 
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
-import be.isservers.hmb.command.publicCommands.admin.ClearChannelCommand;
-import be.isservers.hmb.command.publicCommands.admin.ConnectCommand;
-import be.isservers.hmb.command.publicCommands.admin.PingCommand;
-import be.isservers.hmb.command.publicCommands.admin.SetPrefixCommand;
-import be.isservers.hmb.command.publicCommands.divers.HelpCommand;
-import be.isservers.hmb.command.publicCommands.info.TokenCommand;
-import be.isservers.hmb.command.publicCommands.info.WorldBossCommand;
-import be.isservers.hmb.command.publicCommands.info.WorldEventCommand;
+import be.isservers.hmb.command.publicCommands.admin.*;
+import be.isservers.hmb.command.publicCommands.divers.*;
+import be.isservers.hmb.command.publicCommands.info.*;
 import be.isservers.hmb.command.publicCommands.music.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -24,23 +19,27 @@ public class CommandManager {
     private final List<ICommand> commands = new ArrayList<>();
 
     CommandManager() {
-        addCommand(new HelpCommand(this));
-        addCommand(new TokenCommand());
-        addCommand(new be.isservers.hmb.command.publicCommands.divers.LfgCommand());
-
-        addCommand(new PingCommand());
-        addCommand(new SetPrefixCommand());
         addCommand(new ClearChannelCommand());
         addCommand(new ConnectCommand());
+        addCommand(new PingCommand());
+        addCommand(new SetDungeonChannel());
+        addCommand(new SetEvanChannel());
+        addCommand(new SetGazetteChannel());
+        addCommand(new SetPrefixCommand());
 
-        addCommand(new PlayCommand());
-        addCommand(new StopCommand());
-        addCommand(new SkipCommand());
-        addCommand(new NowPlayingCommand());
-        addCommand(new QueueCommand());
+        addCommand(new HelpCommand(this));
+        addCommand(new be.isservers.hmb.command.publicCommands.divers.LfgCommand());
 
+        addCommand(new TokenCommand());
         addCommand(new WorldBossCommand());
         addCommand(new WorldEventCommand());
+
+        addCommand(new NowPlayingCommand());
+        addCommand(new PlayCommand());
+        addCommand(new QueueCommand());
+        addCommand(new SkipCommand());
+        addCommand(new StopCommand());
+
 
         addCommand(new be.isservers.hmb.command.privateCommand.LfgCommand());
     }

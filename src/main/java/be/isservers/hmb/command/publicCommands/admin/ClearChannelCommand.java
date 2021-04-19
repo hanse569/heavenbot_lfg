@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands.admin;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import net.dv8tion.jda.api.Permission;
@@ -19,6 +20,10 @@ public class ClearChannelCommand implements ICommand {
         final List<String> args = ctx.getArgs();
         final Member member = ctx.getMember();
         final Member selfMember = ctx.getGuild().getSelfMember();
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
 
         if (!member.hasPermission(Permission.MANAGE_SERVER)){
             channel.sendMessage(":x: Vous devez avoir l'autorisation MANAGE_SERVER pour utiliser sa commande").queue();

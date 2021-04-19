@@ -29,7 +29,7 @@ public class Config {
     }
 
     private static String getQuery(String value){
-        return "SELECT value FROM MB_guild_settings_new WHERE parameter LIKE '"+value+"'";
+        return "SELECT value FROM MB_guild_settings WHERE parameter LIKE '"+value+"'";
     }
 
     public static String getToken(){ return data.get("token"); }
@@ -48,6 +48,25 @@ public class Config {
 
     public static void setPrefix(String value) {
         data.put("prefix",value);
-        SQLiteSource.modifyParameter("UPDATE MB_guild_settings_new SET value = ? WHERE parameter LIKE 'prefix';",value);
+        SQLiteSource.modifyParameter("UPDATE MB_guild_settings SET value = ? WHERE parameter LIKE 'prefix';",value);
     }
+
+    public static void setEvanChannel(String value) {
+        data.put("id_channel_evan",value);
+        SQLiteSource.modifyParameter("UPDATE MB_guild_settings SET value = ? WHERE parameter LIKE 'IDCHANNELEVAN';",value);
+    }
+
+    public static void setDungeonChannel(String value) {
+        data.put("id_channel_donjon",value);
+        SQLiteSource.modifyParameter("UPDATE MB_guild_settings SET value = ? WHERE parameter LIKE 'IDCHANNELDONJON';",value);
+    }
+
+    public static void setGazetteChannel(String value) {
+        data.put("id_channel_gazette",value);
+        SQLiteSource.modifyParameter("UPDATE MB_guild_settings SET value = ? WHERE parameter LIKE 'IDCHANNELGAZETTE';",value);
+    }
+
+
+
+
 }

@@ -9,45 +9,39 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-public class SetPrefixCommand implements ICommand {
+public class SetEvanChannel implements ICommand {
+    @Override
     public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
-        final List<String> args = ctx.getArgs();
         final Member member = ctx.getMember();
-
-        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
-            return;
-        }
 
         if (!member.hasPermission(Permission.MANAGE_SERVER)){
             channel.sendMessage("You must have the MANAGE_SERVER permission to use his command").queue();
             return;
         }
 
-        if (args.isEmpty()) {
-            channel.sendMessage("Missing args").queue();
-            return;
-        }
+        Config.setEvanChannel(ctx.getChannel().getId());
 
-        final String newPrefix = String.join("", args);
-        Config.setPrefix(newPrefix);
-
-        channel.sendMessageFormat("New prefix has been set to `%s`",newPrefix).queue();
+        channel.sendMessageFormat("New channel for E-van has been set to `%s`",ctx.getChannel().getName()).queue();
     }
 
     @Override
     public int getType() {
-        return this.PUBLIC_COMMAND;
+        return ICommand.PUBLIC_COMMAND;
     }
 
     @Override
     public String getName() {
-        return "setprefix";
+        return "setevanchannel";
     }
 
     @Override
     public String getHelp() {
-        return "COMMANDE ADMINISTRATEUR: Définit le préfixe de ce serveur\n" +
-                "Usage: `!!setprefix <prefix>`";
+        return null;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("setevan");
     }
 }

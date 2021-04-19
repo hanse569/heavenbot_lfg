@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands.admin;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import net.dv8tion.jda.api.JDA;
@@ -8,6 +9,10 @@ import net.dv8tion.jda.api.Permission;
 public class PingCommand implements ICommand {
     public void handle(CommandContext ctx) {
         JDA jda = ctx.getJDA();
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
 
         if (!ctx.getMember().hasPermission(Permission.MANAGE_SERVER)){
             ctx.getChannel().sendMessage(":x: Vous devez avoir l'autorisation MANAGE_SERVER pour utiliser sa commande").queue();

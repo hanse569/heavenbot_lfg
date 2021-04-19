@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands.info;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.utils.HttpRequest;
@@ -11,6 +12,10 @@ import java.util.Map;
 public class TokenCommand implements ICommand {
     @Override
     public void handle(CommandContext ctx) {
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
+
         long tokenValue = (long)((double)getToken());
         if (tokenValue> 0){
             ctx.getChannel().sendMessage("Prix du token: **" + tokenValue  + "** :coin:").queue();

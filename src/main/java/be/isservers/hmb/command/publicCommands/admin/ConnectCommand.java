@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands.admin;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.api.GeneratePassword;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
@@ -13,6 +14,10 @@ public class ConnectCommand implements ICommand {
     public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
         final Member member = ctx.getMember();
+
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
 
         if (!member.hasPermission(Permission.MANAGE_SERVER)){
             channel.sendMessage(":x: Vous devez avoir l'autorisation MANAGE_SERVER pour utiliser sa commande").queue();

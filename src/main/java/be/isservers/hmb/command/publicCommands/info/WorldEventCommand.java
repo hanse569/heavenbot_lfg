@@ -1,5 +1,6 @@
 package be.isservers.hmb.command.publicCommands.info;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -16,6 +17,10 @@ public class WorldEventCommand implements ICommand {
 
     @Override
     public void handle(CommandContext ctx) {
+        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
+            return;
+        }
+
         try {
             Document doc = Jsoup.connect("https://fr.wowhead.com").get();
             EmbedBuilder eb = new EmbedBuilder();
