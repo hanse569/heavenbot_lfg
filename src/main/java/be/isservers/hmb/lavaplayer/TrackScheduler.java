@@ -1,5 +1,8 @@
 package be.isservers.hmb.lavaplayer;
 
+import be.isservers.hmb.Bot;
+import be.isservers.hmb.Config;
+import be.isservers.hmb.lfg.LFGdataManagement;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -40,5 +43,10 @@ public class TrackScheduler extends AudioEventAdapter {
         if (endReason.mayStartNext) {
             nextTrack();
         }
+        if(queue.isEmpty()) {
+            player.destroy();
+            Bot.jda.getGuilds().get(0).getAudioManager().closeAudioConnection();
+        }
     }
+
 }
