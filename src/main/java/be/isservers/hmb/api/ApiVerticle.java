@@ -27,6 +27,7 @@ public class ApiVerticle extends AbstractVerticle {
         Router router = Router.router(vertx);
         router.get("/ckadmin/:v").handler(this::isAdmin);
         router.get("/archived/").handler(this::Archived);
+        router.get("/archived/:v").handler(this::Archived);
 
         vertx.createHttpServer()
                 .requestHandler(router)
@@ -66,35 +67,66 @@ public class ApiVerticle extends AbstractVerticle {
     }
 
     private void Archived(RoutingContext routingContext){
-        LOGGER.info("Archived request");
+        if (routingContext.request().params().size() > 0) {
+            LOGGER.info("Archived request wtih parameters");
 
-        List<OrganizedDateItem> listODI = new ArrayList<>();
-        final JsonArray jsonArray = new JsonArray();
+            int searchId = Integer.parseInt(routingContext.request().getParam("v"));
+            JsonObject jo = new JsonObject();
+            jo.put("RESULT","NOT_FOUND");
 
-        for (OrganizedDate od : LFGdataManagement.listDate) {
-            OrganizedDateItem odi = new OrganizedDateItem();
-            odi.archived = false;
-            odi.od = od;
-            listODI.add(odi);
+            for (OrganizedDate od : LFGdataManagement.listDate) {
+                if (od.getId() == searchId) {
+                    jo = od.toJsonObject();
+                    jo.put("archived",false);
+                    break;
+                }
+            }
+
+            for (OrganizedDate od : LFGdataManagement.listDateArchived) {
+                if (od.getId() == searchId) {
+                    jo = od.toJsonObject();
+                    jo.put("archived",true);
+                    break;
+                }
+            }
+
+            routingContext.response()
+                    .setStatusCode(200)
+                    .putHeader("content-type","application/json")
+                    .end(Json.encode(jo));
         }
-        for (OrganizedDate od : LFGdataManagement.listDateArchived) {
-            OrganizedDateItem odi = new OrganizedDateItem();
-            odi.archived = true;
-            odi.od = od;
-            listODI.add(odi);
+        else {
+            LOGGER.info("Archived request without parameters");
+            List<OrganizedDateItem> listODI = new ArrayList<>();
+            final JsonArray jsonArray = new JsonArray();
+
+            for (OrganizedDate od : LFGdataManagement.listDate) {
+                OrganizedDateItem odi = new OrganizedDateItem();
+                odi.archived = false;
+                odi.od = od;
+                listODI.add(odi);
+            }
+            for (OrganizedDate od : LFGdataManagement.listDateArchived) {
+                OrganizedDateItem odi = new OrganizedDateItem();
+                odi.archived = true;
+                odi.od = od;
+                listODI.add(odi);
+            }
+
+            for (OrganizedDateItem odi : listODI) {
+                OrganizedDate od = odi.od;
+                JsonObject jo = od.toJsonObject();
+                jo.put("archived",odi.archived);
+                jsonArray.add(jo);
+            }
+
+            routingContext.response()
+                    .setStatusCode(200)
+                    .putHeader("content-type","application/json")
+                    .end(Json.encode(jsonArray));
         }
 
-        for (OrganizedDateItem odi : listODI) {
-            OrganizedDate od = odi.od;
-            JsonObject jo = od.toJsonObject();
-            jo.put("archived",odi.archived);
-            jsonArray.add(jo);
-        }
 
-        routingContext.response()
-                .setStatusCode(200)
-                .putHeader("content-type","application/json")
-                .end(Json.encode(jsonArray));
     }
 }
 
