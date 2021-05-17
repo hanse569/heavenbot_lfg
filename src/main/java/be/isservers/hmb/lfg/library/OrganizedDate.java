@@ -90,15 +90,15 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
             eb.setColor(Color.GREEN);
         }
 
-        eb.addField("Date: ","  " + this.getDateToString(),false);
+        eb.addField("Date",this.getDateToString(),false);
 
         if(this.getInstance().getType() == 1 || this.getInstance().getType() == 2){
-            eb.addField("TANK",getStringOfList(TankList),true);
-            eb.addField("HEAL",getStringOfList(HealList),true);
-            eb.addField("DPS",getStringOfList(DpsList),false);
+            eb.addField(":shield: Tanker",getStringOfList(TankList),true);
+            eb.addField(":syringe: Healer",getStringOfList(HealList),true);
+            eb.addField(":crossed_swords: Damage",getStringOfList(DpsList),true);
         }
         else if(this.getInstance().getType() == 3) {
-            eb.addField("PARTICIPANTS",getStringOfList(DpsList),true);
+            eb.addField("Participant",getStringOfList(DpsList),true);
         }
 
         return eb;
@@ -170,11 +170,11 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         if(list.size() > 0){
             String buffer = "";
             for (String tmp : list){
-                buffer = buffer.concat(LFGdataManagement.getNameOfMember(tmp) + "  ");
+                buffer = buffer.concat("> " + LFGdataManagement.getNameOfMember(tmp) + "\n");
             }
             return buffer;
         }
-        return " / ";
+        return " - ";
     }
 
     @Override
@@ -196,6 +196,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         jo.put("id",this.getId());
         jo.put("admin",this.getAdmin());
         jo.put("instance",this.getInstance().getName());
+        jo.put("typeinstane",this.getInstance().getType());
         jo.put("difficulte",this.getDifficulty());
         jo.put("date",this.getDateToRequest());
         jo.put("description",this.getDescription());
@@ -203,6 +204,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         jo.put("HEAL",this.listToJsonArray(this.HealList));
         jo.put("DPS",this.listToJsonArray(this.DpsList));
         jo.put("locked",this.isLocked());
+
 
         return jo;
     }

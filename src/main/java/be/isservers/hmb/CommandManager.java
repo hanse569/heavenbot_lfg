@@ -2,6 +2,7 @@ package be.isservers.hmb;
 
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
+import be.isservers.hmb.command.publicCommands.RaiderIO.ProgressCommand;
 import be.isservers.hmb.command.publicCommands.admin.*;
 import be.isservers.hmb.command.publicCommands.divers.*;
 import be.isservers.hmb.command.publicCommands.info.*;
@@ -39,6 +40,8 @@ public class CommandManager {
         addCommand(new QueueCommand());
         addCommand(new SkipCommand());
         addCommand(new StopCommand());
+
+        addCommand(new ProgressCommand());
 
 
         addCommand(new be.isservers.hmb.command.privateCommand.LfgCommand());

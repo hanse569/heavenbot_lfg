@@ -8,6 +8,8 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +25,8 @@ public class ApiVerticle extends AbstractVerticle {
         LOGGER.info("Web API Started");
 
         Router router = Router.router(vertx);
-        router.get("/connect/:v").handler(this::Connect);
-        router.get("/archived/:v").handler(this::Archived);
+        router.get("/ckadmin/:v").handler(this::isAdmin);
+        router.get("/archived/").handler(this::Archived);
 
         vertx.createHttpServer()
                 .requestHandler(router)
@@ -36,71 +38,63 @@ public class ApiVerticle extends AbstractVerticle {
         super.stop();
     }
 
-    private void Connect(RoutingContext routingContext){
-        LOGGER.info("Connection request");
+    private void isAdmin(RoutingContext routingContext){
+        LOGGER.info("Check isAdmin request");
+        String id = routingContext.request().getParam("v");
 
-        final String password = routingContext.request().getParam("v");
+        final JsonObject jsonObject = new JsonObject();
 
-        final JsonObject jsonItem = new JsonObject();
-        if(GeneratePassword.checkPassword(password) || password.equals("000000")){
-            jsonItem.put("Token",GeneratePassword.getToken());
-            GeneratePassword.removeUsedPassword(password);
-            routingContext.response()
-                    .setStatusCode(200)
-                    .putHeader("content-type","application/json")
-                    .end(Json.encode(jsonItem));
+        Member user = LFGdataManagement.heavenDiscord.getMemberById(id);
+
+        if (user != null) {
+            if (user.hasPermission(Permission.MANAGE_SERVER)) {
+                jsonObject.put("isAdmin","true");
+            }
+            else {
+                jsonObject.put("isAdmin","false");
+            }
         }
-        else{
-            jsonItem.put("valid","Non");
-            routingContext.response()
-                    .setStatusCode(401)
-                    .putHeader("content-type","application/json")
-                    .end(Json.encode(jsonItem));
+        else {
+            jsonObject.put("isAdmin","no_found");
         }
+
+        routingContext.response()
+                .setStatusCode(200)
+                .putHeader("content-type","application/json")
+                .end(Json.encode(jsonObject));
+
     }
 
     private void Archived(RoutingContext routingContext){
         LOGGER.info("Archived request");
 
-        final String token = routingContext.request().getParam("v");
+        List<OrganizedDateItem> listODI = new ArrayList<>();
+        final JsonArray jsonArray = new JsonArray();
 
-        final JsonObject jsonItem = new JsonObject();
-        if(GeneratePassword.checkToken(token)){
-            List<OrganizedDateItem> listODI = new ArrayList<>();
-            final JsonArray jsonArray = new JsonArray();
-
-            for (OrganizedDate od : LFGdataManagement.listDate) {
-                OrganizedDateItem odi = new OrganizedDateItem();
-                odi.archived = false;
-                odi.od = od;
-                listODI.add(odi);
-            }
-            for (OrganizedDate od : LFGdataManagement.listDateArchived) {
-                OrganizedDateItem odi = new OrganizedDateItem();
-                odi.archived = true;
-                odi.od = od;
-                listODI.add(odi);
-            }
-
-            for (OrganizedDateItem odi : listODI) {
-                OrganizedDate od = odi.od;
-                JsonObject jo = od.toJsonObject();
-                jo.put("archived",odi.archived);
-                jsonArray.add(jo);
-            }
-
-            routingContext.response()
-                    .setStatusCode(200)
-                    .putHeader("content-type","application/json")
-                    .end(Json.encode(jsonArray));
+        for (OrganizedDate od : LFGdataManagement.listDate) {
+            OrganizedDateItem odi = new OrganizedDateItem();
+            odi.archived = false;
+            odi.od = od;
+            listODI.add(odi);
         }
-        else{
-            jsonItem.put("token","expiré");
-            routingContext.response()
-                    .setStatusCode(401)
-                    .putHeader("content-type","application/json")
-                    .end(Json.encode(jsonItem));
+        for (OrganizedDate od : LFGdataManagement.listDateArchived) {
+            OrganizedDateItem odi = new OrganizedDateItem();
+            odi.archived = true;
+            odi.od = od;
+            listODI.add(odi);
         }
+
+        for (OrganizedDateItem odi : listODI) {
+            OrganizedDate od = odi.od;
+            JsonObject jo = od.toJsonObject();
+            jo.put("archived",odi.archived);
+            jsonArray.add(jo);
+        }
+
+        routingContext.response()
+                .setStatusCode(200)
+                .putHeader("content-type","application/json")
+                .end(Json.encode(jsonArray));
     }
 }
 
