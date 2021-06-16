@@ -14,7 +14,7 @@ public class MessageUtils {
     }
 
     public static void SendPrivateRichEmbed(User user, EmbedBuilder embedBuilder){
-        user.openPrivateChannel().queue( (channel) -> channel.sendMessage(embedBuilder.build()).queue());
+        user.openPrivateChannel().queue( (channel) -> channel.sendMessageEmbeds(embedBuilder.build()).queue());
     }
 
     public static void SendPublicMessage(TextChannel tc, String message){
@@ -22,7 +22,7 @@ public class MessageUtils {
     }
 
     public static void SendPublicRichEmbed(TextChannel tc, MessageEmbed me){
-        tc.sendMessage(me).queue();
+        tc.sendMessageEmbeds(me).queue();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -32,7 +32,7 @@ public class MessageUtils {
 
     @SuppressWarnings("ConstantConditions")
     public static void SendPublicRichEmbed(JDA jda, OrganizedDate od){
-        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelDonjon()).sendMessage(od.getEmbedBuilder().build()).queue( (message) -> {
+        jda.getGuildById(Config.getIdDiscordHeaven()).getTextChannelById(Config.getIdChannelDonjon()).sendMessageEmbeds(od.getEmbedBuilder().build()).queue( (message) -> {
             if(od.getIdMessageDiscord() == null)od.setIdMessageDiscord(message.getId());
         });
     }

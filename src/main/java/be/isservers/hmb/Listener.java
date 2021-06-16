@@ -6,18 +6,26 @@ import be.isservers.hmb.lfg.LFGmain;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+
 public class Listener extends ListenerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
     private final CommandManager commandManager = new CommandManager();
+    private final SlashCommandManager slashCommandManager = new SlashCommandManager();
     private final WeeklyInfoManager worldEventManager = new WeeklyInfoManager();
     private final int TIME_BETWEEN_AUTO_DELETE = 21600; //toutes les 6h
 
@@ -39,9 +47,17 @@ public class Listener extends ListenerAdapter {
                     LFGdataManagement.InitializeOrdanizedDateArchived(event);
                     new Timer(TIME_BETWEEN_AUTO_DELETE,new LFGautoDeleteEvent()).start();
                     worldEventManager.Load();
+                    slashCommandManager.Init();
                 }
             }
         }
+    }
+
+    @Override
+    public void onSlashCommand(@NotNull SlashCommandEvent event) {
+        if (!event.getGuild().getId().equals(LFGdataManagement.heavenDiscord.getId()))
+            return;
+        slashCommandManager.handle(event);
     }
 
     @Override

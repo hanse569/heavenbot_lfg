@@ -75,7 +75,7 @@ public class PlayerManager {
                         eb.setThumbnail("https://img.youtube.com/vi/"+ at.getIdentifier()+"/1.jpg");
                     }
                     eb.setAuthor("\u2705 Ajouté à la file d'attente");
-                    channel.sendMessage(eb.build()).queue();
+                    channel.sendMessageEmbeds(eb.build()).queue();
                 }
                 else {
                     LOGGER.error("Pas trouvé l'instance of");
@@ -96,7 +96,7 @@ public class PlayerManager {
                 eb.setTitle(playlist.getName());
                 eb.setDescription("Ajouté par " + final_author.getName());
                 eb.setAuthor("\u2705 Playlist ajouté à la file d'attente");
-                channel.sendMessage(eb.build()).queue();
+                channel.sendMessageEmbeds(eb.build()).queue();
             }
 
             @Override

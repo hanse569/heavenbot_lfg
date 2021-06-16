@@ -1,8 +1,8 @@
-package be.isservers.hmb.command.publicCommands.info;
+package be.isservers.hmb.slashCommand.info;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.command.ICommand;
+import be.isservers.hmb.slashCommand.ISlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommandContext;
 import be.isservers.hmb.utils.MessageUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.jsoup.Jsoup;
@@ -12,12 +12,10 @@ import org.jsoup.select.Elements;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.List;
 
-public class WorldBossCommand implements ICommand {
-
+public class WorldBossCommand implements ISlashCommand {
     @Override
-    public void handle(CommandContext ctx) {
+    public void handle(SlashCommandContext ctx) {
         if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
             return;
         }
@@ -53,15 +51,10 @@ public class WorldBossCommand implements ICommand {
             eb.setTitle(":skull: Boss mondial de cette semaine");
             eb.setDescription(sb.toString());
 
-            ctx.getChannel().sendMessage(eb.build()).queue();
+            ctx.getEvent().replyEmbeds(eb.build()).queue();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public int getType() {
-        return ICommand.PUBLIC_COMMAND;
     }
 
     @Override
@@ -71,11 +64,6 @@ public class WorldBossCommand implements ICommand {
 
     @Override
     public String getHelp() {
-        return "Indique les world boss actuellement présent pour le contenu de Shadowlands, Battle For Azeroth et Légion";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return List.of("wb");
+        return "Indique les world boss actuellement présent pour le contenu de Shadowlands, Battle For Azeroth et Légion".substring(0,100);
     }
 }

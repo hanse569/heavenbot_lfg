@@ -1,8 +1,8 @@
-package be.isservers.hmb.command.publicCommands.info;
+package be.isservers.hmb.slashCommand.info;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.command.ICommand;
+import be.isservers.hmb.slashCommand.ISlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,12 +11,10 @@ import org.jsoup.select.Elements;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.List;
 
-public class WorldEventCommand implements ICommand {
-
+public class WorldEventCommand implements ISlashCommand {
     @Override
-    public void handle(CommandContext ctx) {
+    public void handle(SlashCommandContext ctx) {
         if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
             return;
         }
@@ -39,15 +37,10 @@ public class WorldEventCommand implements ICommand {
             eb.setTitle(":newspaper: Evenement mondial de cette semaine");
             eb.setDescription(sb.toString());
 
-            ctx.getChannel().sendMessage(eb.build()).queue();
+            ctx.getEvent().replyEmbeds(eb.build()).queue();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public int getType() {
-        return ICommand.PUBLIC_COMMAND;
     }
 
     @Override
@@ -58,10 +51,5 @@ public class WorldEventCommand implements ICommand {
     @Override
     public String getHelp() {
         return "Indique les world event actuellement présent";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return List.of("we","event");
     }
 }

@@ -1,27 +1,27 @@
-package be.isservers.hmb.command.publicCommands.info;
+package be.isservers.hmb.slashCommand.info;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.command.ICommand;
+import be.isservers.hmb.slashCommand.ISlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommandContext;
 import be.isservers.hmb.utils.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.Map;
 
-public class TokenCommand implements ICommand {
+public class TokenCommand implements ISlashCommand {
     @Override
-    public void handle(CommandContext ctx) {
+    public void handle(SlashCommandContext ctx) {
         if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
             return;
         }
 
         long tokenValue = (long)((double)getToken());
         if (tokenValue> 0){
-            ctx.getChannel().sendMessage("Prix du token: **" + tokenValue  + "** :coin:").queue();
+            ctx.getEvent().reply("Prix du token: **" + tokenValue  + "** :coin:").queue();
         }
         else {
-            ctx.getChannel().sendMessage(":x:  Impossible d'obtenir cette donnée pour le moment").queue();
+            ctx.getEvent().reply(":x:  Impossible d'obtenir cette donnée pour le moment").queue();
         }
     }
 
@@ -36,17 +36,12 @@ public class TokenCommand implements ICommand {
     }
 
     @Override
-    public int getType() {
-        return ICommand.PUBLIC_COMMAND;
-    }
-
-    @Override
     public String getName() {
         return "token";
     }
 
     @Override
     public String getHelp() {
-        return "Permet d'obtenir le cours actuelle du Token WOW en pièce d'or";
+        return "Indique le cours actuelle du Token WOW en pièce d'or";
     }
 }
