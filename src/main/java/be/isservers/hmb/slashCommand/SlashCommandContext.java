@@ -35,9 +35,7 @@ public class SlashCommandContext {
         return slashCommandEvent.getMember();
     }
 
-    public Member getSelfMember() {
-        return slashCommandEvent.getGuild().getSelfMember();
-    }
+    public Member getSelfMember() { return slashCommandEvent.getGuild().getSelfMember(); }
 
     public User getAuthor() {
         return slashCommandEvent.getUser();

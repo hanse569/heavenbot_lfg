@@ -1,14 +1,10 @@
-package be.isservers.hmb.slashCommand.divers;
+package be.isservers.hmb.slashCommand.guildCommand.divers;
 
-import be.isservers.hmb.CommandManager;
-import be.isservers.hmb.Config;
 import be.isservers.hmb.SlashCommandManager;
-import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;
 import be.isservers.hmb.slashCommand.SlashCommandParamaterItem;
 import be.isservers.hmb.slashCommand.SlashCommandParameter;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.List;

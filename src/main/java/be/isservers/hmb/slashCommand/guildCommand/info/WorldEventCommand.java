@@ -1,6 +1,5 @@
-package be.isservers.hmb.slashCommand.info;
+package be.isservers.hmb.slashCommand.guildCommand.info;
 
-import be.isservers.hmb.Config;
 import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;

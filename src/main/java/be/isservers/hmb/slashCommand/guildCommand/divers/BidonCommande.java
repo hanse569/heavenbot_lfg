@@ -1,9 +1,7 @@
-package be.isservers.hmb.slashCommand.divers;
+package be.isservers.hmb.slashCommand.guildCommand.divers;
 
 import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;
-
-import java.util.concurrent.TimeUnit;
 
 public class BidonCommande extends SlashCommand {
     @Override

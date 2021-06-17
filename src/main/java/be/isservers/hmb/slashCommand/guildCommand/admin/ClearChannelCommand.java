@@ -1,4 +1,4 @@
-package be.isservers.hmb.slashCommand.admin;
+package be.isservers.hmb.slashCommand.guildCommand.admin;
 
 import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;

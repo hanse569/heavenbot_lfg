@@ -1,4 +1,4 @@
-package be.isservers.hmb.slashCommand.admin;
+package be.isservers.hmb.slashCommand.guildCommand.admin;
 
 import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;
@@ -19,7 +19,7 @@ public class PingCommand extends SlashCommand {
 
     @Override
     public String getHelp() {
-        return "Affiche le ping actuel du bot vers les serveurs Discord ";
+        return "Affiche le ping actuel du bot vers les serveurs Discord";
     }
 
     @Override
