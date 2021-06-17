@@ -1,17 +1,14 @@
 package be.isservers.hmb;
 
 import be.isservers.hmb.lfg.LFGdataManagement;
-import be.isservers.hmb.slashCommand.ISlashCommand;
-import be.isservers.hmb.slashCommand.SlashCommandContext;
-import be.isservers.hmb.slashCommand.SlashCommandParamaterItem;
-import be.isservers.hmb.slashCommand.admin.PingCommand;
-import be.isservers.hmb.slashCommand.admin.SetDungeonChannelCommand;
-import be.isservers.hmb.slashCommand.admin.SetEvanChannelCommand;
-import be.isservers.hmb.slashCommand.admin.SetGazetteChannelCommand;
-import be.isservers.hmb.slashCommand.info.TokenCommand;
-import be.isservers.hmb.slashCommand.info.WorldBossCommand;
-import be.isservers.hmb.slashCommand.info.WorldEventCommand;
+import be.isservers.hmb.slashCommand.*;
+import be.isservers.hmb.slashCommand.admin.*;
+import be.isservers.hmb.slashCommand.info.*;
+import be.isservers.hmb.slashCommand.divers.*;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
@@ -20,29 +17,37 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static be.isservers.hmb.Bot.jda;
+import static be.isservers.hmb.lfg.LFGdataManagement.heavenDiscord;
+
 public class SlashCommandManager {
-    private final List<ISlashCommand> slashCommands = new ArrayList<>();
+    private final List<SlashCommand> slashCommands = new ArrayList<>();
 
     public void Init() {
-        CommandListUpdateAction listNewCommands = LFGdataManagement.heavenDiscord.updateCommands();
-        CommandListUpdateAction globalListNewCommands = Bot.jda.updateCommands();
+        CommandListUpdateAction listNewCommands = heavenDiscord.updateCommands();
 
-        addCommand(globalListNewCommands,new TokenCommand());
+        addCommand(listNewCommands,new TokenCommand());
         addCommand(listNewCommands,new WorldBossCommand());
-        addCommand(globalListNewCommands,new WorldEventCommand());
+        addCommand(listNewCommands,new WorldEventCommand());
 
         addCommand(listNewCommands,new PingCommand());
         addCommand(listNewCommands,new SetEvanChannelCommand());
         addCommand(listNewCommands,new SetDungeonChannelCommand());
         addCommand(listNewCommands,new SetGazetteChannelCommand());
 
+        addCommand(listNewCommands,new HelpCommand(this));
+
         listNewCommands.queue();
-        globalListNewCommands.queue();
+
+
+        /*CommandListUpdateAction globalListNewCommands = jda.updateCommands();
+        addCommand(globalListNewCommands,new BidonCommande());
+        globalListNewCommands.queue();*/
     }
 
-    private void addCommand(CommandListUpdateAction listNewCommands,ISlashCommand cmd){
+    private void addCommand(CommandListUpdateAction listNewCommands,SlashCommand cmd){
         boolean nameFound = false;
-        for (ISlashCommand command : slashCommands) {
+        for (SlashCommand command : slashCommands) {
             if (cmd.getName().equals(command.getName()))
                 nameFound = true;
         }
@@ -58,7 +63,7 @@ public class SlashCommandManager {
     }
 
     public void handle(SlashCommandEvent event) {
-        ISlashCommand cmd = this.getCommand(event.getName());
+        SlashCommand cmd = this.getCommand(event.getName());
 
         if (cmd != null){
             SlashCommandContext ctx = new SlashCommandContext(event);
@@ -70,14 +75,18 @@ public class SlashCommandManager {
     }
 
     @Nullable
-    public ISlashCommand getCommand(String search){
+    public SlashCommand getCommand(String search){
         String searchLower = search.toLowerCase();
 
-        for (ISlashCommand cmd : this.slashCommands) {
+        for (SlashCommand cmd : this.slashCommands) {
             if (cmd.getName().equals(searchLower)){
                 return cmd;
             }
         }
         return null;
+    }
+
+    public List<SlashCommand> getCommands() {
+        return slashCommands;
     }
 }

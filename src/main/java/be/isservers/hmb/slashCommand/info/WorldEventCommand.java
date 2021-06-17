@@ -1,7 +1,7 @@
 package be.isservers.hmb.slashCommand.info;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.slashCommand.ISlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.jsoup.Jsoup;
@@ -12,12 +12,10 @@ import org.jsoup.select.Elements;
 import java.awt.*;
 import java.io.IOException;
 
-public class WorldEventCommand implements ISlashCommand {
+public class WorldEventCommand extends SlashCommand {
     @Override
     public void handle(SlashCommandContext ctx) {
-        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
-            return;
-        }
+        if (!this.checkEvanChannel(ctx.getEvent(),ctx.getChannel().getId())) return;
 
         try {
             Document doc = Jsoup.connect("https://fr.wowhead.com").get();
@@ -42,6 +40,9 @@ public class WorldEventCommand implements ISlashCommand {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public int getType() { return this.GUILD_COMMAND; }
 
     @Override
     public String getName() {

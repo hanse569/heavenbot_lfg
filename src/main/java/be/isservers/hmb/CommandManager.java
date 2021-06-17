@@ -20,7 +20,6 @@ public class CommandManager {
 
     CommandManager() {
         addCommand(new ClearChannelCommand());
-        addCommand(new SetDungeonChannel());
         addCommand(new SetPrefixCommand());
 
         addCommand(new HelpCommand(this));

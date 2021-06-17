@@ -1,7 +1,7 @@
 package be.isservers.hmb.slashCommand.info;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.slashCommand.ISlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;
 import be.isservers.hmb.utils.HttpRequest;
 import com.google.gson.Gson;
@@ -9,12 +9,10 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.Map;
 
-public class TokenCommand implements ISlashCommand {
+public class TokenCommand extends SlashCommand {
     @Override
     public void handle(SlashCommandContext ctx) {
-        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
-            return;
-        }
+        if (!this.checkEvanChannel(ctx.getEvent(),ctx.getChannel().getId())) return;
 
         long tokenValue = (long)((double)getToken());
         if (tokenValue> 0){
@@ -34,6 +32,9 @@ public class TokenCommand implements ISlashCommand {
             return 0;
         }
     }
+
+    @Override
+    public int getType() { return this.GUILD_COMMAND; }
 
     @Override
     public String getName() {

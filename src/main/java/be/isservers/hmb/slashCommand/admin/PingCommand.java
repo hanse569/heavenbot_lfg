@@ -1,35 +1,21 @@
 package be.isservers.hmb.slashCommand.admin;
 
-import be.isservers.hmb.Config;
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.lfg.LFGdataManagement;
-import be.isservers.hmb.slashCommand.ISlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 
-import java.util.concurrent.TimeUnit;
-
-public class PingCommand implements ISlashCommand {
+public class PingCommand extends SlashCommand {
     public void handle(SlashCommandContext ctx) {
-        JDA jda = ctx.getJDA();
+        if (!this.checkEvanChannel(ctx.getEvent(),ctx.getChannel().getId())) return;
+        if (!this.checkMemberPermission(ctx.getEvent(),ctx.getMember(),Permission.MANAGE_SERVER)) return;
 
-        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
-            ctx.getEvent().reply(":x: Veuillez envoyer votre commande depuis <#" + Config.getIdChannelEvan() + ">").queue(
-                    (message) -> message.deleteOriginal().queueAfter(5, TimeUnit.SECONDS)
-            );
-            return;
-        }
-
-        if (!ctx.getMember().hasPermission(Permission.MANAGE_SERVER)){
-            ctx.getEvent().replyFormat(":x: Vous devez avoir l'autorisation MANAGE_SERVER pour utiliser sa commande").queue();
-            return;
-        }
-
-        jda.getRestPing().queue(
-                (ping) -> ctx.getEvent().replyFormat("Reset ping: %sms\nWS ping: %sms",ping,jda.getGatewayPing()).queue()
+        ctx.getJDA().getRestPing().queue(
+                (ping) -> ctx.getEvent().replyFormat("Reset ping: %sms\nWS ping: %sms",ping,ctx.getJDA().getGatewayPing()).queue()
         );
     }
+
+    @Override
+    public int getType() { return this.GUILD_COMMAND; }
 
     @Override
     public String getHelp() {

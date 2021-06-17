@@ -55,8 +55,6 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
-        if (!event.getGuild().getId().equals(LFGdataManagement.heavenDiscord.getId()))
-            return;
         slashCommandManager.handle(event);
     }
 

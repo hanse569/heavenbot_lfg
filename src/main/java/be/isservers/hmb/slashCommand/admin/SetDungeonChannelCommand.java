@@ -1,22 +1,22 @@
 package be.isservers.hmb.slashCommand.admin;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.slashCommand.ISlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommand;
 import be.isservers.hmb.slashCommand.SlashCommandContext;
 import net.dv8tion.jda.api.Permission;
 
-public class SetDungeonChannelCommand implements ISlashCommand {
+public class SetDungeonChannelCommand extends SlashCommand {
     @Override
     public void handle(SlashCommandContext ctx) {
-        if (!ctx.getMember().hasPermission(Permission.MANAGE_SERVER)){
-            ctx.getEvent().replyFormat(":x: Vous devez avoir l'autorisation MANAGE_SERVER pour utiliser sa commande").queue();
-            return;
-        }
+        if (!this.checkMemberPermission(ctx.getEvent(),ctx.getMember(),Permission.MANAGE_SERVER)) return;
 
         Config.setDungeonChannel(ctx.getChannel().getId());
 
         ctx.getEvent().replyFormat("New channel for dungeon has been set to <#%s>",ctx.getChannel().getId()).queue();
     }
+
+    @Override
+    public int getType() { return this.GUILD_COMMAND; }
 
     @Override
     public String getName() {
