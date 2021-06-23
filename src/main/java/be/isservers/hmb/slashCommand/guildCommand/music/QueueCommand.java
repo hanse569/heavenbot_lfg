@@ -1,33 +1,33 @@
-package be.isservers.hmb.command.publicCommands.music;
+package be.isservers.hmb.slashCommand.guildCommand.music;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.GuildMusicManager;
 import be.isservers.hmb.lavaplayer.PlayerManager;
+import be.isservers.hmb.slashCommand.SlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommandContext;
+import be.isservers.hmb.utils.EmoteNumber;
 import be.isservers.hmb.utils.MessageUtils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
-public class QueueCommand implements ICommand {
-    public void handle(CommandContext ctx) {
-        final TextChannel channel = ctx.getChannel();
+public class QueueCommand extends SlashCommand {
+    @Override
+    public void handle(SlashCommandContext ctx) {
+        final GuildVoiceState selfVoiceState = ctx.getSelfMember().getVoiceState();
+        final GuildVoiceState memberVoiceState = ctx.getMember().getVoiceState();
+        if (!this.checkEvanChannel(ctx.getEvent(),ctx.getChannel().getId())) return;
+        if (!this.checkSelfInVoiceChannel(ctx.getEvent(),selfVoiceState)) return;
+        if (!this.checkMemberInVoiceChannel(ctx.getEvent(),memberVoiceState)) return;
+        if (!this.checkSameVoiceChannel(ctx.getEvent(),selfVoiceState,memberVoiceState)) return;
+
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
         final BlockingQueue<AudioTrack> queue = musicManager.scheduler.queue;
-
-        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
-            return;
-        }
-
-        if (queue.isEmpty()) {
-            channel.sendMessage("La file d'attente est actuellement vide").queue();
-            return;
-        }
 
         final int trackCount = Math.min(queue.size(), 9);
         final ArrayList<AudioTrack> trackList = new ArrayList<>(queue);
@@ -40,7 +40,7 @@ public class QueueCommand implements ICommand {
             final AudioTrack track = trackList.get(i);
             final AudioTrackInfo info = track.getInfo();
 
-            description.append(getEmoji(i + 1))
+            description.append(EmoteNumber.get(i + 1))
                     .append(" `")
                     .append(info.title)
                     .append(" `\n");
@@ -51,13 +51,7 @@ public class QueueCommand implements ICommand {
                     .append("` autres...");
         }
         eb.setDescription(description.toString());
-
-        MessageUtils.SendPublicRichEmbed(channel,eb.build());
-    }
-
-    @Override
-    public int getType() {
-        return this.PUBLIC_COMMAND;
+        ctx.getEvent().replyEmbeds(eb.build()).queue();
     }
 
     @Override
@@ -67,31 +61,11 @@ public class QueueCommand implements ICommand {
 
     @Override
     public String getHelp() {
-        return "Affiche les chansons en file d'attente";
+        return "Shows all currently enqueued songs";
     }
 
-    private String getEmoji(int number){
-        switch (number) {
-            case 1:
-                return ":one:";
-            case 2:
-                return ":two:";
-            case 3:
-                return ":three:";
-            case 4:
-                return ":four:";
-            case 5:
-                return ":five:";
-            case 6:
-                return ":six:";
-            case 7:
-                return ":seven:";
-            case 8:
-                return ":eight:";
-            case 9:
-                return ":nine:";
-            default:
-                return ":ten:";
-        }
+    @Override
+    public int getType() {
+        return SlashCommand.GUILD_COMMAND;
     }
 }

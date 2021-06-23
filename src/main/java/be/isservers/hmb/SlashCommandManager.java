@@ -1,12 +1,13 @@
 package be.isservers.hmb;
 
 import be.isservers.hmb.slashCommand.*;
-import be.isservers.hmb.slashCommand.guildCommand.*;
+import be.isservers.hmb.slashCommand.guildCommand.admin.*;
 import be.isservers.hmb.slashCommand.guildCommand.divers.*;
+import be.isservers.hmb.slashCommand.guildCommand.info.*;
+import be.isservers.hmb.slashCommand.guildCommand.music.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import javax.annotation.Nullable;
@@ -17,21 +18,33 @@ import static be.isservers.hmb.lfg.LFGdataManagement.heavenDiscord;
 
 public class SlashCommandManager {
     private final List<SlashCommand> slashCommands = new ArrayList<>();
-    private final List<SlashSubCommand> slashSubCommands = new ArrayList<>();
     public void Init() {
-        CommandListUpdateAction listNewCommands = heavenDiscord.updateCommands();
+        CommandListUpdateAction guildCommands = heavenDiscord.updateCommands();
 
-        addCommand(listNewCommands,new HelpCommand(this));
+        addCommand(guildCommands,new HelpCommand(this));
+        addCommand(guildCommands,new LfgCommand());
 
-        addSubCommand(listNewCommands,new adminCommand());
-        addSubCommand(listNewCommands,new infoCommand());
+        addCommand(guildCommands,new ClearChannelCommand());
+        addCommand(guildCommands,new PingCommand());
+        addCommand(guildCommands,new SetEvanChannelCommand());
+        addCommand(guildCommands,new SetDungeonChannelCommand());
+        addCommand(guildCommands,new SetGazetteChannelCommand());
 
-        listNewCommands.queue();
+        addCommand(guildCommands,new TokenCommand());
+        addCommand(guildCommands,new WorldBossCommand());
+        addCommand(guildCommands,new WorldEventCommand());
+
+        addCommand(guildCommands,new PlayCommand());
+        addCommand(guildCommands,new StopCommand());
+        addCommand(guildCommands,new SkipCommand());
+        addCommand(guildCommands,new NowPlayingCommand());
+        addCommand(guildCommands,new QueueCommand());
+
+        guildCommands.queue();
 
 
-        /*CommandListUpdateAction globalListNewCommands = jda.updateCommands();
-        addCommand(globalListNewCommands,new BidonCommande());
-        globalListNewCommands.queue();*/
+        /*CommandListUpdateAction globalCommands = Bot.jda.updateCommands();
+        globalCommands.queue();*/
     }
 
     private void addCommand(CommandListUpdateAction listCommands,SlashCommand cmd){
@@ -45,23 +58,6 @@ public class SlashCommandManager {
         slashCommands.add(cmd);
     }
 
-    private void addSubCommand(CommandListUpdateAction listCommands,SlashSubCommand cmd){
-        CommandData commandData = new CommandData(cmd.getName(),cmd.getHelp());
-        for (SlashCommand slashCommand : cmd.getListSubCommand()) {
-            try {
-                if (isCommandExist(cmd.getName())) throw new IllegalArgumentException("A command with this name is already present");
-
-                SubcommandData scd = new SubcommandData(slashCommand.getName(),slashCommand.getHelp());
-                commandData.addSubcommands(scd);
-                slashCommands.add(slashCommand);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }
-        }
-        slashSubCommands.add(cmd);
-        listCommands.addCommands(commandData);
-    }
-
     private Boolean isCommandExist(String name) {
         for (ISlashCommand command : slashCommands) {
             if (name.equals(command.getName()))
@@ -71,14 +67,7 @@ public class SlashCommandManager {
     }
 
     public void handle(SlashCommandEvent event) {
-        SlashCommand cmd = null;
-        if (slashSubCommands.stream().anyMatch(slashSubCommand -> slashSubCommand.getName().equals(event.getName()))) {
-            cmd = this.getCommand(event.getSubcommandName());
-        }
-        else {
-            cmd = this.getCommand(event.getName());
-        }
-
+        SlashCommand cmd = this.getCommand(event.getName());;
         if (cmd != null){
             SlashCommandContext ctx = new SlashCommandContext(event);
             cmd.handle(ctx);

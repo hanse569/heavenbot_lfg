@@ -3,9 +3,6 @@ package be.isservers.hmb;
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.command.publicCommands.RaiderIO.ProgressCommand;
-import be.isservers.hmb.command.publicCommands.admin.*;
-import be.isservers.hmb.command.publicCommands.divers.*;
-import be.isservers.hmb.command.publicCommands.music.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
@@ -19,21 +16,7 @@ public class CommandManager {
     private final List<ICommand> commands = new ArrayList<>();
 
     CommandManager() {
-        addCommand(new ClearChannelCommand());
-        addCommand(new SetPrefixCommand());
-
-        addCommand(new HelpCommand(this));
-        addCommand(new be.isservers.hmb.command.publicCommands.divers.LfgCommand());
-
-        addCommand(new NowPlayingCommand());
-        addCommand(new PlayCommand());
-        addCommand(new QueueCommand());
-        addCommand(new SkipCommand());
-        addCommand(new StopCommand());
-
         addCommand(new ProgressCommand());
-
-
         addCommand(new be.isservers.hmb.command.privateCommand.LfgCommand());
     }
 

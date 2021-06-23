@@ -20,7 +20,6 @@ public class SlashCommandContext {
         for (OptionMapping option : event.getOptions()) {
             this.args.add(option.getAsString());
         }
-        System.out.println(args);
     }
 
     public Guild getGuild() {
