@@ -1,5 +1,7 @@
 package be.isservers.hmb.web;
 
+import be.isservers.hmb.lfg.LFGdataManagement;
+import be.isservers.hmb.lfg.library.OrganizedDate;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
@@ -62,6 +64,7 @@ public class MainVerticle extends AbstractVerticle{
         router.route("/index").handler(this::index);
         router.route("/logs").handler(this::logs);
         router.route("/command/:cat").handler(this::command);
+        router.route("/archive").handler(this::archive);
 
         router.route("/discord").handler(this::discord);
         router.route("/callback").handler(this::discordCallback);
@@ -84,8 +87,6 @@ public class MainVerticle extends AbstractVerticle{
 
     private void index(RoutingContext routingContext) {
         final TemplateEngine engine = PebbleTemplateEngine.create(vertx);
-
-        LOGGER.error(Locale.getDefault().toString());
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("home", "home");
@@ -167,6 +168,12 @@ public class MainVerticle extends AbstractVerticle{
         Map<String, Object> vars = new HashMap<>();
         vars.put("logs", "logs");
 
+        if (routingContext.session().get("data") != null) {
+            SessionData sessionData = routingContext.session().get("data");
+            vars.put("image", sessionData.getImageLink());
+            vars.put("name", sessionData.getName());
+        }
+
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -3);
 
@@ -215,6 +222,12 @@ public class MainVerticle extends AbstractVerticle{
         vars.put(category,category);
         vars.put("category",category);
 
+        if (routingContext.session().get("data") != null) {
+            SessionData sessionData = routingContext.session().get("data");
+            vars.put("image", sessionData.getImageLink());
+            vars.put("name", sessionData.getName());
+        }
+
         try {
             File file = new File(getClass().getClassLoader().getResource("data/"+category+".json").getFile());
             JsonArray jsonArray = new JsonArray(new String(Files.readAllBytes(file.toPath())));
@@ -242,5 +255,37 @@ public class MainVerticle extends AbstractVerticle{
                 routingContext.fail(res.cause());
             }
         });
+    }
+
+    public void archive(RoutingContext routingContext) {
+        final TemplateEngine engine = PebbleTemplateEngine.create(vertx);
+
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("archive","archive");
+
+        if (routingContext.session().get("data") != null) {
+            SessionData sessionData = routingContext.session().get("data");
+            vars.put("image", sessionData.getImageLink());
+            vars.put("name", sessionData.getName());
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (OrganizedDate organizedDate : LFGdataManagement.listDate) {
+            sb.append(new RenderEvents(organizedDate,false).build());
+        }
+        for (OrganizedDate organizedDate : LFGdataManagement.listDateArchived) {
+            sb.append(new RenderEvents(organizedDate,true).build());
+        }
+        vars.put("events",sb.toString());
+
+        engine.render(vars, "pages/archive", res -> {
+            if (res.succeeded()) {
+                routingContext.response().end(res.result());
+            } else {
+                routingContext.fail(res.cause());
+            }
+        });
+
+
     }
 }

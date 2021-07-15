@@ -85,7 +85,7 @@
                     {% if name is defined %}
                     <li class="sidebar-title">Administration</li>
 
-                    <li class="sidebar-item">
+                    <li class="sidebar-item {% if archive is defined %} active {% endif %}">
                         <a href="/archive" class='sidebar-link'>
                             <i class="fas fa-database"></i>
                             <span>Archives</span>

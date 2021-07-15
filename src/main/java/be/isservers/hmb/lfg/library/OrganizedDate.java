@@ -72,6 +72,9 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         return dateFormat.format(this.getDateToDate());
     }
     public String getDescription() { return description; }
+    public ArrayList<String> getTankList() { return TankList; }
+    public ArrayList<String> getHealList() { return HealList; }
+    public ArrayList<String> getDpsList() { return DpsList; }
 
     public EmbedBuilder getEmbedBuilder(){
         EmbedBuilder eb = new EmbedBuilder();
