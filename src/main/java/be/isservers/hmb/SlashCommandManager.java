@@ -8,6 +8,7 @@ import be.isservers.hmb.slashCommand.guildCommand.music.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import javax.annotation.Nullable;
@@ -42,7 +43,6 @@ public class SlashCommandManager {
 
         guildCommands.queue();
 
-
         /*CommandListUpdateAction globalCommands = Bot.jda.updateCommands();
         globalCommands.queue();*/
     }
@@ -50,7 +50,7 @@ public class SlashCommandManager {
     private void addCommand(CommandListUpdateAction listCommands,SlashCommand cmd){
         if (isCommandExist(cmd.getName())) throw new IllegalArgumentException("A command with this name is already present");
 
-        CommandData cd = new CommandData(cmd.getName(),cmd.getHelp());
+        CommandData cd = new CommandData(cmd.getName(),cmd.getHelp()).setDefaultEnabled(cmd.isEnabled());
         for (SlashCommandParamaterItem scpi : cmd.getParam()) {
             cd.addOptions(new OptionData(scpi.getOptionType(),scpi.getName(), scpi.getDescription(), scpi.getRequired()));
         }

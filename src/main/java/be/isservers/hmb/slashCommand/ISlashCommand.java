@@ -8,5 +8,7 @@ public interface ISlashCommand {
 
     String getHelp();
 
+    default Boolean isEnabled() { return true; };
+
     int getType();
 }

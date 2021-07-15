@@ -27,4 +27,7 @@ public class SetEvanChannelCommand extends SlashCommand {
     public String getHelp() {
         return "Défini le canal où le E-Van pourra fonctionner";
     }
+
+    @Override
+    public Boolean isEnabled() { return false; }
 }

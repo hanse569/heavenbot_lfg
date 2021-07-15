@@ -27,4 +27,7 @@ public class SetDungeonChannelCommand extends SlashCommand {
     public String getHelp() {
         return "Défini le canal où les évenements organisés sont affichés";
     }
+
+    @Override
+    public Boolean isEnabled() { return false; }
 }

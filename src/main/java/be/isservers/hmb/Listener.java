@@ -10,16 +10,16 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.List;
+import java.util.Map;
 
 public class Listener extends ListenerAdapter {
 
@@ -48,6 +48,23 @@ public class Listener extends ListenerAdapter {
                     new Timer(TIME_BETWEEN_AUTO_DELETE,new LFGautoDeleteEvent()).start();
                     worldEventManager.Load();
                     slashCommandManager.Init();
+
+                    for (Command command : guild.retrieveCommands().complete()) {
+                        if (command.getName().startsWith("set")) {
+                            System.out.println(command.getName() + ": " + command.getId());
+                            guild.updateCommandPrivilegesById(command.getId(),CommandPrivilege.enable(guild.getRoleById("486419048150859781"))).queue();
+                        }
+                    }
+
+                    guild.retrieveCommandPrivileges().queue( commands -> {
+                            for (Map.Entry<String, List<CommandPrivilege>> entry : commands.entrySet()){
+                                for (CommandPrivilege commandPrivilege : entry.getValue()) {
+                                    System.out.println(entry.getKey() + ": " + commandPrivilege.getType() + " | " + commandPrivilege.isEnabled() + " | " + commandPrivilege.getIdLong());
+                                }
+                            }
+                        }
+                    );
+
                 }
             }
         }

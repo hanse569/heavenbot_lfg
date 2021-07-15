@@ -27,4 +27,7 @@ public class SetGazetteChannelCommand extends SlashCommand {
     public String getHelp() {
         return "Défini le canal où E-Van affichera les informations hebdomadaire";
     }
+
+    @Override
+    public Boolean isEnabled() { return false; }
 }
