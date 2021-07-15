@@ -3,6 +3,7 @@ package be.isservers.hmb;
 import be.isservers.hmb.api.ApiVerticle;
 import be.isservers.hmb.lfg.LFGemoteManagement;
 import be.isservers.hmb.lfg.LFGmain;
+import be.isservers.hmb.web.MainVerticle;
 import io.vertx.core.Vertx;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -57,7 +58,7 @@ public class Bot {
     public static void main(String[] args) throws LoginException {
         new Bot();
         final Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new ApiVerticle());
+        vertx.deployVerticle(new MainVerticle(vertx));
     }
 
 }

@@ -1,0 +1,61 @@
+[
+  {
+    "titlePage": "Musiques",
+    "descriptionPage" : "Toutes les commandes pour le bot musical"
+  },
+  {
+    "title": "Jouer une musique",
+    "alias" : "pl, start",
+    "commands" : [
+      {
+        "title": "play",
+        "args": "Lien ou mot-clé",
+        "des": "Ajoute une musique via un mot-clé ou bien un lien (Youtube, Youtube Music et Twitch). Ajoute la musique dans la file d'attente si une musique est déjà en cours."
+      }
+    ]
+  },
+  {
+    "title": "Arrêter une musique",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "stop",
+        "args": "",
+        "des": "Arrête la chanson en cours et efface la file d'attente"
+      }
+    ]
+  },
+  {
+    "title": "Passer une musique",
+    "alias" : "next",
+    "commands" : [
+      {
+        "title": "skip",
+        "args": "",
+        "des": "Passe à la musique suivante"
+      }
+    ]
+  },
+  {
+    "title": "Voir la musique en cours",
+    "alias" : "now, np",
+    "commands" : [
+      {
+        "title": "nowplaying",
+        "args": "",
+        "des": "Affiche la chanson en cours de lecture"
+      }
+    ]
+  },
+  {
+    "title": "Voir la liste d'attente",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "queue",
+        "args": "",
+        "des": "Affiche les chansons en file d'attente"
+      }
+    ]
+  }
+]

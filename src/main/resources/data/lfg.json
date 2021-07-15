@@ -1,0 +1,70 @@
+[
+  {
+    "titlePage": "Looking for Group",
+    "descriptionPage" : "Toutes les commandes pour la programmation d'evenement"
+  },
+  {
+    "title": "Création d'un evenement",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "lfg",
+        "args": "donjon",
+        "des": "Permet de planifier un donjon de Shadowlands"
+      },
+      {
+        "title": "lfg",
+        "args": "raid",
+        "des": "Permet de planifier un raid de Shadowlands"
+      },
+      {
+        "title": "lfg",
+        "args": "jcj",
+        "des": "Permet de planifier un evenement PVP"
+      }
+    ]
+  },
+  {
+    "title": "Edition d'un evenement",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "lfg",
+        "args": "edit",
+        "des": "Permet de modifier un évènement"
+      },
+      {
+        "title": "lfg",
+        "args": "delete",
+        "des": "Permet de supprimer un évènement"
+      }
+    ]
+  },
+  {
+    "title": "Verrouillage d'un evenement",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "lfg",
+        "args": "lock",
+        "des": "Permet de verrouillé un evenement que l'on a créé. Un evenement verrouillé est un évenement qui n'est pas encore passé, on verrouille simplement les inscriptions et désinscription."
+      },
+      {
+        "title": "lfg",
+        "args": "unlock",
+        "des": "Permet de déverrouillé un evenement que l'on a verrouillé."
+      }
+    ]
+  },
+  {
+    "title": "Annulation des modifications",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "lfg",
+        "args": "cancel",
+        "des": "Permet d'annuler toutes actions en cours."
+      }
+    ]
+  }
+]

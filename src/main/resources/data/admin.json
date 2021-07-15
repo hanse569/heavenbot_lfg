@@ -1,0 +1,76 @@
+[
+  {
+    "titlePage": "Administrateur",
+    "descriptionPage" : "Pour ces commandes, il est nécessaire d'avoir la permission administrateur"
+  },
+  {
+    "title": "Suppression de messages pour un channel spécifique",
+    "alias" : "cc,cclear",
+    "commands" : [
+      {
+        "title": "cchannel",
+        "args": "",
+        "des": "Efface 100 messages dans à partir du channel où la commande est lancée"
+      },
+      {
+        "title": "cchannel",
+        "args": "montant à supprimer",
+        "des": "Efface le nombre de message voulu à partir du channel où la commande est lancée"
+      }
+    ]
+  },
+  {
+    "title": "Configuration du préfix",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "setprefix",
+        "args": "",
+        "des": "Permet de définir le préfixe de E-van"
+      }
+    ]
+  },
+  {
+    "title": "Configuration des channels <small class='text-success'>a utiliser dans le channel désirer</small>",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "setevanchannel",
+        "args": "",
+        "des": "Permet de définir le canal où le E-Van pourra fonctionner"
+      },
+      {
+        "title": "setdungeonchannel",
+        "args": "",
+        "des": "Permet de définir le canal où les évenements organisés sont affichés"
+      },
+      {
+        "title": "setgazettechannel",
+        "args": "",
+        "des": "Permet de définir le canal où E-Van affichera les informations hebdomadaire (ex: Affixes tout les mercredi à 9h15)"
+      }
+    ]
+  },
+  {
+    "title": "Ping",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "ping",
+        "args": "",
+        "des": "Affiche le ping actuel du bot vers les serveurs Discord"
+      }
+    ]
+  },
+  {
+    "title": "Arrêt du bot",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "shutdown",
+        "args": "",
+        "des": "<small class='text-danger'>MALA UNIQUEMENT </small> Faut vraiment être con pour ne pas comprendre ce que fait cette commande"
+      }
+    ]
+  }
+]

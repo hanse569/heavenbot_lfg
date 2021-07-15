@@ -1,0 +1,39 @@
+[
+  {
+    "titlePage": "Informations",
+    "descriptionPage" : "Ensemble de commandes d'informations"
+  },
+  {
+    "title": "Information sur le jeton WoW",
+    "alias": "",
+    "commands": [
+      {
+        "title": "token",
+        "args": "",
+        "des": "Permet d'obtenir le cours actuelle du Token WOW en pièce d'or"
+      }
+    ]
+  },
+  {
+    "title": "WorldBoss de la semaine",
+    "alias": "wb",
+    "commands": [
+      {
+        "title": "worldboss",
+        "args": "",
+        "des": "Indique les world boss actuellement présent pour le contenu de Shadowlands, Battle For Azeroth et Légion"
+      }
+    ]
+  },
+  {
+    "title": "WorldEvent de la semaine",
+    "alias": "we, event",
+    "commands": [
+      {
+        "title": "worldevent",
+        "args": "",
+        "des": "Indique les world event actuellement présent"
+      }
+    ]
+  }
+]
