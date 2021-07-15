@@ -1,11 +1,11 @@
-package be.isservers.hmb.command.publicCommands.music;
+package be.isservers.hmb.slashCommand.guildCommand.music;
 
 import be.isservers.hmb.Config;
-import be.isservers.hmb.command.CommandContext;
-import be.isservers.hmb.command.ICommand;
 import be.isservers.hmb.lavaplayer.HmbTwitchAudioTrack;
 import be.isservers.hmb.lavaplayer.HmbYoutubeAudioTrack;
 import be.isservers.hmb.lavaplayer.PlayerManager;
+import be.isservers.hmb.slashCommand.SlashCommand;
+import be.isservers.hmb.slashCommand.SlashCommandContext;
 import be.isservers.hmb.utils.MessageUtils;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -14,43 +14,23 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.util.List;
-
-public class NowPlayingCommand implements ICommand {
+public class NowPlayingCommand extends SlashCommand {
+    @Override
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
-    public void handle(CommandContext ctx) {
-        final TextChannel channel = ctx.getChannel();
+    public void handle(SlashCommandContext ctx) {
+        final GuildVoiceState selfVoiceState = ctx.getSelfMember().getVoiceState();
+        final GuildVoiceState memberVoiceState = ctx.getMember().getVoiceState();
 
-        final Member self = ctx.getSelfMember();
-        final GuildVoiceState selfVoiceState = self.getVoiceState();
-
-        if (!ctx.getChannel().getId().equals(Config.getIdChannelEvan())){
-            return;
-        }
-
-        if (!selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage(":x: J'ai besoin d'être dans un canal vocal pour que cela fonctionne").queue();
-            return;
-        }
-
-        final Member member = ctx.getMember();
-        final GuildVoiceState memberVoiceState = member.getVoiceState();
-
-        if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage(":x: Vous devez être dans un canal vocal pour que cette commande fonctionne").queue();
-            return;
-        }
-
-        if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage(":x: Vous devez être sur le même canal vocal que moi pour que cela fonctionne").queue();
-            return;
-        }
+        if (!this.checkEvanChannel(ctx.getEvent(),ctx.getChannel().getId())) return;
+        if (!this.checkSelfInVoiceChannel(ctx.getEvent(),selfVoiceState)) return;
+        if (!this.checkMemberInVoiceChannel(ctx.getEvent(),memberVoiceState)) return;
+        if (!this.checkSameVoiceChannel(ctx.getEvent(),selfVoiceState,memberVoiceState)) return;
 
         final AudioPlayer audioPlayer = PlayerManager.getInstance().getMusicManager(ctx.getGuild()).audioPlayer;
         final AudioTrack audioTrack = audioPlayer.getPlayingTrack();
 
         if (audioPlayer.getPlayingTrack() == null) {
-            channel.sendMessage("Il n'y a pas de lecture actuellement").queue();
+            ctx.getEvent().reply("Il n'y a pas de lecture actuellement").queue();
             return;
         }
 
@@ -68,12 +48,7 @@ public class NowPlayingCommand implements ICommand {
             eb.setDescription("Ajouté par " + audioTrackTwitch.getAuthor().getName());
             eb.setThumbnail("https://img.youtube.com/vi/"+audioTrackTwitch.getIdentifier()+"/1.jpg");
         }
-        MessageUtils.SendPublicRichEmbed(channel,eb.build());
-    }
-
-    @Override
-    public int getType() {
-        return this.PUBLIC_COMMAND;
+        ctx.getEvent().replyEmbeds(eb.build()).queue();
     }
 
     @Override
@@ -83,11 +58,11 @@ public class NowPlayingCommand implements ICommand {
 
     @Override
     public String getHelp() {
-        return "Affiche la chanson en cours de lecture";
+        return "Shows the current playing song";
     }
 
     @Override
-    public List<String> getAliases() {
-        return List.of("now", "np");
+    public int getType() {
+        return SlashCommand.GUILD_COMMAND;
     }
 }

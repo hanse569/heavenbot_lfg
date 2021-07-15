@@ -41,7 +41,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (endReason.mayStartNext) {
             nextTrack();
         }
-        if(queue.isEmpty()) {
+        else if(queue.isEmpty() && endReason != AudioTrackEndReason.REPLACED) {
             player.destroy();
             Bot.jda.getGuilds().get(0).getAudioManager().closeAudioConnection();
         }
