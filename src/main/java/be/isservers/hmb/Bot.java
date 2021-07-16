@@ -1,6 +1,5 @@
 package be.isservers.hmb;
 
-import be.isservers.hmb.api.ApiVerticle;
 import be.isservers.hmb.lfg.LFGemoteManagement;
 import be.isservers.hmb.lfg.LFGmain;
 import be.isservers.hmb.web.MainVerticle;

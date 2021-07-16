@@ -6,7 +6,6 @@ import be.isservers.hmb.utils.SQLiteSource;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.jetbrains.annotations.NotNull;
@@ -148,7 +147,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     }
 
     public void RefreshEvent() {
-        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon()).editMessageById(this.getIdMessageDiscord(),this.getEmbedBuilder().build()).queue();
+        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon()).editMessageEmbedsById(this.getIdMessageDiscord(),this.getEmbedBuilder().build()).queue();
 
         TextChannel tc = LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon());
         if(this.getDateToDate().before(Calendar.getInstance().getTime()) || this.isLocked()){

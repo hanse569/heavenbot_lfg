@@ -2,15 +2,12 @@ package be.isservers.hmb.command.publicCommands.RaiderIO;
 
 import be.isservers.hmb.command.CommandContext;
 import be.isservers.hmb.command.ICommand;
-import be.isservers.hmb.utils.HttpRequest;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -35,7 +32,7 @@ public class ProgressCommand implements ICommand {
         eb.addField("Role",":crossed_swords: DPS",true);
         eb.setTimestamp(Calendar.getInstance().toInstant());
 
-        ctx.getChannel().sendMessage(eb.build()).queue();
+        ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
 
         try {
             Document document = Jsoup.connect("http://evan.isservers.be").get();

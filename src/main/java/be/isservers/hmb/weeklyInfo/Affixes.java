@@ -35,7 +35,7 @@ public class Affixes extends WeeklyInfo {
             this.setEmbedTitle(":fire: " + title);
             this.setEmbedDescription(sb);
 
-            LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelGazette()).sendMessage(this.getEmbedMessage()).queue();
+            LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelGazette()).sendMessageEmbeds(this.getEmbedMessage()).queue();
         }
     }
 

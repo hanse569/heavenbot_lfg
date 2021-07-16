@@ -113,7 +113,7 @@ public class LFGdataManagement {
                     od.setDescription(rs.getString("description"));
                     od.setLock(rs.getInt("locked"));
 
-                    LOGGER.info("Event find: " + od.toString(), event.getJDA().getSelfUser().getAsTag());
+                    LOGGER.info("Event find: " + od, event.getJDA().getSelfUser().getAsTag());
 
                     tmpList.add(od);
                 }

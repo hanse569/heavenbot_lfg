@@ -21,7 +21,6 @@ public class CommandManager {
 
     CommandManager() {
         addCommand(new ClearChannelCommand());
-        addCommand(new ConnectCommand());
         addCommand(new PingCommand());
         addCommand(new SetDungeonChannel());
         addCommand(new SetEvanChannel());

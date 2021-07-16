@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class Config {
 
-    private static HashMap<String,String> data = new HashMap<>();
+    private static final HashMap<String,String> data = new HashMap<>();
 
     public static void Initialize(){
         try{

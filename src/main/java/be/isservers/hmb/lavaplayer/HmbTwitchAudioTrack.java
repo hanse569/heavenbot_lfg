@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.User;
 
 public class HmbTwitchAudioTrack extends TwitchStreamAudioTrack {
 
-    private User author;
+    private final User author;
 
     HmbTwitchAudioTrack(TwitchStreamAudioTrack yat, User author) {
         super(yat.getInfo(), (TwitchStreamAudioSourceManager) yat.getSourceManager());
