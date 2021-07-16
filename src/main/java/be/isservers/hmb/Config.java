@@ -22,6 +22,7 @@ public class Config {
             data.put("emoji_heal",SQLiteSource.getTable(getQuery("EMOJIHEAL")).getString("value"));
             data.put("emoji_dps",SQLiteSource.getTable(getQuery("EMOJIDPS")).getString("value"));
             data.put("emoji_delete",SQLiteSource.getTable(getQuery("EMOJIDELETE")).getString("value"));
+            data.put("web_port",SQLiteSource.getTable(getQuery("WEB_PORT")).getString("value"));
         }
         catch (SQLException ex){
             ex.printStackTrace();
@@ -46,6 +47,8 @@ public class Config {
     public static String getEmojiDPS(){ return data.get("emoji_dps"); }
     public static String getEmojiDELETE(){ return data.get("emoji_delete"); }
 
+    public static int getWebPort() { return Integer.parseInt(data.get("web_port")); }
+
     public static void setPrefix(String value) {
         data.put("prefix",value);
         SQLiteSource.modifyParameter("UPDATE MB_guild_settings SET value = ? WHERE parameter LIKE 'prefix';",value);
@@ -65,8 +68,4 @@ public class Config {
         data.put("id_channel_gazette",value);
         SQLiteSource.modifyParameter("UPDATE MB_guild_settings SET value = ? WHERE parameter LIKE 'IDCHANNELGAZETTE';",value);
     }
-
-
-
-
 }

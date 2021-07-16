@@ -1,11 +1,6 @@
 {% extends "../templates/default.peb" %}
 
 {% block content %}
-<?php
-    use App\OAuth2Discord;
-    use App\Event;
-?>
-
 <div class="page-heading">
     <div class="page-title">
         <div class="row">

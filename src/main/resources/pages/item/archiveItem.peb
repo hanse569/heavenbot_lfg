@@ -1,4 +1,4 @@
-<tr class='hoverTr clickable-row' data-href='index.php?p=event&id={{id}}'>
+<tr class='hoverTr clickable-row' data-href='/archive/{{id}}'>
     <td class='text-bold-500'>
         <div class='btn icon me-2 {{classState}}'>
             <i data-feather='check'></i>

@@ -1,5 +1,6 @@
 package be.isservers.hmb.web;
 
+import be.isservers.hmb.Config;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.lfg.library.OrganizedDate;
 import io.vertx.core.AbstractVerticle;
@@ -19,6 +20,7 @@ import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
 import io.vertx.ext.web.templ.pebble.PebbleTemplateEngine;
+import net.dv8tion.jda.api.entities.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +72,8 @@ public class MainVerticle extends AbstractVerticle{
         router.route("/index").handler(this::index);
         router.route("/logs").handler(this::logs);
         router.route("/command/:cat").handler(this::command);
-        router.route("/archive").handler(this::archive);
+        router.route("/archive").handler(this::events);
+        router.route("/archive/:event").handler(this::event);
 
         router.route("/discord").handler(this::discord);
         router.route("/callback").handler(this::discordCallback);
@@ -82,8 +85,8 @@ public class MainVerticle extends AbstractVerticle{
 
         router.errorHandler(404, this::error_404);
 
-        server.requestHandler(router).listen(8080);
-        LOGGER.info("Serveur web demarre");
+        server.requestHandler(router).listen(Config.getWebPort());
+        LOGGER.info("Web server started");
     }
 
     private void error_404(RoutingContext routingContext) {
@@ -268,34 +271,44 @@ public class MainVerticle extends AbstractVerticle{
         });
     }
 
-    public void archive(RoutingContext routingContext) {
+    public void events(RoutingContext routingContext) {
         if (routingContext.session().get("data") == null) {
             routingContext.session().put("state", new SweetAlert2(SweetAlert2.ERROR, "Vous n'êtes pas connecté"));
             routingContext.reroute("/");
         }
         else {
-            final TemplateEngine engine = PebbleTemplateEngine.create(vertx);
+            TemplateEngine engine = PebbleTemplateEngine.create(vertx);
 
             Map<String, Object> vars = this.getVars();
             vars.put("archive","archive");
 
-            SessionData sessionData = routingContext.session().get("data");
-            vars.put("image", sessionData.getImageLink());
-            vars.put("name", sessionData.getName());
+            String filepath;
 
-            try {
-                StringBuilder sb = new StringBuilder();
-                for (OrganizedDate organizedDate : LFGdataManagement.listDate) {
-                    sb.append(new RenderEvents(organizedDate,false).build());
-                }
-                for (OrganizedDate organizedDate : LFGdataManagement.listDateArchived) {
-                    sb.append(new RenderEvents(organizedDate,true).build());
-                }
-                vars.put("events",sb.toString());
+            if (routingContext.request().getParam("event") != null) {
+                filepath = "pages/detailArchive";
+
+
             }
-            catch (IOException ignored) {}
+            else {
+                SessionData sessionData = routingContext.session().get("data");
+                vars.put("image", sessionData.getImageLink());
+                vars.put("name", sessionData.getName());
+                filepath = "pages/archive";
 
-            engine.render(vars, "pages/archive", res -> {
+                try {
+                    StringBuilder sb = new StringBuilder();
+                    for (OrganizedDate organizedDate : LFGdataManagement.listDate) {
+                        sb.append(new RenderEvents(organizedDate,false).build());
+                    }
+                    for (OrganizedDate organizedDate : LFGdataManagement.listDateArchived) {
+                        sb.append(new RenderEvents(organizedDate,true).build());
+                    }
+                    vars.put("events",sb.toString());
+                }
+                catch (IOException ignored) {}
+            }
+
+            engine.render(vars, filepath, res -> {
                 if (res.succeeded()) {
                     routingContext.response().end(res.result());
                 } else {
@@ -303,5 +316,107 @@ public class MainVerticle extends AbstractVerticle{
                 }
             });
         }
+
     }
+
+    public void event(RoutingContext routingContext) {
+        if (routingContext.session().get("data") == null) {
+            routingContext.session().put("state", new SweetAlert2(SweetAlert2.ERROR, "Vous n'êtes pas connecté"));
+            routingContext.reroute("/");
+        }
+        else {
+            int id = Integer.parseInt(routingContext.request().getParam("event"));
+            OrganizedDate od = LFGdataManagement.listDate.stream()
+                    .filter(organizedDate -> id == organizedDate.getId()).findAny().orElse(null);
+
+            OrganizedDate od1 = LFGdataManagement.listDateArchived.stream()
+                    .filter(organizedDate -> id == organizedDate.getId()).findAny().orElse(null);
+
+            if (od == null && od1 == null) {
+                routingContext.session().put("state", new SweetAlert2(SweetAlert2.ERROR, "L'évenement n'existe pas"));
+                routingContext.reroute("/archive");
+            }
+            else {
+                final TemplateEngine engine = PebbleTemplateEngine.create(vertx);
+
+                Map<String, Object> vars = new HashMap<>();
+
+                if (od == null) {
+                    vars.put("stateClassCSS","btn-secondary");
+                    vars.put("stateName","Terminé");
+                    od = od1;
+                } else if (od.isLocked()) {
+                    vars.put("stateClassCSS","btn-warning");
+                    vars.put("stateName","Verrouillé");
+                } else {
+                    vars.put("stateClassCSS","btn-success");
+                    vars.put("stateName","Ouvert");
+                }
+
+                if (od.getDifficulty() == 0) {
+                    if (od.getInstance().getType() == 3) {
+                        vars.put("difficulte","Non coté");
+                    } else {
+                        vars.put("difficulte","Normal");
+                    }
+                } else if (od.getDifficulty() == 1) {
+                    if (od.getInstance().getType() == 3) {
+                        vars.put("difficulte","Coté");
+                    } else {
+                        vars.put("difficulte","Heroique");
+                    }
+                } else if (od.getDifficulty() == 2) {
+                    vars.put("difficulte","Mythique");
+                } else {
+                    vars.put("difficulte","(Null)");
+                }
+
+                vars.put("instanceName",od.getInstance().getName());
+                vars.put("instanceImg",od.getInstance().getThumbmail());
+                vars.put("difficulte","");
+                vars.put("description",od.getDescription());
+                vars.put("author",od.getAdmin());
+                vars.put("date",od.getDateToString());
+
+                try {
+                    StringBuilder sbTank = new StringBuilder();
+                    for (String userId : od.getTankList()) {
+                        Member member = LFGdataManagement.heavenDiscord.getMemberById(userId);
+                        sbTank.append(new RenderRole(member.getEffectiveName(), member.getUser().getAvatarUrl()).build());
+                    }
+                    vars.put("tank",sbTank.toString());
+
+                    StringBuilder sbHeal = new StringBuilder();
+                    for (String userId : od.getHealList()) {
+                        Member member = LFGdataManagement.heavenDiscord.getMemberById(userId);
+                        sbHeal.append(new RenderRole(member.getEffectiveName(), member.getUser().getAvatarUrl()).build());
+                    }
+                    vars.put("heal",sbHeal.toString());
+
+                    StringBuilder sbDps = new StringBuilder();
+                    for (String userId : od.getDpsList()) {
+                        Member member = LFGdataManagement.heavenDiscord.getMemberById(userId);
+                        sbDps.append(new RenderRole(member.getEffectiveName(), member.getUser().getAvatarUrl()).build());
+                    }
+                    vars.put("dps",sbDps.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                engine.render(vars, "pages/detailArchive", res -> {
+                    if (res.succeeded()) {
+                        routingContext.response().end(res.result());
+                    } else {
+                        routingContext.fail(res.cause());
+                    }
+                });
+            }
+
+
+
+        }
+
+    }
+
+
 }
