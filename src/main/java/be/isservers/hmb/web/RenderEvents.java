@@ -2,8 +2,6 @@ package be.isservers.hmb.web;
 
 import be.isservers.hmb.lfg.library.OrganizedDate;
 
-import java.util.Calendar;
-
 public class RenderEvents extends Render{
     OrganizedDate od;
 
@@ -45,15 +43,22 @@ public class RenderEvents extends Render{
     }
 
     public String build() {
-        String buffer1,buffer2,buffer3;
-        buffer1 = surround("i data-feather='check'");
-        buffer1 = surround("div class='btn icon me-2 " + this.classState + "'", buffer1);
-        buffer1 = surround("td class='text-bold-500'", buffer1 + this.od.getInstance());
-
-        buffer2 = surround("td", this.difficulte);
-
-        buffer3 = surround("td", od.getDateToString());
-
-        return surround("tr class='hoverTr clickable-row' data-href='index.php?p=event&id=" + od.getId() + " '", buffer1 + buffer2 + buffer3);
+        template = template.replace("{{id}}",String.valueOf(this.od.getId()));
+        template = template.replace("{{classState}}",this.classState);
+        template = template.replace("{{instance}}",this.od.getInstance().getName());
+        template = template.replace("{{difficulte}}",this.difficulte);
+        template = template.replace("{{date}}",this.od.getDateToString());
+        return template;
     }
+
+    String template =
+        "<tr class='hoverTr clickable-row' data-href='index.php?p=event&id={{id}}'>" +
+            "<td class='text-bold-500'>" +
+                "<div class='btn icon me-2 {{classState}}'>" +
+                    "<i data-feather='check'></i>" +
+                "</div>" +
+                "{{instance}}</td>" +
+            "<td>{{difficulte}}</td>" +
+            "<td>{{date}}</td>" +
+        "</tr>";
 }
