@@ -3,11 +3,7 @@ package be.isservers.hmb.lfg.library;
 import be.isservers.hmb.Config;
 import be.isservers.hmb.lfg.LFGdataManagement;
 import be.isservers.hmb.utils.SQLiteSource;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,6 +68,9 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
         return dateFormat.format(this.getDateToDate());
     }
     public String getDescription() { return description; }
+    public ArrayList<String> getTankList() { return TankList; }
+    public ArrayList<String> getHealList() { return HealList; }
+    public ArrayList<String> getDpsList() { return DpsList; }
 
     public EmbedBuilder getEmbedBuilder(){
         EmbedBuilder eb = new EmbedBuilder();
@@ -145,7 +144,7 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     }
 
     public void RefreshEvent() {
-        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon()).editMessageById(this.getIdMessageDiscord(),this.getEmbedBuilder().build()).queue();
+        LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon()).editMessageEmbedsById(this.getIdMessageDiscord(),this.getEmbedBuilder().build()).queue();
 
         TextChannel tc = LFGdataManagement.heavenDiscord.getTextChannelById(Config.getIdChannelDonjon());
         if(this.getDateToDate().before(Calendar.getInstance().getTime()) || this.isLocked()){
@@ -192,34 +191,4 @@ public class OrganizedDate implements Comparable<OrganizedDate>{
     public int compareTo(@NotNull OrganizedDate o) {
         return this.getDateToDate().compareTo(o.getDateToDate());
     }
-
-    public JsonObject toJsonObject(){
-        JsonObject jo = new JsonObject();
-        jo.put("id",this.getId());
-        jo.put("admin",this.getAdmin());
-        jo.put("instance",this.getInstance().getName());
-        jo.put("typeinstance",this.getInstance().getType());
-        jo.put("imginstance",this.getInstance().getThumbmail());
-        jo.put("difficulte",this.getDifficulty());
-        jo.put("date",this.getDateToRequest());
-        jo.put("description",this.getDescription());
-        jo.put("TANK",this.listToJsonArray(this.TankList));
-        jo.put("HEAL",this.listToJsonArray(this.HealList));
-        jo.put("DPS",this.listToJsonArray(this.DpsList));
-        jo.put("locked",this.isLocked());
-        return jo;
-    }
-
-    private JsonArray listToJsonArray(List<String> roleList){
-        JsonArray ja = new JsonArray();
-        for (String player : roleList) {
-            Member member = LFGdataManagement.heavenDiscord.getMemberById(player);
-            JsonObject jo = new JsonObject();
-            jo.put("name",member.getEffectiveName());
-            jo.put("img",member.getUser().getAvatarUrl());
-            ja.add(jo);
-        }
-        return ja;
-    }
-
 }

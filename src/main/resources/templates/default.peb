@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evan Discord Bot</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="shortcut icon" href="/images/logo/wow.svg" type="image/x-icon">
+</head>
+
+<body>
+<div id="app">
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
+            <div class="sidebar-header">
+                <div class="d-flex justify-content-between">
+                    <div class="logo mx-auto d-block">
+                        <a href="/"><img class="h-auto logoCustom" src="{{guildImage}}" alt="Logo" srcset=""></a>
+                    </div>
+                    <div class="toggler">
+                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-menu">
+                <ul class="menu">
+                    <li class="sidebar-item {% if home is defined %} active {% endif %}">
+                        <a href="/index" class='sidebar-link'>
+                            <i class="fas fa-home"></i>
+                            <span>Acceuil</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {% if logs is defined %} active {% endif %}">
+                        <a href="/logs" class='sidebar-link'>
+                            <i class="fas fa-list"></i>
+                            <span>WarcraftLogs</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-title">Documentation</li>
+
+                    <li class="sidebar-item {% if admin is defined %} active {% endif %}">
+                        <a href="/command/admin" class='sidebar-link'>
+                            <i class="fa fa-user-cog"></i>
+                            <span>Administrateur</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {% if divers is defined %} active {% endif %}">
+                        <a href="/command/divers" class='sidebar-link'>
+                            <i class="fa fa-toolbox"></i>
+                            <span>Divers</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {% if info is defined %} active {% endif %}">
+                        <a href="/command/info" class='sidebar-link'>
+                            <i class="fa fa-newspaper"></i>
+                            <span>Information</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {% if lfg is defined %} active {% endif %}">
+                        <a href="/command/lfg" class='sidebar-link'>
+                            <i class="fa fa-search"></i>
+                            <span>Looking for Group</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {% if music is defined %} active {% endif %}">
+                        <a href="/command/music" class='sidebar-link'>
+                            <i class="fa fa-music"></i>
+                            <span>Musique</span>
+                        </a>
+                    </li>
+
+                    {% if name is defined %}
+                    <li class="sidebar-title">Administration</li>
+
+                    <li class="sidebar-item {% if archive is defined %} active {% endif %}">
+                        <a href="/archive" class='sidebar-link'>
+                            <i class="fas fa-database"></i>
+                            <span>Archives</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+            <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+        </div>
+    </div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        {% block content %}
+            to be replaced by template inheritance
+        {% endblock %}
+
+        <footer class="">
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-start">
+                    <p>2021 &copy; Evan Discord Bot</p>
+                </div>
+                <div class="float-end">
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/js/all.min.js"></script>
+
+<script>
+    for (let element of document.getElementsByClassName("clickable-row")) {
+        element.addEventListener("click", function () {
+            window.location = element.getAttribute("data-href");
+        });
+    }
+</script>
+<script>
+    {% if sweetalert is defined %}
+    {{ sweetalert | raw }}
+    {% endif %}
+</script>
+
+</body>
+
+</html>

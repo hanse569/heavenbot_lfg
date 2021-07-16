@@ -1,0 +1,33 @@
+[
+  {
+  "titlePage": "Divers",
+  "descriptionPage" : "Ensemble de commandes divers"
+  },
+  {
+    "title": "Aide pour les commandes",
+    "alias" : "commands, cmds, commandlist",
+    "commands" : [
+      {
+        "title": "help",
+        "args": "",
+        "des": "Affiche la liste des commandes de E-van"
+      },
+      {
+        "title": "help",
+        "args": "Nom d'une commande",
+        "des": "Affiche une aide concernant la commande tapé"
+      }
+    ]
+  },
+  {
+    "title": "Accès aux commandes de Looking for group",
+    "alias" : "",
+    "commands" : [
+      {
+        "title": "lfg",
+        "args": "",
+        "des": "Redirige vers la conversation privé avec le bot"
+      }
+    ]
+  }
+]

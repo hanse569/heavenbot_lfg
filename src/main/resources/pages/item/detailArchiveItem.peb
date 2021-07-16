@@ -1,0 +1,8 @@
+<div class="d-flex align-items-center px-4 py-1">
+    <div class="avatar">
+        <img src="{{image}}">
+    </div>
+    <span class="fw-600 ms-4 mb-0">
+        {{name}}
+    </span>
+</div>

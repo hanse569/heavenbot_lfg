@@ -39,7 +39,7 @@ public class WorldEventCommand implements ICommand {
             eb.setTitle(":newspaper: Evenement mondial de cette semaine");
             eb.setDescription(sb.toString());
 
-            ctx.getChannel().sendMessage(eb.build()).queue();
+            ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
         } catch (IOException e) {
             e.printStackTrace();
         }

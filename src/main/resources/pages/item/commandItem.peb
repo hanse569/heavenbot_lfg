@@ -1,0 +1,9 @@
+<div class="card">
+    <div class="card-header">
+        <h4>{{title}}</h4>
+        {{alias}}
+    </div>
+    <div class="card-body">
+        {{commands}}
+    </div>
+</div>

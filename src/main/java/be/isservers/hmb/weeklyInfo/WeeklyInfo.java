@@ -11,7 +11,7 @@ import java.util.TimerTask;
 
 public abstract class WeeklyInfo extends TimerTask {
 
-    private EmbedBuilder eb = new EmbedBuilder();
+    private final EmbedBuilder eb = new EmbedBuilder();
 
     private final static long ONCE_PER_WEEK = 1000*60*60*24*7;
     private final static int NINE_AM = 9;

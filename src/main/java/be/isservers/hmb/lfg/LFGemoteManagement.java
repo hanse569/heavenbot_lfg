@@ -30,7 +30,7 @@ public class LFGemoteManagement extends ListenerAdapter {
                         else if(emoteReceive.equals("RE:" + Config.getEmojiDELETE())){
                             tmp.removeRoleList(event.getUser().getId());
                         }
-                        event.getChannel().editMessageById(event.getMessageId(),tmp.getEmbedBuilder().build()).complete();//ajoute l'actualisation du message
+                        event.getChannel().editMessageEmbedsById(event.getMessageId(),tmp.getEmbedBuilder().build()).complete();//ajoute l'actualisation du message
                         break;
                     }
                 }

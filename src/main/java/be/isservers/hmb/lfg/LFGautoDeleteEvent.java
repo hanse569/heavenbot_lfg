@@ -25,7 +25,7 @@ public class LFGautoDeleteEvent implements ActionListener {
         for (OrganizedDate od : LFGdataManagement.listDate) {
             if (od.getDateToDate().before(dateBefore14Days)) {
                 od.Delete();
-                LOGGER.info("Event deleted: " + od.toString());
+                LOGGER.info("Event deleted: " + od);
             }
         }
     }

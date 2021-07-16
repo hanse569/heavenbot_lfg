@@ -4,7 +4,7 @@ import be.isservers.hmb.lfg.library.OrganizedDate;
 
 class EditEvent {
 
-    private int action;
+    private final int action;
     int etape = 0;
     int type = -1;
     private OrganizedDate od;

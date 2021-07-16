@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evan Discord Bot</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="shortcut icon" href="/images/logo/wow.svg" type="image/x-icon">
+</head>
+
+<body>
+<nav class="navbar navbar-light">
+    <div class="container d-block">
+        <a class="btn btn-outline-primary align-middle" href="/archive"><i class="fas fa-chevron-left"></i> <span class="">Retour aux archives</span></a>
+    </div>
+</nav>
+
+<div class="container">
+    {% block content %}
+    to be replaced by template inheritance
+    {% endblock %}
+</div>
+</body>

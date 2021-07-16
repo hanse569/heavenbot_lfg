@@ -1,0 +1,10 @@
+<tr class='hoverTr clickable-row' data-href='/archive/{{id}}'>
+    <td class='text-bold-500'>
+        <div class='btn icon me-2 {{classState}}'>
+            <i data-feather='check'></i>
+        </div>
+        {{instance}}
+    </td>
+    <td>{{difficulte}}</td>
+    <td>{{date}}</td>
+</tr>
