@@ -6,21 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class RenderEvents implements Render {
-    String id;
+public class RenderIndex implements Render{
     String instance;
-    String date;
     String classState;
     String difficulte;
 
-    public RenderEvents(OrganizedDate od, Boolean isArchived) {
-        this.id = String.valueOf(od.getId());
+    public RenderIndex(OrganizedDate od) {
         this.instance = od.getInstance().getName();
-        this.date = od.getDateToString();
 
-        if (isArchived) {
-            this.classState = "btn-secondary";
-        } else if (od.isLocked()) {
+        if (od.isLocked()) {
             this.classState = "btn-warning";
         } else {
             this.classState = "btn-success";
@@ -46,13 +40,11 @@ public class RenderEvents implements Render {
     }
 
     public String build() throws IOException {
-        String template = new String(Files.readAllBytes(new File(getClass().getClassLoader().getResource("pages/item/archiveItem.peb").getFile()).toPath()));
+        String template = new String(Files.readAllBytes(new File(getClass().getClassLoader().getResource("pages/item/indexItem.peb").getFile()).toPath()));
 
-        template = template.replace("{{id}}", this.id);
         template = template.replace("{{classState}}", this.classState);
         template = template.replace("{{instance}}", this.instance);
         template = template.replace("{{difficulte}}", this.difficulte);
-        template = template.replace("{{date}}", this.date);
         return template;
     }
 }

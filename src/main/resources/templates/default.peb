@@ -22,7 +22,7 @@
             <div class="sidebar-header">
                 <div class="d-flex justify-content-between">
                     <div class="logo mx-auto d-block">
-                        <a href="/"><img class="h-auto logoCustom" src="https://cdn.discordapp.com/icons/241110646677176320/4a6a68577a6f49b1570b35447786ef46.png" alt="Logo" srcset=""></a>
+                        <a href="/"><img class="h-auto logoCustom" src="{{guildImage}}" alt="Logo" srcset=""></a>
                     </div>
                     <div class="toggler">
                         <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>

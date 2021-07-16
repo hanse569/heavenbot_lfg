@@ -52,6 +52,12 @@ public class MainVerticle extends AbstractVerticle{
                 .setHeaders(new JsonObject().put("Content-Type", "application/x-www-form-urlencoded"));
     }
 
+    private Map<String, Object> getVars() {
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("guildImage",LFGdataManagement.heavenDiscord.getIconUrl());
+        return vars;
+    }
+
     @Override
     public void start() throws Exception {
         super.start();
@@ -88,8 +94,17 @@ public class MainVerticle extends AbstractVerticle{
     private void index(RoutingContext routingContext) {
         final TemplateEngine engine = PebbleTemplateEngine.create(vertx);
 
-        Map<String, Object> vars = new HashMap<>();
+        Map<String, Object> vars = this.getVars();
         vars.put("home", "home");
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (OrganizedDate organizedDate : LFGdataManagement.listDate) {
+                sb.append(new RenderIndex(organizedDate).build());
+            }
+            vars.put("events",sb.toString());
+        }
+        catch (IOException ignored) {}
 
         if (routingContext.session().get("state") != null) {
             vars.put("sweetalert", ((SweetAlert2) routingContext.session().get("state")).generate());
@@ -165,7 +180,7 @@ public class MainVerticle extends AbstractVerticle{
     private void logs(RoutingContext routingContext) {
         final TemplateEngine engine = PebbleTemplateEngine.create(vertx);
 
-        Map<String, Object> vars = new HashMap<>();
+        Map<String, Object> vars = this.getVars();
         vars.put("logs", "logs");
 
         if (routingContext.session().get("data") != null) {
@@ -181,20 +196,18 @@ public class MainVerticle extends AbstractVerticle{
                 .getAbs("https://www.warcraftlogs.com:443/v1/reports/guild/H%C3%ABaven/elune/EU?start=" + calendar.getTimeInMillis() + "&api_key=ac847c8b762b99a3acef40e31eb6836a")
                 .send()
                 .onSuccess(response -> {
-                    JsonArray jsonArray = response.bodyAsJsonArray();
-                    StringBuilder sb = new StringBuilder();
-                    for (Object o : jsonArray) {
-                        JsonObject entries = (JsonObject) o;
-                        sb.append(
-                                new RenderLogs(
-                                        entries.getString("id"),
-                                        entries.getString("title"),
-                                        entries.getString("owner"),
-                                        entries.getString("start"))
-                                        .render()
-                        ).append("<hr>");
+                    try {
+                        JsonArray jsonArray = response.bodyAsJsonArray();
+                        StringBuilder sb = new StringBuilder();
+                        for (Object o : jsonArray) {
+                            JsonObject entries = (JsonObject) o;
+
+                            sb.append(new RenderLogs(entries).build()).append("<hr>");
+                        }
+                        vars.put("data", sb.substring(0, sb.length() - 4));
                     }
-                    vars.put("data", sb.substring(0, sb.length() - 4));
+                    catch (IOException ignored){}
+
                 })
                 .onComplete(event -> engine.render(vars, "pages/logs", res -> {
                     if (res.succeeded()) {
@@ -218,7 +231,7 @@ public class MainVerticle extends AbstractVerticle{
 
         String category = routingContext.request().getParam("cat");
 
-        Map<String, Object> vars = new HashMap<>();
+        Map<String, Object> vars = this.getVars();
         vars.put(category,category);
         vars.put("category",category);
 
@@ -239,9 +252,7 @@ public class MainVerticle extends AbstractVerticle{
 
             StringBuilder sb = new StringBuilder();
             for (Object o : jsonArray) {
-                JsonObject object = (JsonObject) o;
-                RenderCommands command = new RenderCommands(object);
-                sb.append(command.printCommand());
+                sb.append(new RenderCommands((JsonObject) o).build());
             }
             vars.put("commands",sb.toString());
         } catch (IOException | NullPointerException e) {
@@ -258,34 +269,39 @@ public class MainVerticle extends AbstractVerticle{
     }
 
     public void archive(RoutingContext routingContext) {
-        final TemplateEngine engine = PebbleTemplateEngine.create(vertx);
+        if (routingContext.session().get("data") == null) {
+            routingContext.session().put("state", new SweetAlert2(SweetAlert2.ERROR, "Vous n'êtes pas connecté"));
+            routingContext.reroute("/");
+        }
+        else {
+            final TemplateEngine engine = PebbleTemplateEngine.create(vertx);
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("archive","archive");
+            Map<String, Object> vars = this.getVars();
+            vars.put("archive","archive");
 
-        if (routingContext.session().get("data") != null) {
             SessionData sessionData = routingContext.session().get("data");
             vars.put("image", sessionData.getImageLink());
             vars.put("name", sessionData.getName());
-        }
 
-        StringBuilder sb = new StringBuilder();
-        for (OrganizedDate organizedDate : LFGdataManagement.listDate) {
-            sb.append(new RenderEvents(organizedDate,false).build());
-        }
-        for (OrganizedDate organizedDate : LFGdataManagement.listDateArchived) {
-            sb.append(new RenderEvents(organizedDate,true).build());
-        }
-        vars.put("events",sb.toString());
-
-        engine.render(vars, "pages/archive", res -> {
-            if (res.succeeded()) {
-                routingContext.response().end(res.result());
-            } else {
-                routingContext.fail(res.cause());
+            try {
+                StringBuilder sb = new StringBuilder();
+                for (OrganizedDate organizedDate : LFGdataManagement.listDate) {
+                    sb.append(new RenderEvents(organizedDate,false).build());
+                }
+                for (OrganizedDate organizedDate : LFGdataManagement.listDateArchived) {
+                    sb.append(new RenderEvents(organizedDate,true).build());
+                }
+                vars.put("events",sb.toString());
             }
-        });
+            catch (IOException ignored) {}
 
-
+            engine.render(vars, "pages/archive", res -> {
+                if (res.succeeded()) {
+                    routingContext.response().end(res.result());
+                } else {
+                    routingContext.fail(res.cause());
+                }
+            });
+        }
     }
 }

@@ -3,7 +3,11 @@ package be.isservers.hmb.web;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
-public class RenderCommands extends Render {
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+public class RenderCommands implements Render {
     private final String prefix = "?";
     private final String titre;
     private final String alias;
@@ -15,36 +19,44 @@ public class RenderCommands extends Render {
         this.listItem = jo.getJsonArray("commands");
     }
 
-    public String printCommand() {
-        String sb = this.cardHeader(this.titre, this.alias) + this.cardBody(listItem);
-        return this.surround("div class='card'", sb);
-    }
+    @Override
+    public String build() throws IOException {
+        String templateItem = new String(Files.readAllBytes(new File(getClass().getClassLoader().getResource("pages/item/commandItem.peb").getFile()).toPath()));
 
-    private String cardHeader(String titre,String alias){
-        String content = "";
+        templateItem = templateItem.replace("{{title}}", this.titre);
         if (alias.length() > 0) {
-            content = surround("small style='font-style: italic'","Alias: " + alias);
+            templateItem = templateItem.replace("{{alias}}", "<small style='font-style: italic'>Alias: " + this.alias + "</small>");
         }
-        return surround("div class='card-header'", surround("h4",titre) + content);
-    }
+        else {
+            templateItem = templateItem.replace("{{alias}}", "");
+        }
 
-    private String cardBody(JsonArray list) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for (;i < list.size()-1;i++) {
-            sb.append(cardBodyItem(list.getJsonObject(i)));
-            sb.append(this.surround("hr"));
+        for (;i < listItem.size()-1;i++) {
+            sb.append(buildSubItem(listItem.getJsonObject(i)));
+            sb.append("<hr>");
         }
-        sb.append(cardBodyItem(list.getJsonObject(i)));
-        return this.surround("div class='card-body'",sb.toString());
+        sb.append(buildSubItem(listItem.getJsonObject(i)));
+        templateItem = templateItem.replace("{{commands}}",sb.toString());
+
+        return templateItem;
     }
 
-    private String cardBodyItem(JsonObject jo) {
-        String content = "";
+    private String buildSubItem(JsonObject jo) throws IOException {
+        String templateSubItem = new String(Files.readAllBytes(new File(getClass().getClassLoader().getResource("pages/item/commandSubItem.peb").getFile()).toPath()));
+
+        templateSubItem = templateSubItem.replace("{{prefix}}",this.prefix);
+        templateSubItem = templateSubItem.replace("{{command}}",jo.getString("title") + "{{args}}");
+        templateSubItem = templateSubItem.replace("{{description}}",jo.getString("des"));
+
         if (jo.getString("args").length() > 0) {
-            content = surround("span class='btn-sm btn-dark' style='padding: 0 4px; margin-left: 4px;'",jo.getString("args"));
+            templateSubItem = templateSubItem.replace("{{args}}", "<span class='btn-sm btn-dark' style='padding: 0 4px; margin-left: 4px;'>" + jo.getString("args") + "</span>");
         }
-        return this.surround("h6",this.prefix + jo.getString("title") + content) + this.surround("p class='text-muted'",jo.getString("des"));
-    }
+        else {
+            templateSubItem = templateSubItem.replace("{{args}}","");
+        }
 
+        return templateSubItem;
+    }
 }

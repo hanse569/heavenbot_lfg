@@ -30,20 +30,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td class="text-bold-500">
-                                                <a href="#" class="btn icon btn-success"><i data-feather="check"></i></a>
-                                                Château Nathria
-                                            </td>
-                                            <td>Héroïque</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-bold-500">
-                                                <a href="#" class="btn icon btn-warning"><i data-feather="check"></i></a>
-                                                Flèches de l’Ascension
-                                            </td>
-                                            <td>Mythique+</td>
-                                        </tr>
+                                        {{events}}
                                         </tbody>
                                     </table>
                                 </div>
